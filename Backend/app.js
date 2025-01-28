@@ -9,8 +9,11 @@ const port = 3000;
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/ArcadeArray', {
+// MongoDB Atlas connection string
+const mongoURI = 'mongodb+srv://user:user123@cluster0.otzw8.mongodb.net/';
+
+// Connect to MongoDB Atlas
+mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
