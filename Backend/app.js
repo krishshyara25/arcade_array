@@ -10,7 +10,9 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // MongoDB Atlas connection string
-const mongoURI = 'mongodb+srv://user:user123@cluster0.otzw8.mongodb.net/';
+// const mongoURI = 'mongodb+srv://user:user123@cluster0.otzw8.mongodb.net/';
+const mongoURI = 'mongodb+srv://user:user123@cluster0.otzw8.mongodb.net/ArcadeArray?retryWrites=true&w=majority';
+
 
 // Connect to MongoDB Atlas
 mongoose.connect(mongoURI, {
