@@ -10,6 +10,6 @@ const userSchema = new mongoose.Schema({
     friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('userModel', userSchema);
 
 module.exports = User;
