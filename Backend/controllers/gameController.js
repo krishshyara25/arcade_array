@@ -1,5 +1,5 @@
 const Game = require('../models/Game');
-const User = require('../models/userModel');
+const User = require('../models/userModel ');
 
 // Controller to fetch all games
 const getAllGames = async (req, res) => {
