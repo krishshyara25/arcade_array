@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/userModel');
 
 // Controller to get a user's wishlist
 const getWishlist = async (req, res) => {
