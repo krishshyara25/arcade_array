@@ -78,4 +78,25 @@ const getUserWishlist = async (req, res) => {
   }
 };
 
-module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist};
+
+// Controller to get the user's username and email
+const getUserDetails = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find the user and only return username & email
+    const user = await User.findById(userId).select('username email');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user); // Returns { username: "user123", email: "user@example.com" }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching user details' });
+  }
+};
+
+
+module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails};

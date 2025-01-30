@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAllGames, addToWishlist, getUserWishlist ,removeFromWishlist} = require('../controllers/gameController');
+const { getAllGames, addToWishlist, getUserWishlist ,removeFromWishlist ,getUserDetails} = require('../controllers/gameController');
 
 // Route to get all games
 router.get('/', getAllGames);
@@ -13,5 +13,8 @@ router.delete('/remove', removeFromWishlist);
 
 // Route to get a user's wishlist
 router.get('/wishlist/:userId', getUserWishlist);
+
+// Route to get user details (username and email)
+router.get('/user/details/:userId', getUserDetails);
 
 module.exports = router;
