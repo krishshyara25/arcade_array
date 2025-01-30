@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
-const wishlistRoutes = require('./routes/wishlistRoutes');
 
 const app = express();
 const port = 3000;
@@ -28,7 +27,7 @@ mongoose.connect(mongoURI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/games', gameRoutes);  // Games routes
-app.use('/api/wishlist', wishlistRoutes);  // Wishlist routes
+// app.use('/api/wishlist', wishlistRoutes);  // Wishlist routes
 
 // Start the server
 app.listen(port, () => {
