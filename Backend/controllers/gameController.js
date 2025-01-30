@@ -40,6 +40,25 @@ const addToWishlist = async (req, res) => {
   }
 };
 
+//remove game from wishlist
+const removeFromWishlist = async (req, res) => {
+  try {
+      const { userId, gameId } = req.body;
+
+      if (!userId || !gameId) return res.status(400).json({ message: 'User ID and Game ID are required' });
+
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+
+      user.wishlist = user.wishlist.filter(id => id.toString() !== gameId);
+      await user.save();
+      
+      res.status(200).json({ message: 'Game removed from wishlist', wishlist: user.wishlist });
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+  }
+};
+
 // Controller to get the user's wishlist
 const getUserWishlist = async (req, res) => {
   const { userId } = req.params;
@@ -59,4 +78,4 @@ const getUserWishlist = async (req, res) => {
   }
 };
 
-module.exports = { getAllGames, addToWishlist, getUserWishlist };
+module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist};
