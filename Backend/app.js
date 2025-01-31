@@ -27,7 +27,6 @@ mongoose.connect(mongoURI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/games', gameRoutes);  // Games routes
-// app.use('/api/wishlist', wishlistRoutes);  // Wishlist routes
 
 // Start the server
 app.listen(port, () => {
