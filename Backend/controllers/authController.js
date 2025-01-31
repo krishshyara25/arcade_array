@@ -26,14 +26,21 @@ exports.signup = async (req, res) => {
             password: hashedPassword
         });
 
-        await newUser.save();
-        return res.status(201).json({ message: 'User registered successfully' });
+        await newUser.save();  // Save user before generating token
+
+        // Generate JWT Token after signup
+        const token = jwt.sign(
+            { userId: newUser._id, username: newUser.username },  // Use `newUser`, not `user`
+            process.env.JWT_SECRET,  // Ensure you have this set in your `.env`
+            { expiresIn: '7d' }
+        );
+
+        return res.status(201).json({ message: 'User registered successfully', token, userId: newUser._id });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 
 // Login controller
 exports.login = async (req, res) => {
@@ -55,7 +62,11 @@ exports.login = async (req, res) => {
         }
 
         // Generate a JWT token
-        const token = jwt.sign({ userId: user._id, username: user.username }, 'your_secret_key', { expiresIn: '7d' });
+        const token = jwt.sign(
+            { userId: user._id, username: user.username },
+            process.env.JWT_SECRET,  // Use environment variable
+            { expiresIn: '7d' }
+        );
 
         res.status(200).json({ message: 'Login successful', token, userId: user._id });
     } catch (err) {
