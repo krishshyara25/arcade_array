@@ -29,6 +29,8 @@ mongoose.connect(mongoURI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/games', gameRoutes);  // Games routes
+const cors = require('cors');
+app.use(cors());
 
 // Start the server on the specified port
 app.listen(port, () => {
