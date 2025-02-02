@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
+const cors = require('cors'); 
+
 
 const app = express();
 const port = process.env.PORT || 3000;
