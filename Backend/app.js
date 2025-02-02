@@ -6,7 +6,14 @@ const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+// Enable CORS for your frontend
+app.use(cors({
+    origin: ["http://localhost:5173", "https://arcade-array.onrender.com"], // Allow frontend URLs
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // Use built-in middleware for parsing JSON and URL encoded data
 app.use(express.json());  
