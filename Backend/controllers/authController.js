@@ -27,6 +27,7 @@ exports.signup = async (req, res) => {
         });
 
         await newUser.save();  // Save user before generating token
+        console.log('Received signup request:', req.body);  // Add this line to see the incoming data
 
         // Generate JWT Token after signup
         const token = jwt.sign(
@@ -34,6 +35,7 @@ exports.signup = async (req, res) => {
             process.env.JWT_SECRET,  // Ensure you have this set in your `.env`
             { expiresIn: '7d' }
         );
+
 
         return res.status(201).json({ message: 'User registered successfully', token, userId: newUser._id });
     } catch (err) {

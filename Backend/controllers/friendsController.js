@@ -76,12 +76,14 @@ exports.acceptFriendRequest = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Remove sender from the recipient's friendRequests array
         user.friendRequests = user.friendRequests.filter(id => id.toString() !== senderId.toString());
-        user.friends.push(senderId);
+        user.friends.push(senderId);  // Add sender to the user's friends array
         await user.save();
 
+        // Remove user from the sender's friendRequests array
         sender.friendRequests = sender.friendRequests.filter(id => id.toString() !== userId.toString());
-        sender.friends.push(userId);
+        sender.friends.push(userId);  // Add user to the sender's friends array
         await sender.save();
 
         return res.status(200).json({ message: 'Friend request accepted' });
@@ -90,6 +92,7 @@ exports.acceptFriendRequest = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+    
 
 // Reject friend request route
 exports.rejectFriendRequest = async (req, res) => {
@@ -114,6 +117,32 @@ exports.rejectFriendRequest = async (req, res) => {
         await sender.save();
 
         return res.status(200).json({ message: 'Friend request rejected' });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+// Get friend requests received by the user route
+exports.getReceivedFriendRequests = async (req, res) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    try {
+        const user = await User.findById(userId).populate('friendRequests', 'username email');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Get the users who sent the friend requests
+        const receivedRequests = user.friendRequests;
+
+        return res.status(200).json({ receivedRequests });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error' });
