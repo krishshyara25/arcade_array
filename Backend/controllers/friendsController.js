@@ -1,5 +1,15 @@
 const User = require('../models/userModel');
 
+exports.getAllUsers = async (req, res) => {
+    try {
+      const users = await User.find();
+      res.json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching games.' });
+    }
+  };
+
 // Search users route
 exports.searchUsers = async (req, res) => {
     const { query } = req.query;
