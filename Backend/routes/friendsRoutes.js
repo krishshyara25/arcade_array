@@ -8,6 +8,5 @@ router.get('/requests/:userId', friendsController.getReceivedFriendRequests);
 router.post('/friend-request', friendsController.sendFriendRequest);
 router.post('/accept-friend-request', friendsController.acceptFriendRequest);
 router.post('/reject-friend-request', friendsController.rejectFriendRequest);
-router.post('/user_friends', friendsController.getUserFriends);
-
+router.get('/user_friends/:userId', friendsController.getUserFriends);
 module.exports = router;
