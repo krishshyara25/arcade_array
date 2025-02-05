@@ -1,18 +1,10 @@
-.game-store1 {
-    /* display: flex; */
-    min-height: 100vh;
-    background-color: #1a1b1e;
-    color: white;
-    font-family: system-ui, -apple-system, sans-serif;
-  }
-  .poster{
+ /* .poster{
     display: flex;
     min-height: 100vh;
     background-color: #1a1b1e;
     color: white;
     font-family: system-ui, -apple-system, sans-serif;
   }
-  /* Sidebar Styles */
   .sidebar {
     width: 250px;
     background-color: #202124;
@@ -44,7 +36,6 @@
     background-color: #2d2e32;
   }
   
-  /* Main Content */
   .main-content {
     flex: 1;
     padding: 20px;
@@ -95,7 +86,6 @@
     border-radius: 50%;
   }
   
-  /* Hero Section */
   .hero-section {
     position: relative;
     height: 400px;
@@ -136,7 +126,6 @@
     cursor: pointer;
   }
   
-  /* Games Grid */
   .games-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -174,7 +163,6 @@
     font-weight: bold;
   }
   
-  /* Right Sidebar */
   .right-sidebar {
     width: 300px;
     padding: 20px;
@@ -257,7 +245,6 @@
     color: #999;
   }
   
-  /* Recently Played Section */
   .recent-games {
     display: flex;
     flex-direction: column;
@@ -301,4 +288,217 @@
   .progress-text {
     font-size: 12px;
     color: #999;
-  }
+  } 
+
+
+ */
+
+
+
+ /* General styles */
+ .body{
+  background: linear-gradient(to bottom, #1a1a1a, #4b0082);
+ }
+.container {
+  min-height: 180vh;
+  background-color: #1a1a1a;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.upper {
+  display: flex;
+  min-height: 90vh;
+  background-color: #1a1a1a;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 200px;
+  background-color: #2d2d3a;
+  padding: 20px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 20px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px;
+  border-radius: 20px;
+  border: none;
+  background-color: #e0e0e0;
+  font-size: 16px;
+}
+
+/* Featured Game */
+.featured-game {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.featured-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+.featured-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  display: flex;
+  gap: 140px;
+}
+
+.buy-button {
+  background-color: #ff5722;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Game Carousel */
+.game-carousel {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.carousel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.carousel-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.control-button {
+  background-color: #404040;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+}
+
+/* Game Grid */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.game-card {
+  background-color: #2d2d3a;
+  border-radius: 10px;
+  width: 14vw;
+  overflow: hidden;
+}
+
+.game-card-image {
+  width: 14vw;
+  height: 275px;
+  object-fit: cover;
+}
+
+.game-card-info {
+  padding: 10px;
+}
+
+.price {
+  color: #4a90e2;
+  font-weight: bold;
+}
+
+/* Friends Section */
+.friends-section {
+  width: 250px;
+  background-color: #2d2d3a;
+  padding: 20px;
+}
+
+.friend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.online-status {
+  width: 8px;
+  height: 8px;
+  background-color: #4caf50;
+  border-radius: 50%;
+}
+
+.game-status {
+  background-color: #404040;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Recently Played */
+.recently-played {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #404040;
+  border-radius: 2px;
+  margin-top: 5px;
+}
+
+.progress {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 2px;
+}
