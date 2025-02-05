@@ -165,15 +165,18 @@ exports.getUserFriends = async (req, res) => {
     const { userId } = req.params;
 
     try {
-        const user = await User.findById(userId).select('friends').lean(); // .lean() to return plain JSON
+        const user = await User.findById(userId)
+            .populate('friends', 'username') // Populating the friends array with usernames
+            .select('friends') // Select only the friends field
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.status(200).json(user.friends); // Now returns only the friends array
+        res.status(200).json(user.friends); // Now returns friends with usernames
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching user details' });
     }
 };
+
