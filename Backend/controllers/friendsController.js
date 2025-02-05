@@ -163,17 +163,17 @@ exports.getReceivedFriendRequests = async (req, res) => {
 //to get user's friends
 exports.getUserFriends = async (req, res) => {
     const { userId } = req.params;
-  
+
     try {
-        const user = await User.findById(userId).select('friends');
+        const user = await User.findById(userId).select('friends').lean(); // .lean() to return plain JSON
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.status(200).json(user.friends); // Return ONLY the friends array
+        res.status(200).json(user.friends); // Now returns only the friends array
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error fetching friends list' });
+        res.status(500).json({ message: 'Error fetching user details' });
     }
 };
