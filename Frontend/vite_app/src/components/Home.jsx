@@ -82,12 +82,12 @@ const GameStore = () => {
       <div className="game-store">
         <nav className="sidebar">
           <ul className="nav-items">
-            <li>Home</li>
+          <li><Link to="/Home">Home</Link></li>
             <li>Category</li>
-            <li>Community</li>
-            <li>Friends</li>
-            <li>Profile</li>
-            <li>Download</li>
+            <li><Link to="/login">Community</Link></li>
+            <li><Link to="/login">Friends</Link></li>
+            <li><Link to="/login">Profile</Link></li>
+            <li><Link to="/login">Download</Link></li>
             <li>Setting</li>
           </ul>
         </nav>

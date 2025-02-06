@@ -1,6 +1,6 @@
 .auth-container {
     width: 100%;
-    max-width: 700px;
+    max-width: 530px;
     margin: 100px auto;
     padding: 50px;
     background: #1e1e2f;
@@ -53,7 +53,9 @@ button {
 button:hover {
     background: #ff3333;
 }
-
+button::after{
+    background-color: blue;
+}
 .error {
     color: #ff4d4d;
     font-size: 14px;
@@ -66,11 +68,12 @@ p {
 }
 
 a {
-    color: #ff4d4d;
+    color: #ffffff;
     text-decoration: none;
     font-weight: bold;
 }
 
 a:hover {
     text-decoration: underline;
+    color: #ff3333;
 }

@@ -1,5 +1,15 @@
 const User = require('../models/userModel');
 
+exports.getAllUsers = async (req, res) => {
+    try {
+      const users = await User.find();
+      res.json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error fetching games.' });
+    }
+  };
+
 // Search users route
 exports.searchUsers = async (req, res) => {
     const { query } = req.query;
@@ -148,3 +158,49 @@ exports.getReceivedFriendRequests = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
+//to get user's friends
+exports.getUserFriends = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const user = await User.findById(userId)
+            .populate('friends', 'username') // Populating the friends array with usernames
+            .select('friends') // Select only the friends field
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user.friends); // Now returns friends with usernames
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching user details' });
+    }
+};
+
+
+
+exports.removeFriend = async (req, res) => {
+    const { userId, friendId } = req.body;
+  
+    try {
+      const user = await User.findById(userId);
+      const friend = await User.findById(friendId);
+  
+      if (!user || !friend) return res.status(404).json({ message: "User not found" });
+  
+      user.friends = user.friends.filter(id => id.toString() !== friendId);
+      friend.friends = friend.friends.filter(id => id.toString() !== userId);
+  
+      await user.save();
+      await friend.save();
+  
+      return res.status(200).json({ message: "Friend removed" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  

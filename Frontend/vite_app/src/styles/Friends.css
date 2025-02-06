@@ -1,0 +1,160 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #1a1a1a, #4b0082);
+    color: white;
+    min-height: 100vh;
+  }
+  
+  .app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .header {
+    background-color: #333;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    width: 120px;
+  }
+  
+  .title {
+    margin-left: 8px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon {
+    font-size: 24px;
+    margin-right: 16px;
+  }
+  
+  .user-details {
+    display: flex;
+    align-items: center;
+  }
+  
+  .avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .main {
+    padding: 16px;
+    flex-grow: 1;
+  }
+  
+  .back-button {
+    display: flex;
+    align-items: center;
+    color: #ccc;
+    margin-bottom: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .back-button i {
+    margin-right: 8px;
+  }
+  
+  .search-container {
+    display: flex;
+    margin-bottom: 16px;
+  }
+  
+  .search-input {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 4px 0 0 4px;
+    border: none;
+    background-color: #555;
+    color: white;
+  }
+  
+  .search-button {
+    padding: 8px;
+    border-radius: 0 4px 4px 0;
+    border: none;
+    background-color: #555;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  
+  .tab {
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .search-tab {
+    background-color: #666;
+    border-radius: 4px 0 0 4px;
+  }
+  
+  .friends-tab {
+    background-color: #aaa;
+    color: black;
+    border-radius: 0 4px 4px 0;
+  }
+  
+  .friends-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .friend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    color: black;
+    padding: 16px;
+    border-radius: 8px;
+  }
+  
+  .friend-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .friend-avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 16px;
+  }
+  
+  .friend-name {
+    font-size: 16px;
+  }
+  
+  .friend-actions {
+    display: flex;
+    gap: 16px;
+  }
