@@ -9,4 +9,6 @@ router.post('/friend-request', friendsController.sendFriendRequest);
 router.post('/accept-friend-request', friendsController.acceptFriendRequest);
 router.post('/reject-friend-request', friendsController.rejectFriendRequest);
 router.get('/user_friends/:userId', friendsController.getUserFriends);
+router.post('/remove-friend', friendsController.removeFriend);
+
 module.exports = router;

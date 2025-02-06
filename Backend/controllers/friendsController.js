@@ -180,3 +180,27 @@ exports.getUserFriends = async (req, res) => {
     }
 };
 
+
+
+exports.removeFriend = async (req, res) => {
+    const { userId, friendId } = req.body;
+  
+    try {
+      const user = await User.findById(userId);
+      const friend = await User.findById(friendId);
+  
+      if (!user || !friend) return res.status(404).json({ message: "User not found" });
+  
+      user.friends = user.friends.filter(id => id.toString() !== friendId);
+      friend.friends = friend.friends.filter(id => id.toString() !== userId);
+  
+      await user.save();
+      await friend.save();
+  
+      return res.status(200).json({ message: "Friend removed" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  
