@@ -150,8 +150,9 @@ exports.getReceivedFriendRequests = async (req, res) => {
 
         // Get the users who sent the friend requests
         const receivedRequests = user.friendRequests;
+        // Return the count of friend requests
+        return res.status(200).json({ count: receivedRequests.length });
 
-        return res.status(200).json({ receivedRequests });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error' });
