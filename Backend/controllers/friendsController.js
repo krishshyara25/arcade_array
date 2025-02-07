@@ -134,7 +134,8 @@ exports.rejectFriendRequest = async (req, res) => {
 
 
 // Get friend requests received by the user route
-exports.getFriendRequestscount = async (req, res) => {
+exports.getReceivedFriendRequests = async (req, res) => {
+
     const { userId } = req.params;
 
     if (!userId) {
@@ -159,7 +160,7 @@ exports.getFriendRequestscount = async (req, res) => {
 
 
 // Get friend requests received by the user route
-exports.getReceivedFriendRequests = async (req, res) => {
+exports.getFriendRequestscount = async (req, res) => {
     const { userId } = req.params;
 
     if (!userId) {
