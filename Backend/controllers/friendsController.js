@@ -57,8 +57,7 @@ exports.sendFriendRequest = async (req, res) => {
             return res.status(400).json({ message: 'You have already sent a friend request' });
         }
 
-        user.friendRequests.push(targetUserId);
-        await user.save();
+
 
         targetUser.friendRequests.push(userId);
         await targetUser.save();
