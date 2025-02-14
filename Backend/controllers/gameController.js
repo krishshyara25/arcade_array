@@ -21,7 +21,7 @@ const searchGame = async (req, res) => {
   }
 
   try {
-    const games = await Game.find({ title: { $regex: query, $options: 'i' } });
+    const games = await Game.find({ name: { $regex: query, $options: 'i' } });
 
     if (games.length === 0) {
       return res.status(404).json({ message: 'No games found' });
@@ -33,6 +33,7 @@ const searchGame = async (req, res) => {
     res.status(500).json({ message: 'Error searching for games' });
   }
 };
+
 
 
 // Controller to add a game to the wishlist
