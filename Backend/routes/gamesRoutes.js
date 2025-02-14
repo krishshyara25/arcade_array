@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getAllGames, addToWishlist, getUserWishlist ,removeFromWishlist ,getUserDetails} = require('../controllers/gameController');
+const { getAllGames, addToWishlist, getUserWishlist ,removeFromWishlist ,getUserDetails ,searchGame} = require('../controllers/gameController');
 
 // Route to get all games
 router.get('/', getAllGames);
+
+//Route to get searched game details
+router.get('/search',searchGame);
 
 // Route to add a game to the wishlist
 router.post('/add', addToWishlist);
