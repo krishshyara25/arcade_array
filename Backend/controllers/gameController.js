@@ -123,4 +123,4 @@ const getUserDetails = async (req, res) => {
 };
 
 
-module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails};
+module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails, searchGame};
