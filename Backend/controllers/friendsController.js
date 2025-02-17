@@ -57,8 +57,7 @@ exports.sendFriendRequest = async (req, res) => {
             return res.status(400).json({ message: 'You have already sent a friend request' });
         }
 
-        user.friendRequests.push(targetUserId);
-        await user.save();
+
 
         targetUser.friendRequests.push(userId);
         await targetUser.save();
@@ -136,6 +135,7 @@ exports.rejectFriendRequest = async (req, res) => {
 
 // Get friend requests received by the user route
 exports.getReceivedFriendRequests = async (req, res) => {
+
     const { userId } = req.params;
 
     if (!userId) {
@@ -151,7 +151,6 @@ exports.getReceivedFriendRequests = async (req, res) => {
 
         // Get the users who sent the friend requests
         const receivedRequests = user.friendRequests;
-
         return res.status(200).json({ receivedRequests });
     } catch (err) {
         console.error(err);
@@ -159,6 +158,32 @@ exports.getReceivedFriendRequests = async (req, res) => {
     }
 };
 
+
+// Get friend requests received by the user route
+exports.getFriendRequestscount = async (req, res) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    try {
+        const user = await User.findById(userId).populate('friendRequests', 'username email');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Get the users who sent the friend requests
+        const receivedRequests = user.friendRequests;
+        // Return the count of friend requests
+        return res.status(200).json({ count: receivedRequests.length });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 //to get user's friends
 exports.getUserFriends = async (req, res) => {

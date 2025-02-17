@@ -12,6 +12,30 @@ const getAllGames = async (req, res) => {
   }
 };
 
+// Controller to search for games by title
+const searchGame = async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ message: 'Search query is required' });
+  }
+
+  try {
+    const games = await Game.find({ name: { $regex: query, $options: 'i' } });
+
+    if (games.length === 0) {
+      return res.status(404).json({ message: 'No games found' });
+    }
+
+    res.status(200).json(games);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error searching for games' });
+  }
+};
+
+
+
 // Controller to add a game to the wishlist
 const addToWishlist = async (req, res) => {
   const { userId, gameId } = req.body;
@@ -99,4 +123,4 @@ const getUserDetails = async (req, res) => {
 };
 
 
-module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails};
+module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails, searchGame};

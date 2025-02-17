@@ -4,6 +4,8 @@ import Signup from "./components/signup";
 import Home from "./components/Home"; // Updated import path
 import Home1 from "./components/Home1";
 import Friends from "./components/Friends";
+import Notifications from "./components/Notification";
+import Catagory from "./components/Catagory"
 
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/home" element={<Home />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/catagory" element={<Catagory />} />
             </Routes>
     );
 }
