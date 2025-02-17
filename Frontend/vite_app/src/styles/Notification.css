@@ -1,0 +1,170 @@
+
+/* Full screen layout */
+.notifications-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(to bottom, #1a1a1a, #4b0082);
+  padding: 20px;
+}
+
+/* Header Styling */
+.notifications-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Main Title */
+.notifications-title {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Subheading */
+.notifications-subheading {
+  font-size: 18px;
+  font-weight: 500;
+  color: #666;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* No Requests Message */
+.no-requests-message {
+  font-size: 18px;
+  font-weight: 400;
+  color: #999;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Hover Effects for Headings */
+.notifications-title:hover {
+  color: #4CAF50;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.notifications-subheading:hover {
+  color: #f44336;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.back-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.back-button:hover {
+  background-color: #45a049;
+}
+
+/* Main Section */
+.notifications-main {
+  flex-grow: 1;
+  padding-top: 20px;
+}
+
+.notifications-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+/* Username */
+.notification-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-left: 10px;
+  text-transform: capitalize;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Hover Effects for Username */
+.notification-name:hover {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+
+.no-requests-message {
+  font-size: 18px;
+  color: #999;
+}
+
+/* Notification Items */
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.notification-info {
+  display: flex;
+  align-items: center;
+}
+
+.notification-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.notification-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Notification Actions */
+.notification-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.accept-button,
+.reject-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+}
+
+.accept-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.accept-button:hover {
+  background-color: #45a049;
+}
+
+.reject-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.reject-button:hover {
+  background-color: #e53935;
+}

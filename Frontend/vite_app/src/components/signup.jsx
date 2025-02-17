@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/signup.css";
 import logo from '../assets/arcade_alley_logo.png'
+import seen from '../assets/visibility_off_24dp_E8EAED.svg'
 
 function SignUpForm() {
   const [formData, setFormData] = useState({
@@ -119,7 +120,7 @@ function SignUpForm() {
               className="password-toggle"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? "🙈" : "👁"}
+              {showPassword ? <img src={seen} alt="" className="eyeicon"/> : "👁"}
             </button>
           </div>
 

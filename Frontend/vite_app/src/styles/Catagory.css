@@ -1,0 +1,246 @@
+.game-store {
+    display: flex;
+    background-color: #1a1b1f;
+    color: white;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    background-color: #212226;
+    padding: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    padding: 12px 20px;
+    margin: 8px 0;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.sidebar li.active {
+    background-color: #2d2e32;
+}
+
+.sidebar li:hover {
+    background-color: #2d2e32;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6vh;
+    margin-top: 6vh;
+
+}
+
+.category-card {
+    position: relative;
+    background-color: #212226;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 29vh;
+    padding-bottom: 40px; /* Space for category name */
+    width: 100%;
+    max-width: 380px; /* Adjust width based on your layout */
+  }
+  
+  .category-images {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+  
+  .category-image {
+    width: 33%; /* Adjust for 3 images side by side */
+    height: 180px; /* Adjust based on design */
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .category-name {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.897);
+    color: rgb(0, 0, 0);
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+.navigation-arrows button {
+    background: #2d2e32;
+    border: none;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.navigation-arrows button:hover {
+    background: #3d3e42;
+}
+
+.categories-grid {
+    display: flex;
+    gap: 20px;
+}
+
+.category-card {
+    background-color: #212226;
+    border-radius: 12px;
+    padding-top: 12px;
+    transition: transform 0.2s;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.game-thumbnail img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.games-horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    background-color: #212226;
+    border-radius: 12px;
+    padding: 15px;
+    transition: transform 0.2s;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+}
+
+.game-image {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.game-image img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.discount {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff5555;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.price {
+    color: #8f9093;
+}
+
+.heading-secondary {
+    font-size: 24px;
+    margin: 0;
+}
+
+.subheading {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+/* Additional Classes for Missing Elements */
+.sidebarItem {
+    display: block;
+    padding: 12px 20px;
+    margin: 8px 0;
+    cursor: pointer;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+}
+
+.sidebarItem:hover {
+    background-color: #2d2e32;
+}
+
+.logo img {
+    width: 100%;
+    height: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #212226;
+}
+
+.searchBar {
+    flex-grow: 1;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #2d2e32;
+    color: white;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-buttons button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ff5555;
+    color: white;
+    cursor: pointer;
+}
+
+.auth-buttons button:hover {
+    background-color: #e04444;
+}

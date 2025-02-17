@@ -158,3 +158,21 @@ body {
     display: flex;
     gap: 16px;
   }
+  .add-friend-icon {
+    width: 24px; /* Set appropriate size */
+    height: 24px;
+    cursor: pointer; /* Make it clickable */
+  }
+  .remove-friend-icon {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .remove-friend-icon:hover {
+    transform: scale(1.1);
+  }
+  .notification_icon:hover{
+    cursor: pointer;
+  }
