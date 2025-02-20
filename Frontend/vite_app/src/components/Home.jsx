@@ -107,7 +107,7 @@ const GameStore = () => {
             <a href="#" className="sidebarItem">🏠 Home</a>
             <a href="#" className="sidebarItem" onClick={() => navigate("/catagory")}>📁 Category</a>
             <a href="#" className="sidebarItem" onClick={() => navigate("/login")}>👥 Community</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
+            <a href="#" className="sidebarItem" onClick={() => navigate("/login")}>👫 Friends</a>
             <a href="#" className="sidebarItem">❤️ Wishlist</a>
             <a href="#" className="sidebarItem" onClick={() => navigate("/login")}>⬇️ Download</a>
             <a href="#" className="sidebarItem">⚙️ Setting</a>

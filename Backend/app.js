@@ -53,21 +53,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);
 });
-
-
-
-const path = require("path");
-
-// Serve static files from the frontend build folder
-app.use(express.static(path.join(__dirname, 'dist')));
-
-// API routes
-app.get("/api/some-endpoint", (req, res) => {
-  res.json({ message: "Hello from the backend!" });
-});
-
-// All other routes serve the frontend
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  });
-
