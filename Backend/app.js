@@ -12,11 +12,17 @@ const port = process.env.PORT || 3000;
 
 // ✅ Proper CORS configuration
 const corsOptions = {
-    origin: ["http://localhost:5173", "http://localhost:5174", "https://arcade-array.onrender.com"], // Allowed frontend URLs
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Ensure OPTIONS is allowed
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://arcade-array.onrender.com", // Backend URL
+        "https://your-netlify-site.netlify.app" // Netlify Frontend URL
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 };
+
 
 app.use(cors(corsOptions));
 
