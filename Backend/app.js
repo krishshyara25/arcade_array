@@ -16,7 +16,7 @@ const corsOptions = {
         "http://localhost:5173",
         "http://localhost:5174",
         "https://arcade-array.onrender.com", // Backend URL
-        "https://arcadearray.netlify.app/" // Netlify Frontend URL
+        "https://arcadearray.netlify.app" // ✅ Corrected Netlify Frontend URL
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
