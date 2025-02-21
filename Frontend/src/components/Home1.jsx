@@ -138,7 +138,7 @@ const GamingPlatform = () => {
               <img src={logo} alt="Arcade Alley" />
             </div>
             <a href="#" className="sidebarItem">🏠 Home</a>
-            <a href="#" className="sidebarItem">📁 Category</a>
+            <a href="#" className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
             <a href="#" className="sidebarItem">👥 Community</a>
             <a href="#" className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
             <a href="#" className="sidebarItem">❤️ Wishlist</a>
