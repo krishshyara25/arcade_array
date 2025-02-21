@@ -16,7 +16,7 @@ const corsOptions = {
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:5174",
-        "https://arcadearray.netlify.app", // ✅ Fix: Remove extra slash at the end
+        "https://arcadearray.netlify.app", 
         "https://arcade-array.onrender.com"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
