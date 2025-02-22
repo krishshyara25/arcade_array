@@ -12,11 +12,18 @@ const port = process.env.PORT || 3000;
 
 // ✅ Proper CORS configuration
 const corsOptions = {
-    origin: ["http://localhost:5173", "http://localhost:5174", "https://arcade-array.onrender.com"], // Allowed frontend URLs
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Ensure OPTIONS is allowed
+    origin: [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "https://arcadearray.netlify.app", 
+        "https://arcade-array.onrender.com"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 };
+
 
 app.use(cors(corsOptions));
 
@@ -53,21 +60,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);
 });
-
-
-
-const path = require("path");
-
-// Serve static files from the frontend build folder
-app.use(express.static(path.join(__dirname, "dist")));
-
-// API routes
-app.get("/api/some-endpoint", (req, res) => {
-  res.json({ message: "Hello from the backend!" });
-});
-
-// All other routes serve the frontend
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
-

@@ -1,6 +1,6 @@
 # 🎮 Arcade Array
 
-**Live Demo:** [🔗 Deployed Website](https://arcade-array.onrender.com)  
+**Live Demo:** [🔗 Deployed Website](https://arcadearray.netlify.app/)  
 **Figma Design:** [🎨 View on Figma](https://www.figma.com/design/muK3MA7Dhfr66f9SWSsjZZ/Archade-Alley-(Copy)?node-id=2057-401&t=cE1gAhGpSZzB8PEs-1)  
 **API Documentation:** [📄 Postman Docs](https://documenter.getpostman.com/view/39216508/2sAYX2Miri)  
 

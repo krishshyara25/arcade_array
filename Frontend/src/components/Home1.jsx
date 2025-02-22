@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import SearchBar from "./Searchbar";
 import logo from '../assets/arcade_alley_logo.png';
 import img1 from '../assets/wp1854784-the-witcher-3-wallpapers.png'
 import img2 from '../assets/wp9549839.png';
@@ -138,7 +139,7 @@ const GamingPlatform = () => {
               <img src={logo} alt="Arcade Alley" />
             </div>
             <a href="#" className="sidebarItem">🏠 Home</a>
-            <a href="#" className="sidebarItem">📁 Category</a>
+            <a href="#" className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
             <a href="#" className="sidebarItem">👥 Community</a>
             <a href="#" className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
             <a href="#" className="sidebarItem">❤️ Wishlist</a>
@@ -149,9 +150,7 @@ const GamingPlatform = () => {
           {/* Main Content */}
           <main className="mainContent">
             <header className="header">
-              <div className="searchBar">
-                <input type="text" placeholder="Search" className="searchInput" />
-              </div>
+            <SearchBar />
               <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
                 <span onClick={() => navigate("/notifications")} className='notification_icon'>🔔{friendRequests > 0 && (
                   <span className="notificationCount">{friendRequests}</span> // Display notification count if friendRequests > 0

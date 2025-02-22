@@ -1,10 +1,20 @@
-.game-store {
-    display: flex;
+.game-store1{
     background-color: #1a1b1f;
     color: white;
     min-height: 100vh;
 }
 
+.upper1{
+    display: flex;
+    background-color: #1a1b1f;
+    color: white;
+    min-height: 85vh;
+}
+.new-releases{
+    background-color: #1a1b1f;
+    color: white;
+    min-height: 100vh;
+}
 .sidebar {
     width: 240px;
     background-color: #212226;
@@ -37,6 +47,23 @@
     padding: 20px;
 }
 
+.gameCarousel1{
+    margin-left: 20px;
+    padding: 30px;
+  }
+
+.gameGrid1{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+.carouselHeader1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -52,9 +79,9 @@
     border-radius: 12px;
     overflow: hidden;
     height: 29vh;
-    padding-bottom: 40px; /* Space for category name */
+    padding-bottom: 40px; 
     width: 100%;
-    max-width: 380px; /* Adjust width based on your layout */
+    max-width: 380px; 
   }
   
   .category-images {
@@ -69,8 +96,8 @@
   }
   
   .category-image {
-    width: 33%; /* Adjust for 3 images side by side */
-    height: 180px; /* Adjust based on design */
+    width: 33%; 
+    height: 180px; 
     object-fit: cover;
     border-radius: 5px;
   }
@@ -186,7 +213,6 @@
     margin: 10px 0;
 }
 
-/* Additional Classes for Missing Elements */
 .sidebarItem {
     display: block;
     padding: 12px 20px;
@@ -244,3 +270,5 @@
 .auth-buttons button:hover {
     background-color: #e04444;
 }
+
+
