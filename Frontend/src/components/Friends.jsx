@@ -3,8 +3,8 @@ import '../styles/Friends.css';
 import { useNavigate } from "react-router-dom";
 import img from '../assets/arcade_alley_logo.png';
 import img2 from '../assets/wp9549839.png';
-import addUserImage from '../assets/add-user.png'; 
-import pendingrequest from '../assets/pending.png'; 
+import addUserImage from '../assets/add-user.png';
+import pendingrequest from '../assets/pending.png';
 import bin from '../assets/bin.png';
 import acceptIcon from '../assets/correct.png'; // Add Accept icon
 import rejectIcon from '../assets/reject.png'; // Add Reject icon
@@ -18,6 +18,7 @@ const Friends = () => {
   const [user, setUser] = useState(null);
   const [requestStatus, setRequestStatus] = useState({});
   const [notifications, setNotifications] = useState([]); // Track incoming requests
+  const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown menu
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -164,12 +165,16 @@ const Friends = () => {
   };
 
   const filteredUsers = users
-  .filter(user => 
-    user.username.toLowerCase().includes(searchQuery.toLowerCase()) &&
-    user._id !== userId && // Exclude the logged-in user
-    !friendsList.some(friend => friend._id === user._id) // Exclude users who are already friends
-  );
+    .filter(user =>
+      user.username.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      user._id !== userId && // Exclude the logged-in user
+      !friendsList.some(friend => friend._id === user._id) // Exclude users who are already friends
+    );
 
+    const handleLogout = () => {
+      localStorage.removeItem('userId'); // Remove user ID from localStorage
+      navigate('/home'); // Navigate to login page after logout
+    };
 
   return (
     <div className="app">
@@ -178,14 +183,27 @@ const Friends = () => {
           <img src={img} alt="Arcade Alley Logo" className="logo" />
         </div>
         <div className="user-info">
-        <span onClick={() => navigate("/notifications")} className='notification_icon'>🔔</span>
+          <span onClick={() => navigate("/notifications")} className='notification_icon'>🔔</span>
           <i className="fas fa-bell icon"></i>
           <div className="user-details">
-            <img src={img2} alt="User Avatar" className="avatar" />
+            <img
+              src={img2}
+              style={{ borderRadius: '50%', width: '3vw', cursor: 'pointer' }}
+              alt="Profile"
+              onClick={() => setDropdownVisible(!dropdownVisible)}
+            />
             <div>
               <h1 className="username">Welcome, {user?.username || "Guest"}</h1>
               <p className="useremail">Email: {user?.email || "No email found"}</p>
             </div>
+
+            {/* Dropdown Menu */}
+            {dropdownVisible && (
+                    <div className="dropdownMenu">
+                      <button onClick={handleLogout} className="logoutButton">Logout</button>
+                    </div>
+                  )}
+
           </div>
         </div>
       </header>
@@ -203,9 +221,6 @@ const Friends = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="search-button">
-            <i className="fas fa-search"></i>
-          </button>
         </div>
 
         <div className="tabs">
@@ -221,7 +236,7 @@ const Friends = () => {
           >
             Friends
           </button>
-                  </div>
+        </div>
 
         <div className="friends-list">
           {activeTab === "notifications" ? (

@@ -1,0 +1,80 @@
+/* Container */
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  /* Search Input */
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Dropdown */
+  .search-dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: rgb(63, 63, 63);
+    border: 1px solid rgb(63, 63, 63);
+    border-radius: 8px;
+    margin-top: 50px;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+  }
+  
+  /* Search Result */
+  .search-result {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .search-result:hover {
+    background: #4b4b4b;
+  }
+  
+  /* Game Image */
+  .search-game-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  /* Game Title */
+  .search-game-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+  }
+  
+  /* Loading & Error Messages */
+  .search-message {
+    padding: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .search-error {
+    padding: 10px;
+    font-size: 14px;
+    color: red;
+  }
+  

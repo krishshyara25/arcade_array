@@ -2,27 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import '../styles/Home.css';
+import SearchBar from './Searchbar';
 import logo from '../assets/arcade_alley_logo.png';
-import img1 from '../assets/wp1854784-the-witcher-3-wallpapers.png';
-import img2 from '../assets/tankhead-c7n4p.png';
-import img3 from '../assets/image.png';
-import img4 from '../assets/image2.png';
-import img19 from '../assets/image19.png'
-import img20 from '../assets/image2.png'
-import img5 from '../assets/image5.png'
-import img6 from '../assets/image6.png'
-import img7 from '../assets/image7.png'
-import img8 from '../assets/image8.png'
-import img9 from '../assets/image9.png'
-import img10 from '../assets/image10.png'
-import img11 from '../assets/image11.png'
-import img12 from '../assets/image12.png'
-import img13 from '../assets/image13.png'
-import img14 from '../assets/image14.png'
-import img15 from '../assets/image15.png'
-import img16 from '../assets/image16.png'
-import img17 from '../assets/image17.png'
-import img18 from '../assets/image18.png'
 
 
 const GameStore = () => {
@@ -116,12 +97,7 @@ const GameStore = () => {
           {/* Main Content */}
           <main className="mainContent">
             <header className="header">
-              <div className="searchBar">
-                <input type="text"
-                  placeholder="Search"
-                  className="searchInput"
-                />
-              </div>
+            <SearchBar />
               <div className="auth-buttons">
                 <Link to="/login">
                   <button>Login</button>
@@ -211,6 +187,7 @@ const GameStore = () => {
             </div>
             ))}
           </div>
+          
         </div>
       </div>
 
