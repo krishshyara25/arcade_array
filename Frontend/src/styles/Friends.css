@@ -61,17 +61,7 @@ body {
     padding: 16px;
     flex-grow: 1;
   }
-  
-  .back-button {
-    display: flex;
-    align-items: center;
-    color: #ccc;
-    margin-bottom: 12px;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
+
 
   .search-container {
     display: flex;

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Catagory.css';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/arcade_alley_logo.png';
 import SearchBar from './Searchbar';
+import axios from "axios";
 
 import img5 from '../assets/image5.png';
 import img6 from '../assets/image6.png';
@@ -22,7 +23,15 @@ import image6 from '../assets/img6.png';
 
 const GameStore = () => {
     const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
+  const [games, setGames] = useState([]);
+    const [savingSpotlight, setSavingSpotlight] = useState([]);
+    const [discoverNew, setDiscoverNew] = useState([]);
+    const [mostPopular, setMostPopular] = useState([]);
+      const [visibleDiscover, setVisibleDiscover] = useState(6);
+      const [visibleSpotlight, setVisibleSpotlight] = useState(6);
+      const [visiblePopular, setVisiblePopular] = useState(6);
+      
     const popularGames = [
         {
             id: 1,
@@ -80,6 +89,42 @@ const GameStore = () => {
         { id: 6, title: 'Farming Simulator 22', price: ' ₹1,559', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/uhvtwkenynbvtynqdlgo.png" },
     ];
 
+    useEffect(() => {
+        axios.get("https://arcade-array.onrender.com/api/games")
+            .then(response => {
+                const fetchedGames = response.data;
+                setGames(fetchedGames);
+                setLoading(false);
+
+                // Filter games with discounts
+                const discountedGames = fetchedGames.filter(game => game.price && game.discount);
+                setSavingSpotlight(discountedGames.length > 0 ? discountedGames : fetchedGames);
+
+                // Sort games by release date (newest first) for "Discover Something New"
+                const sortedByRelease = [...fetchedGames].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+                setDiscoverNew(sortedByRelease.slice(0, 6));
+
+                // Sort games by popularity (assuming `popularityScore` exists)
+                const sortedByPopularity = [...fetchedGames].sort((a, b) => b.popularityScore - a.popularityScore);
+                setMostPopular(sortedByPopularity.slice(0, 6));
+            })
+            .catch(error => {
+                console.error("Error fetching games:", error);
+                setLoading(false);
+            });
+    }, []);
+
+    
+  const loadMoreDiscover = () => {
+    setVisibleDiscover(prev => prev + 6);
+  };
+
+  const loadMoreSpotlight = () => {
+    setVisibleSpotlight(prev => prev + 6);
+  };
+
+  const loadMorePopular = () => setVisiblePopular(prev => prev + 6);
+
     return (
         <>
             <div className="game-store1">
@@ -102,7 +147,7 @@ const GameStore = () => {
                         <div className='main-content'>
                             {/* Header */}
                             <header className="header">
-                            <SearchBar />
+                                <SearchBar />
                                 <div className="auth-buttons">
                                     <Link to="/login">
                                         <button>Login</button>
@@ -143,74 +188,80 @@ const GameStore = () => {
 
 
                 </div>
-                <section className="gameCarousel">
-                    <div className="carouselHeader1">
-                        <h2 className="heading-secondary">New Released</h2>
-                        <div className="carouselControls">
-                            <button className="controlButton">←</button>
-                            <button className="controlButton">→</button>
-                        </div>
+                {/* Game Carousel */}
+                {/* Discover Something New Section */}
+                <div className="carouselHeader">
+                    <h2>New Released</h2>
+                    <div className="carouselControls">
+                        <button className="controlButton">←</button>
+                        <button className="controlButton" onClick={loadMoreDiscover}>→</button>
                     </div>
-
-                    <div className="gameGrid1">
-                        {newReleases.map(game => (
-                            <div key={game.id} className="game-card">
-                                <div className="game-image">
-                                    <img src={game.imageUrl} alt={game.title} />
-                                    {game.discount && <span className="discount">-{game.discount}</span>}
-                                </div>
-                                <h3 className="subheading">{game.title}</h3>
-                                <p className="price">{game.price}</p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                <section className="gameCarousel">
-                    <div className="carouselHeader1">
-                        <h2 className="heading-secondary">Saving Spotlight</h2>
-                        <div className="carouselControls">
-                            <button className="controlButton">←</button>
-                            <button className="controlButton">→</button>
-                        </div>
-                    </div>
-
-                    <div className="gameGrid1">
-                        {SavingSpotlight.map(game => (
-                            <div key={game.id} className="game-card">
-                                <div className="game-image">
-                                    <img src={game.image} alt={game.title} />
-                                    {game.discount && <span className="discount">-{game.discount}</span>}
-                                </div>
-                                <h3 className="subheading">{game.title}</h3>
-                                <p className="price">{game.price}</p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                <section className="gameCarousel">
-                    <div className="carouselHeader1">
-                        <h2>Most Popular</h2>
-                        <div className="carouselControls">
-                            <button className="controlButton">←</button>
-                            <button className="controlButton">→</button>
-                        </div>
-                    </div>
-
+                </div>
+                {loading ? (
+                    <p>Loading games...</p>
+                ) : (
                     <div className="gameGrid">
-                        {MostPopular.map(game => (
-                            <div key={game.id} className="game-card">
+                        {discoverNew.slice(0, visibleDiscover).map(game => (
+                            <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
                                 <div className="game-image">
-                                    <img src={game.image} alt={game.title} />
+                                    <img src={game.imageUrl} alt={game.name} />
                                     {game.discount && <span className="discount">-{game.discount}</span>}
                                 </div>
-                                <h3 className="subheading">{game.title}</h3>
-                                <p className="price">{game.price}</p>
+                                <h3 className="subheading">{game.name}</h3>
+                                <p className="price">{game.price || "loading.."}</p>
                             </div>
                         ))}
                     </div>
-                </section>
+                )}
+
+<div className="carouselHeader">
+          <h2>Saving Spotlight</h2>
+          <div className="carouselControls">
+            <button className="controlButton">←</button>
+            <button className="controlButton">→</button>
+          </div>
+        </div>
+        {loading ? (
+          <p>Loading games...</p>
+        ) : (
+          <div className="gameGrid">
+            {savingSpotlight.slice(0, visibleSpotlight).map(game => (
+              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                <div className="game-image">
+                  <img src={game.imageUrl} alt={game.name} />
+                  {game.discount && <span className="discount">-{game.discount}</span>}
+                </div>
+                <h3 className="subheading">{game.name}</h3>
+                <p className="price">{game.price || "Free"}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+<div className="carouselHeader">
+          <h2>Most Popular</h2>
+          <div className="carouselControls">
+            <button className="controlButton">←</button>
+            <button className="controlButton" onClick={loadMorePopular}>→</button>
+          </div>
+        </div>
+
+        {loading ? (
+          <p>Loading games...</p>
+        ) : (
+          <div className="gameGrid">
+            {mostPopular.slice(0, visiblePopular).map(game => (
+              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                <div className="game-image">
+                  <img src={game.imageUrl} alt={game.name} />
+                  {game.discount && <span className="discount">-{game.discount}</span>}
+                </div>
+                <h3 className="subheading">{game.name}</h3>
+                <p className="price">{game.price || "Free"}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
 
                 <footer className="footer">
