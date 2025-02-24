@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
-import "../styles/Searchbar.css"; // Import external CSS
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/SearchBar.css"; // External CSS for styling
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGames = async () => {
       if (!searchTerm.trim()) {
         setGames([]);
-        setIsOpen(false);
+        setShowDropdown(false);
         return;
       }
 
@@ -28,16 +29,14 @@ const SearchBar = () => {
 
         if (response.ok) {
           setGames(data);
-          setIsOpen(true);
+          setShowDropdown(true);
         } else {
           setGames([]);
           setError(data.message);
-          setIsOpen(false);
         }
       } catch (err) {
         console.error("Error fetching games:", err);
         setError("Something went wrong.");
-        setIsOpen(false);
       } finally {
         setLoading(false);
       }
@@ -47,20 +46,13 @@ const SearchBar = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const handleGameClick = (game) => {
+    navigate(`/game/${game._id}`, { state: game });
+    setShowDropdown(false);
+  };
 
   return (
-    <div className="search-container" ref={dropdownRef}>
+    <div className="search-container">
       {/* Search Input */}
       <input
         type="text"
@@ -68,29 +60,30 @@ const SearchBar = () => {
         placeholder="Search games..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onFocus={() => setShowDropdown(true)}
       />
 
-      {/* Dropdown Results */}
-      {isOpen && (
-        <div className="search-dropdown">
-          {loading && <p className="search-message">Loading...</p>}
-          {error && <p className="search-error">{error}</p>}
+      {/* Loading & Error Messages */}
+      {loading && <p className="search-message">Loading...</p>}
+      {error && <p className="search-message error">{error}</p>}
 
-          {games.length > 0 ? (
-            games.map((game) => (
-              <div key={game._id} className="search-result">
-                {/* Game Image */}
-                <img
-                  src={game.imageUrl || "https://via.placeholder.com/50"}
-                  alt={game.name}
-                  className="search-game-image"
-                />
-                <span className="search-game-title">{game.name}</span>
-              </div>
-            ))
-          ) : (
-            <p className="search-message">No results found.</p>
-          )}
+      {/* Search Results Dropdown */}
+      {showDropdown && games.length > 0 && (
+        <div className="search-dropdown">
+          {games.map((game) => (
+            <div
+              key={game._id}
+              className="search-result"
+              onClick={() => handleGameClick(game)}
+            >
+              <img
+                src={game.imageUrl || "https://via.placeholder.com/50"}
+                alt={game.name}
+                className="search-result-img"
+              />
+              <span className="search-result-name">{game.name}</span>
+            </div>
+          ))}
         </div>
       )}
     </div>

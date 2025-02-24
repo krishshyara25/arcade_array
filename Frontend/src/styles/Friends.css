@@ -66,18 +66,17 @@ body {
     display: flex;
     align-items: center;
     color: #ccc;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     background: none;
     border: none;
     cursor: pointer;
   }
   
-  .back-button i {
-    margin-right: 8px;
-  }
-  
+
   .search-container {
     display: flex;
+    margin-left: 10px;
+
   }
   
   .search-input {

@@ -4,20 +4,25 @@ import { Link } from 'react-router-dom';
 import '../styles/Home.css';
 import SearchBar from './Searchbar';
 import logo from '../assets/arcade_alley_logo.png';
+import axios from "axios";
+
 
 
 const GameStore = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false);
+  const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [savingSpotlight, setSavingSpotlight] = useState([]);
+  const [discoverNew, setDiscoverNew] = useState([]);
+  const [mostPopular, setMostPopular] = useState([]);
+  const [visibleDiscover, setVisibleDiscover] = useState(6);
+  const [visibleSpotlight, setVisibleSpotlight] = useState(6);
+  const [visiblePopular, setVisiblePopular] = useState(6);
 
 
 
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      fetchUserProfile(token);
-    }
-  }, []);
 
   const fetchUserProfile = async (token) => {
     try {
@@ -47,33 +52,67 @@ const GameStore = () => {
     setUser(null);
   };
 
+  const handleRestrictedAccess = () => {
+    if (!user) {
+      setShowPopup(true);
+    } else {
+      navigate("/restricted-page"); // Replace with actual paths if needed
+    }
+  };
 
-  const Discover = [
-    { id: 1, title: 'TankHead', price: '₹1,300', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/mos3g07a8dqk9ddftmni.png" },
-    { id: 2, title: 'EA SPORTS FC™ 25', price: '₹3,999', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/iuthw8gvt6bbjp8u7x58.png" },
-    { id: 3, title: 'Space Marine 2', price: '₹2,799', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/lwlk9qdbswacidtrgb7r.png" },
-    { id: 4, title: 'Squirrel with a Gun', price: '₹719', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/smwheajgcqxnqtai8siq.png" },
-    { id: 5, title: 'Wild Bastards', price: '₹1,249', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/n4bmgrbkcu8lvau0lkp1.png" },
-    { id: 6, title: 'VALORANT', price: '₹ Free', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/amgfdsiyg0yph7aoezte.png "},
-  ];
+  useEffect(() => {
+    axios.get("https://arcade-array.onrender.com/api/games")
+      .then(response => {
+        setGames(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error("Error fetching games:", error);
+        setLoading(false);
+      });
+  }, []);
 
-  const Savingspotlight = [
-    { id: 1, title: 'Dying Light 2 + Brecken + Rais Bundles', price: '₹1,158', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/fp9hmxdwo64po9s7a8u6.png" , discount: "60%"},
-    { id: 2, title: 'Tiny Tinas Wonderlands Chaotic Great Edition', price: '₹798', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/ut917gaf22nqcbmkwz11.png" , discount: "80%"},
-    { id: 3, title: 'Borderlands 3: Ultimate Edition', price: ' ₹1,255', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/dgbqmamjjfmekvpsivv1.png" , discount: "75%"},
-    { id: 4, title: 'Marvels Midnight Suns Legendary Edition', price: '₹1,424', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/ize6trkemrn0xdegtwxr.png" , discount: "75%"},
-    { id: 5, title: 'Goat Simulator 3', price: '₹520', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/tdihouenei5kqzn7pcr6.png", discount: "65%" },
-    { id: 6, title: 'Tony Hawks™ Pro Skater™ 1 +2', price: ' ₹884.10', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/syijluveutafcayvgevd.png" , discount: "60%"},
-  ];
+  useEffect(() => {
+    axios.get("https://arcade-array.onrender.com/api/games")
+      .then(response => {
+        const fetchedGames = response.data;
+        setGames(fetchedGames);
+        setLoading(false);
 
-  const gameData2 = [
-    { id: 1, title: 'Grand Theft Auto V: Premium Edition', price: '₹2,321.44', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/dnggn7nfiwr9iopsq3ho.png" },
-    { id: 2, title: 'VALORANT', price: '₹ Free', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/amgfdsiyg0yph7aoezte.png" },
-    { id: 3, title: 'The Last Stand: Aftermath', price: ' ₹589', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/aseazclmnulkejgizjyo.png" },
-    { id: 4, title: 'EA SPORTS FCT™ 24 Standard Edition', price: '₹1,199', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/tihfukuhizvkwpu0lrsw.png" },
-    { id: 5, title: 'Satisfactory', price: '₹1,600', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/becudv5d8ajzvyapot7v.png" },
-    { id: 6, title: 'Farming Simulator 22', price: ' ₹1,559', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/uhvtwkenynbvtynqdlgo.png" },
-  ];
+        // Filter games with discounts
+        const discountedGames = fetchedGames.filter(game => game.price && game.discount);
+        setSavingSpotlight(discountedGames.length > 0 ? discountedGames : fetchedGames);
+
+        // Sort games by release date (newest first) for "Discover Something New"
+        const sortedByRelease = [...fetchedGames].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+        setDiscoverNew(sortedByRelease.slice(0, 6));
+
+        // Sort games by popularity (assuming `popularityScore` exists)
+        const sortedByPopularity = [...fetchedGames].sort((a, b) => b.popularityScore - a.popularityScore);
+        setMostPopular(sortedByPopularity.slice(0, 6));
+      })
+      .catch(error => {
+        console.error("Error fetching games:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      fetchUserProfile(token);
+    }
+  }, []);
+
+  const loadMoreDiscover = () => {
+    setVisibleDiscover(prev => prev + 6);
+  };
+
+  const loadMoreSpotlight = () => {
+    setVisibleSpotlight(prev => prev + 6);
+  };
+
+  const loadMorePopular = () => setVisiblePopular(prev => prev + 6);
 
   return (
     <>
@@ -87,17 +126,17 @@ const GameStore = () => {
             </div>
             <a href="#" className="sidebarItem">🏠 Home</a>
             <a href="#" className="sidebarItem" onClick={() => navigate("/catagory")}>📁 Category</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/login")}>👥 Community</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/login")}>👫 Friends</a>
-            <a href="#" className="sidebarItem">❤️ Wishlist</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/login")}>⬇️ Download</a>
+            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>👥 Community</a>
+            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>👫 Friends</a>
+            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>❤️ Wishlist</a>
+            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>⬇️ Download</a>
             <a href="#" className="sidebarItem">⚙️ Setting</a>
           </nav>
 
           {/* Main Content */}
           <main className="mainContent">
             <header className="header">
-            <SearchBar />
+              <SearchBar />
               <div className="auth-buttons">
                 <Link to="/login">
                   <button>Login</button>
@@ -127,69 +166,99 @@ const GameStore = () => {
         </div>
 
         {/* Game Carousel */}
-        <div className="gameCarousel">
-          <div className="carouselHeader">
-            <h2>Discover something new</h2>
-            <div className="carouselControls">
-              <button className="controlButton">←</button>
-              <button className="controlButton">→</button>
-            </div>
+        {/* Discover Something New Section */}
+        <div className="carouselHeader">
+          <h2>Discover Something New</h2>
+          <div className="carouselControls">
+            <button className="controlButton">←</button>
+            <button className="controlButton" onClick={loadMoreDiscover}>→</button>
           </div>
-          <div className="gameGrid">
-            {Discover.map(game => (
-              <div key={game.id} className="game-card">
-              <div className="game-image">
-                <img src={game.image} alt={game.title} />
-                {game.discount && <span className="discount">-{game.discount}</span>}
-              </div>
-              <h3 className="subheading">{game.title}</h3>
-              <p className="price">{game.price}</p>
-            </div>
-            ))}
-          </div>
-
-          <div className="carouselHeader">
-            <h2>Saving Spotlight</h2>
-            <div className="carouselControls">
-              <button className="controlButton">←</button>
-              <button className="controlButton">→</button>
-            </div>
-          </div>
-          <div className="gameGrid">
-            {Savingspotlight.map(game => (
-              <div key={game.id} className="game-card">
-              <div className="game-image">
-                <img src={game.image} alt={game.title} />
-                {game.discount && <span className="discount">-{game.discount}</span>}
-              </div>
-              <h3 className="subheading">{game.title}</h3>
-              <p className="price">{game.price}</p>
-            </div>
-            ))}
-          </div>
-
-          <div className="carouselHeader">
-            <h2>Most Popular</h2>
-            <div className="carouselControls">
-              <button className="controlButton">←</button>
-              <button className="controlButton">→</button>
-            </div>
-          </div>
-          <div className="gameGrid">
-            {gameData2.map(game => (
-              <div key={game.id} className="game-card">
-              <div className="game-image">
-                <img src={game.image} alt={game.title} />
-                {game.discount && <span className="discount">-{game.discount}</span>}
-              </div>
-              <h3 className="subheading">{game.title}</h3>
-              <p className="price">{game.price}</p>
-            </div>
-            ))}
-          </div>
-          
         </div>
+        {loading ? (
+          <p>Loading games...</p>
+        ) : (
+          <div className="gameGrid">
+            {discoverNew.slice(0, visibleDiscover).map(game => (
+              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                <div className="game-image">
+                  <img src={game.imageUrl} alt={game.name} />
+                  {game.discount && <span className="discount">-{game.discount}</span>}
+                </div>
+                <h3 className="subheading">{game.name}</h3>
+                <p className="price">{game.price || "loading.."}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+
+        <div className="carouselHeader">
+          <h2>Saving Spotlight</h2>
+          <div className="carouselControls">
+            <button className="controlButton">←</button>
+            <button className="controlButton">→</button>
+          </div>
+        </div>
+        {loading ? (
+          <p>Loading games...</p>
+        ) : (
+          <div className="gameGrid">
+            {savingSpotlight.slice(0, visibleSpotlight).map(game => (
+              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                <div className="game-image">
+                  <img src={game.imageUrl} alt={game.name} />
+                  {game.discount && <span className="discount">-{game.discount}</span>}
+                </div>
+                <h3 className="subheading">{game.name}</h3>
+                <p className="price">{game.price || "Free"}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+
+        <div className="carouselHeader">
+          <h2>Most Popular</h2>
+          <div className="carouselControls">
+            <button className="controlButton">←</button>
+            <button className="controlButton" onClick={loadMorePopular}>→</button>
+          </div>
+        </div>
+
+        {loading ? (
+          <p>Loading games...</p>
+        ) : (
+          <div className="gameGrid">
+            {mostPopular.slice(0, visiblePopular).map(game => (
+              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                <div className="game-image">
+                  <img src={game.imageUrl} alt={game.name} />
+                  {game.discount && <span className="discount">-{game.discount}</span>}
+                </div>
+                <h3 className="subheading">{game.name}</h3>
+                <p className="price">{game.price || "Free"}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
       </div>
+
+      {/* Login Required Popup */}
+      {
+        showPopup && (
+          <div className="popup-overlay">
+            <div className="popup">
+              <h2>Login Required</h2>
+              <p>You need to log in to access this page.</p>
+              <div className="popup-buttons">
+                <button onClick={() => setShowPopup(false)}>Close</button>
+                <Link to="/login"><button>Login</button></Link>
+              </div>
+            </div>
+          </div>
+        )
+      }
 
       <footer className="footer">
         <div className="footerContainer">
@@ -259,5 +328,4 @@ const GameStore = () => {
 };
 
 export default GameStore;
-
 
