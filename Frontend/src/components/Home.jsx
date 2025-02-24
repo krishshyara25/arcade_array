@@ -20,6 +20,9 @@ const GameStore = () => {
   const [visibleDiscover, setVisibleDiscover] = useState(6);
   const [visibleSpotlight, setVisibleSpotlight] = useState(6);
   const [visiblePopular, setVisiblePopular] = useState(6);
+  const [slide, setSlide] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
 
 
 
@@ -114,6 +117,20 @@ const GameStore = () => {
 
   const loadMorePopular = () => setVisiblePopular(prev => prev + 6);
 
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlide(true);
+      setTimeout(() => {
+        setCurrentIndex(prev => (prev + 1) % games.length); // Cycle games
+        setSlide(false);
+      }, 500); // Match this with CSS transition duration
+    }, 3500); // Change game every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [games]);
+
+  
   return (
     <>
 
@@ -148,19 +165,17 @@ const GameStore = () => {
 
             </header>
 
-            {/* Featured Game */}
-            <div className="featuredGame" style={{ display: 'flex', justifyContent: 'center' }}>
-              <img src="https://res.cloudinary.com/drno4r3vd/image/upload/v1740118330/ynaroxlk7eapw0mxic8u.png" alt="The Witcher 3" className="featuredImage" style={{ width: '70%' }} />
+         {/* Featured Game Section */}
+         {!loading && games.length > 0 && (
+            <div className={`featuredGame ${slide ? 'slide-out' : 'slide-in'}`}>
+              <img src={games[currentIndex].poster} alt={games[currentIndex].name} className="featuredImage" />
               <div className="featuredInfo">
-                <div>
-                  <h1>The Witcher 3</h1>
-                  <p>The most awarded game of a generation, now enhanced for the next!</p>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '20px', gap: '30px' }}>
-                  <button className="buyButton">Buy Now ₹1,163</button>
-                </div>
+                <h1>{games[currentIndex].name}</h1>
+                <p>{games[currentIndex].description}</p>
+                <button className="buyButton">Buy Now ₹{games[currentIndex].price || 'Free'}</button>
               </div>
             </div>
+          )}
           </main>
 
         </div>

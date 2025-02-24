@@ -59,15 +59,6 @@
   transition: color 0.3s ease-in-out;
 }
 
-.back-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-}
 
 .back-button:hover {
   background-color: #45a049;
