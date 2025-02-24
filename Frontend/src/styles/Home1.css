@@ -14,11 +14,11 @@
   font-family: 'Arial, sans-serif';
 }
 .username{
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 17px;
+    margin-bottom: 4px;
 }
 .useremail{
-  font-size: 15px;
+  font-size: 14px;
   margin-top: 0px;
 }
 
@@ -81,7 +81,6 @@
   position: relative;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 30px;
 }
 
 .featuredImage {
@@ -119,7 +118,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin: 20px;
+  
 }
 
 .carouselControls {
@@ -144,6 +144,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
+  margin: 20px;
+  margin-bottom: 0px;
 }
 
 .gameCard {
@@ -151,6 +153,9 @@
   border-radius: 10px;
   width: 14vw;
   overflow: hidden;
+}
+.gameCard:hover{
+  cursor: pointer;
 }
 
 .gameCardImage {
@@ -171,7 +176,7 @@
 .friendsSection {
   width: 250px;
   background-color: #2d2d3a;
-  padding: 20px;
+  padding: 20px 20px 7px 20px;
   height: 80%;
 }
 

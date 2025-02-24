@@ -2,6 +2,7 @@ import React from 'react';
 import '../styles/Catagory.css';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/arcade_alley_logo.png';
+import SearchBar from './Searchbar';
 
 import img5 from '../assets/image5.png';
 import img6 from '../assets/image6.png';
@@ -101,9 +102,7 @@ const GameStore = () => {
                         <div className='main-content'>
                             {/* Header */}
                             <header className="header">
-                                <div className="searchBar">
-                                    <input type="text" placeholder="Search" className="searchInput" />
-                                </div>
+                            <SearchBar />
                                 <div className="auth-buttons">
                                     <Link to="/login">
                                         <button>Login</button>
@@ -118,9 +117,9 @@ const GameStore = () => {
                             <section className="popular-section">
                                 <div className="section-header">
                                     <h2 className="heading-secondary">Popular Genres</h2>
-                                    <div className="navigation-arrows">
-                                        <button>&lt;</button>
-                                        <button>&gt;</button>
+                                    <div className="carouselControls">
+                                        <button className="controlButton">←</button>
+                                        <button className="controlButton">→</button>
                                     </div>
                                 </div>
 
@@ -147,9 +146,9 @@ const GameStore = () => {
                 <section className="gameCarousel">
                     <div className="carouselHeader1">
                         <h2 className="heading-secondary">New Released</h2>
-                        <div className="navigation-arrows">
-                            <button>&lt;</button>
-                            <button>&gt;</button>
+                        <div className="carouselControls">
+                            <button className="controlButton">←</button>
+                            <button className="controlButton">→</button>
                         </div>
                     </div>
 
@@ -170,9 +169,9 @@ const GameStore = () => {
                 <section className="gameCarousel">
                     <div className="carouselHeader1">
                         <h2 className="heading-secondary">Saving Spotlight</h2>
-                        <div className="navigation-arrows">
-                            <button>&lt;</button>
-                            <button>&gt;</button>
+                        <div className="carouselControls">
+                            <button className="controlButton">←</button>
+                            <button className="controlButton">→</button>
                         </div>
                     </div>
 
@@ -188,14 +187,17 @@ const GameStore = () => {
                             </div>
                         ))}
                     </div>
+                </section>
 
-                    <div className="carouselHeader">
+                <section className="gameCarousel">
+                    <div className="carouselHeader1">
                         <h2>Most Popular</h2>
                         <div className="carouselControls">
                             <button className="controlButton">←</button>
                             <button className="controlButton">→</button>
                         </div>
                     </div>
+
                     <div className="gameGrid">
                         {MostPopular.map(game => (
                             <div key={game.id} className="game-card">
@@ -208,7 +210,6 @@ const GameStore = () => {
                             </div>
                         ))}
                     </div>
-
                 </section>
 
 

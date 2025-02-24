@@ -60,30 +60,30 @@ const GamingPlatform = () => {
 
 
   const gameData = [
-    { id: 1, title: 'TankHead', price: '₹1,300', image: img3 },
-    { id: 2, title: 'EA SPORTS FC™ 25', price: '₹3,999', image: img19 },
-    { id: 3, title: 'Space Marine 2', price: '₹2,799', image: img5 },
-    { id: 4, title: 'Squirrel with a Gun', price: '₹719', image: img6 },
-    { id: 5, title: 'Wild Bastards', price: '₹1,249', image: img7 },
-    { id: 6, title: 'VALORANT', price: '₹ Free', image: img8 },
+    { id: 1, title: 'TankHead', price: '₹1,300', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/mos3g07a8dqk9ddftmni.png" },
+    { id: 2, title: 'EA SPORTS FC™ 25', price: '₹3,999', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/iuthw8gvt6bbjp8u7x58.png" },
+    { id: 3, title: 'Space Marine 2', price: '₹2,799', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/lwlk9qdbswacidtrgb7r.png" },
+    { id: 4, title: 'Squirrel with a Gun', price: '₹719', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/smwheajgcqxnqtai8siq.png" },
+    { id: 5, title: 'Wild Bastards', price: '₹1,249', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/n4bmgrbkcu8lvau0lkp1.png" },
+    { id: 6, title: 'VALORANT', price: '₹ Free', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/amgfdsiyg0yph7aoezte.png "},
   ];
 
   const Savingspotlight = [
-      { id: 1, title: 'Dying Light 2 + Brecken + Rais Bundles', price: '₹1,158', image: img9 , discount: "60%"},
-      { id: 2, title: 'Tiny Tinas Wonderlands Chaotic Great Edition', price: '₹798', image: img10 , discount: "80%"},
-      { id: 3, title: 'Borderlands 3: Ultimate Edition', price: ' ₹1,255', image: img11 , discount: "75%"},
-      { id: 4, title: 'Marvels Midnight Suns Legendary Edition', price: '₹1,424', image: img12 , discount: "75%"},
-      { id: 5, title: 'Goat Simulator 3', price: '₹520', image: img13, discount: "65%" },
-      { id: 6, title: 'Tony Hawks™ Pro Skater™ 1 +2', price: ' ₹884.10', image: img14 , discount: "60%"},
-    ];
+    { id: 1, title: 'Dying Light 2 + Brecken + Rais Bundles', price: '₹1,158', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/fp9hmxdwo64po9s7a8u6.png" , discount: "60%"},
+    { id: 2, title: 'Tiny Tinas Wonderlands Chaotic Great Edition', price: '₹798', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/ut917gaf22nqcbmkwz11.png" , discount: "80%"},
+    { id: 3, title: 'Borderlands 3: Ultimate Edition', price: ' ₹1,255', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/dgbqmamjjfmekvpsivv1.png" , discount: "75%"},
+    { id: 4, title: 'Marvels Midnight Suns Legendary Edition', price: '₹1,424', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/ize6trkemrn0xdegtwxr.png" , discount: "75%"},
+    { id: 5, title: 'Goat Simulator 3', price: '₹520', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/tdihouenei5kqzn7pcr6.png", discount: "65%" },
+    { id: 6, title: 'Tony Hawks™ Pro Skater™ 1 +2', price: ' ₹884.10', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/syijluveutafcayvgevd.png" , discount: "60%"},
+  ];
 
   const gameData2 = [
-    { id: 1, title: 'Grand Theft Auto V: Premium Edition', price: '₹2,321.44', image: img20 },
-    { id: 2, title: 'VALORANT', price: '₹ Free', image: img8 },
-    { id: 3, title: 'The Last Stand: Aftermath', price: ' ₹589', image: img15 },
-    { id: 4, title: 'EA SPORTS FCT™ 24 Standard Edition', price: '₹1,199', image: img16 },
-    { id: 5, title: 'Satisfactory', price: '₹1,600', image: img17 },
-    { id: 6, title: 'Farming Simulator 22', price: ' ₹1,559', image: img18 },
+    { id: 1, title: 'Grand Theft Auto V: Premium Edition', price: '₹2,321.44', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/dnggn7nfiwr9iopsq3ho.png" },
+    { id: 2, title: 'VALORANT', price: '₹ Free', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/amgfdsiyg0yph7aoezte.png" },
+    { id: 3, title: 'The Last Stand: Aftermath', price: ' ₹589', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/aseazclmnulkejgizjyo.png" },
+    { id: 4, title: 'EA SPORTS FCT™ 24 Standard Edition', price: '₹1,199', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/tihfukuhizvkwpu0lrsw.png" },
+    { id: 5, title: 'Satisfactory', price: '₹1,600', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/becudv5d8ajzvyapot7v.png" },
+    { id: 6, title: 'Farming Simulator 22', price: ' ₹1,559', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/uhvtwkenynbvtynqdlgo.png" },
   ];
 
   const recentlyPlayed = [

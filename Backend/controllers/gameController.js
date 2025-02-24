@@ -35,6 +35,22 @@ const searchGame = async (req, res) => {
 };
 
 
+// Controller to fetch game by ID
+const getGameById = async (req, res) => {
+  try {
+    const game = await Game.findById(req.params.id);
+    if (!game) {
+      return res.status(404).json({ message: "Game not found" });
+    }
+    res.status(200).json(game);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching game details" });
+  }
+};
+
+
+
 
 // Controller to add a game to the wishlist
 const addToWishlist = async (req, res) => {
@@ -123,4 +139,4 @@ const getUserDetails = async (req, res) => {
 };
 
 
-module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails, searchGame};
+module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails, searchGame, getGameById};
