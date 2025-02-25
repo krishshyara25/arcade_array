@@ -10,7 +10,7 @@
 .nav-bar {
   display: flex;
   align-items: center;
-  background-color: #222222;
+  background-color: #1e1e1e;
   justify-content: space-between;
 }
 
@@ -148,6 +148,7 @@
 
 .game_img {
   width: 20vw;
+  border-radius: 20px;
 }
 
 .game-details {
