@@ -56,6 +56,30 @@ app.get("/", (req, res) => {
     res.send("Welcome to Arcade Array API!");
 });
 
+
+const io = require("socket.io")(server, {
+    cors: { origin: "*" }
+  });
+  
+  const onlineUsers = new Map(); // Store online users
+  
+  io.on("connection", (socket) => {
+    console.log("User connected:", socket.id);
+  
+    socket.on("userOnline", (userId) => {
+      onlineUsers.set(userId, socket.id);
+      io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Notify clients
+    });
+  
+    socket.on("disconnect", () => {
+      const userId = [...onlineUsers.entries()].find(([_, id]) => id === socket.id)?.[0];
+      if (userId) onlineUsers.delete(userId);
+      io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Notify clients
+    });
+  });
+
+  
+
 // ✅ Start Server
 app.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);

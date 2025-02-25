@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
+    isOnline: { type: Boolean, default: false } // Track online status
     
 });
 
