@@ -83,7 +83,7 @@ const addToWishlist = async (req, res) => {
 //remove game from wishlist
 const removeFromWishlist = async (req, res) => {
   try {
-      const { userId, gameId } = req.body;
+      const { userId, gameId } = req.params; // Use req.params instead of req.body
 
       if (!userId || !gameId) return res.status(400).json({ message: 'User ID and Game ID are required' });
 
@@ -98,6 +98,7 @@ const removeFromWishlist = async (req, res) => {
       res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 // Controller to get the user's wishlist
 const getUserWishlist = async (req, res) => {

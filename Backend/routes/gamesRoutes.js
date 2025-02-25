@@ -15,7 +15,7 @@ router.get('/games/:id', getGameById);
 router.post('/add', addToWishlist);
 
 // Route to remove a game from the wishlist
-router.delete('/remove', removeFromWishlist);
+router.delete('/remove/:userId/:gameId', removeFromWishlist);
 
 // Route to get a user's wishlist
 router.get('/wishlist/:userId', getUserWishlist);
