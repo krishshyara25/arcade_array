@@ -9,10 +9,10 @@ const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
 
 const app = express();
-const server = http.createServer(app);  // ✅ Correctly using HTTP server
+const server = http.createServer(app); // ✅ Use HTTP server
 const port = process.env.PORT || 3000;
 
-// ✅ Proper CORS configuration
+// ✅ CORS Configuration
 const corsOptions = {
     origin: [
         "http://localhost:5173",
@@ -55,29 +55,59 @@ app.get("/", (req, res) => {
     res.send("Welcome to Arcade Array API!");
 });
 
-// ✅ Initialize Socket.IO
+// ✅ Initialize Socket.IO with CORS
 const io = require("socket.io")(server, {
-    cors: { origin: "*" }
+    cors: {
+        origin: [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "http://localhost:5174",
+            "https://arcadearray.netlify.app",
+            "https://arcade-array.onrender.com"
+        ],
+        methods: ["GET", "POST"],
+        credentials: true
+    }
 });
 
-const onlineUsers = new Map();
+const onlineUsers = new Map(); // Store online users
 
 io.on("connection", (socket) => {
-    console.log("User connected:", socket.id);
+    console.log(`✅ New connection: ${socket.id}`);
 
+    // ✅ Handle user coming online
     socket.on("userOnline", (userId) => {
+        if (onlineUsers.has(userId)) {
+            console.log(`⚠️ User ${userId} is already online (Duplicate Connection)`);
+            return;
+        }
+
         onlineUsers.set(userId, socket.id);
-        io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); 
+        console.log(`📌 User ${userId} is now online.`);
+        io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Broadcast update
     });
 
+    // ✅ Handle disconnection
     socket.on("disconnect", () => {
+        console.log(`❌ Disconnected: ${socket.id}`);
+
+        // Find the user by socket ID and remove them
         const userId = [...onlineUsers.entries()].find(([_, id]) => id === socket.id)?.[0];
-        if (userId) onlineUsers.delete(userId);
-        io.emit("updateOnlineUsers", Array.from(onlineUsers.keys()));
+        if (userId) {
+            onlineUsers.delete(userId);
+            console.log(`📌 User ${userId} went offline.`);
+        }
+
+        io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Broadcast update
+    });
+
+    // ✅ Error Handling (Detect connection issues)
+    socket.on("connect_error", (err) => {
+        console.error(`❌ Connection error: ${err.message}`);
     });
 });
 
-// ✅ FIX: Use `server.listen()` Instead of `app.listen()`
+// ✅ Start Server (Use `server.listen` to enable WebSockets)
 server.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);
 });
