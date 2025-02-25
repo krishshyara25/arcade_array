@@ -78,13 +78,13 @@ const GamePage = () => {
       alert("Please log in to add to wishlist.");
       return;
     }
-  
+
     try {
       const response = await axios.post("https://arcade-array.onrender.com/api/games/add", {
         userId,
         gameId,
       });
-  
+
       if (response.status === 200) {
         if (response.data.message === "Game already in wishlist") {
           alert("This game is already in your wishlist!");
@@ -96,7 +96,7 @@ const GamePage = () => {
       }
     } catch (error) {
       console.error("Error adding to wishlist:", error);
-  
+
       if (error.response && error.response.data && error.response.data.message === "Game already in wishlist") {
         alert("This game is already in your wishlist!");
       } else {
@@ -104,7 +104,7 @@ const GamePage = () => {
       }
     }
   };
-  
+
 
 
   return (
@@ -245,9 +245,14 @@ const GamePage = () => {
                 {/* Buy Section */}
                 <div className="buy-section">
                   <button className="buy-button">Buy Now {game.price}</button>
-                  <button className="controlButton" onClick={() => handleAddToWishlist(game._id)}>
-                  ❤️
-                  </button>
+                  {user ? (
+                    <button className="controlButton" onClick={() => handleAddToWishlist(game._id)}>
+                      ❤️
+                    </button>
+                  ) : (
+                    <div></div>
+                  )}
+
                 </div>
               </div>
 

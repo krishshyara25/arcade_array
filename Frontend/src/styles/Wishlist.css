@@ -58,3 +58,19 @@
     margin-top: 6vh;
   
   }
+
+  .popup {
+    position: fixed;
+    top: 20px;
+    right: -300px;
+    background: #ff4d4d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: right 0.5s ease-in-out;
+}
+
+.popup.show {
+    right: 20px;
+}

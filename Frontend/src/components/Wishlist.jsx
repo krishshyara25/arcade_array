@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Wishlist.css"; // Create a new CSS file for styling
 import logo from '../assets/arcade_alley_logo.png';
 import img2 from "../assets/wp9549839.png";
+import { toast } from "react-toastify";
 
 
 const WishlistPage = () => {
@@ -186,7 +187,72 @@ const WishlistPage = () => {
 
                     </div>
                 ))}
+                
             </div>
+            <footer className="footer">
+        <div className="footerContainer">
+          <div className="socialIcons">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="socialIconLink">
+              <i className="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="socialIconLink">
+              <i className="fab fa-twitter"></i>
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="socialIconLink">
+              <i className="fab fa-youtube"></i>
+            </a>
+          </div>
+
+          <div className="section">
+            <h4 className="sectionHeader">Resources</h4>
+            <ul className="list">
+              <li><a href="#" className="link">Support A-Creator</a></li>
+              <li><a href="#" className="link">Distribute on Epic Games</a></li>
+              <li><a href="#" className="link">Careers</a></li>
+              <li><a href="#" className="link">Company</a></li>
+            </ul>
+          </div>
+
+          <div className="section">
+            <h4 className="sectionHeader">Fan Art Policy</h4>
+            <ul className="list">
+              <li><a href="#" className="link">UX Research</a></li>
+              <li><a href="#" className="link">Store EULA</a></li>
+            </ul>
+          </div>
+
+          <div className="section">
+            <h4 className="sectionHeader">Online Services</h4>
+            <ul className="list">
+              <li><a href="#" className="link">Community Rules</a></li>
+              <li><a href="#" className="link">Epic Newsroom</a></li>
+            </ul>
+          </div>
+
+          <div className="section">
+            <p className="sectionHeader">Made By Archade Array</p>
+            <ul className="list">
+              <li className="link">Battle Breakers</li>
+              <li className="link">Robo Recall</li>
+              <li className="link">Fortnite</li>
+              <li className="link">Shadow Complex</li>
+              <li className="link">Infinity Blade</li>
+              <li className="link">Unreal Tournament</li>
+            </ul>
+          </div>
+
+          <div className="copyright">
+            <p>© 2024 Archade Array, Inc. All rights reserved. Epic, Archade Array, the Archade Array logo, Fortnite, the Fortnite logo, Unreal, Unreal Engine, the Unreal Tournament logo, Tournament, and the Unreal Tournament logo are trademarks of their respective owners or affiliates.</p>
+          </div>
+
+          <div className="legalLinks">
+            <a href="#" className="link">Terms of Service</a>
+            <a href="#" className="link">Privacy Policy/Store</a>
+            <a href="#" className="link">Refund Policy</a>
+          </div>
+        </div>
+      </footer>
+            
         </div>
     );
 };
