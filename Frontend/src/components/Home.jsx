@@ -130,7 +130,7 @@ const GameStore = () => {
     return () => clearInterval(interval);
   }, [games]);
 
-  
+
   return (
     <>
 
@@ -165,17 +165,19 @@ const GameStore = () => {
 
             </header>
 
-         {/* Featured Game Section */}
-         {!loading && games.length > 0 && (
-            <div className={`featuredGame ${slide ? 'slide-out' : 'slide-in'}`}>
-              <img src={games[currentIndex].poster} alt={games[currentIndex].name} className="featuredImage" />
-              <div className="featuredInfo">
-                <h1>{games[currentIndex].name}</h1>
-                <p>{games[currentIndex].description}</p>
-                <button className="buyButton">Buy Now ₹{games[currentIndex].price || 'Free'}</button>
+            {/* Featured Game Section */}
+            {!loading && games.length > 0 && (
+              <div className={`featuredGame ${slide ? 'slide-out' : 'slide-in'}`}>
+                <img src={games[currentIndex].poster} alt={games[currentIndex].name} className="featuredImage" />
+                <div className="featuredInfo">
+                  <h1>{games[currentIndex].name}</h1>
+                  <p>{games[currentIndex].description}</p>
+                  <div className="buttons">
+                    <button className="buyButton">Buy Now {games[currentIndex].price || 'Free'}</button>
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
+            )}
           </main>
 
         </div>

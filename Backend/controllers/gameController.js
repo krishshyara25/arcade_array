@@ -63,27 +63,27 @@ const addToWishlist = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Find the game
-    const game = await Game.findById(gameId);
-    if (!game) {
-      return res.status(404).json({ message: 'Game not found' });
+    // Check if the game already exists in the wishlist
+    if (user.wishlist.includes(gameId)) {
+      return res.status(400).json({ message: 'Game already in wishlist' });
     }
 
-    // Add the game to the wishlist
-    user.wishlist.push(game);
+    // Add the game ID to the wishlist (instead of the full game object)
+    user.wishlist.push(gameId);
     await user.save();
 
-    res.status(200).json({ message: 'Game added to wishlist' });
+    res.status(200).json({ message: 'Game added to wishlist', wishlist: user.wishlist });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error adding game to wishlist' });
   }
 };
 
+
 //remove game from wishlist
 const removeFromWishlist = async (req, res) => {
   try {
-      const { userId, gameId } = req.body;
+      const { userId, gameId } = req.params; // Use req.params instead of req.body
 
       if (!userId || !gameId) return res.status(400).json({ message: 'User ID and Game ID are required' });
 
@@ -98,6 +98,7 @@ const removeFromWishlist = async (req, res) => {
       res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 // Controller to get the user's wishlist
 const getUserWishlist = async (req, res) => {

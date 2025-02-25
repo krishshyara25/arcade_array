@@ -14,24 +14,19 @@ import img10 from '../assets/image10.png';
 import img11 from '../assets/image11.png';
 import img12 from '../assets/image12.png';
 import img13 from '../assets/image13.png';
-import image1 from '../assets/img1.png';
-import image2 from '../assets/img2.png';
-import image3 from '../assets/img3.png';
-import image4 from '../assets/img4.png';
-import image5 from '../assets/img5.png';
-import image6 from '../assets/img6.png';
+
 
 const GameStore = () => {
     const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [games, setGames] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [games, setGames] = useState([]);
     const [savingSpotlight, setSavingSpotlight] = useState([]);
     const [discoverNew, setDiscoverNew] = useState([]);
     const [mostPopular, setMostPopular] = useState([]);
-      const [visibleDiscover, setVisibleDiscover] = useState(6);
-      const [visibleSpotlight, setVisibleSpotlight] = useState(6);
-      const [visiblePopular, setVisiblePopular] = useState(6);
-      
+    const [visibleDiscover, setVisibleDiscover] = useState(6);
+    const [visibleSpotlight, setVisibleSpotlight] = useState(6);
+    const [visiblePopular, setVisiblePopular] = useState(6);
+
     const popularGames = [
         {
             id: 1,
@@ -114,16 +109,16 @@ const GameStore = () => {
             });
     }, []);
 
-    
-  const loadMoreDiscover = () => {
-    setVisibleDiscover(prev => prev + 6);
-  };
 
-  const loadMoreSpotlight = () => {
-    setVisibleSpotlight(prev => prev + 6);
-  };
+    const loadMoreDiscover = () => {
+        setVisibleDiscover(prev => prev + 6);
+    };
 
-  const loadMorePopular = () => setVisiblePopular(prev => prev + 6);
+    const loadMoreSpotlight = () => {
+        setVisibleSpotlight(prev => prev + 6);
+    };
+
+    const loadMorePopular = () => setVisiblePopular(prev => prev + 6);
 
     return (
         <>
@@ -214,54 +209,54 @@ const GameStore = () => {
                     </div>
                 )}
 
-<div className="carouselHeader">
-          <h2>Saving Spotlight</h2>
-          <div className="carouselControls">
-            <button className="controlButton">←</button>
-            <button className="controlButton">→</button>
-          </div>
-        </div>
-        {loading ? (
-          <p>Loading games...</p>
-        ) : (
-          <div className="gameGrid">
-            {savingSpotlight.slice(0, visibleSpotlight).map(game => (
-              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
-                <div className="game-image">
-                  <img src={game.imageUrl} alt={game.name} />
-                  {game.discount && <span className="discount">-{game.discount}</span>}
+                <div className="carouselHeader">
+                    <h2>Saving Spotlight</h2>
+                    <div className="carouselControls">
+                        <button className="controlButton">←</button>
+                        <button className="controlButton">→</button>
+                    </div>
                 </div>
-                <h3 className="subheading">{game.name}</h3>
-                <p className="price">{game.price || "Free"}</p>
-              </div>
-            ))}
-          </div>
-        )}
+                {loading ? (
+                    <p>Loading games...</p>
+                ) : (
+                    <div className="gameGrid">
+                        {savingSpotlight.slice(0, visibleSpotlight).map(game => (
+                            <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                                <div className="game-image">
+                                    <img src={game.imageUrl} alt={game.name} />
+                                    {game.discount && <span className="discount">-{game.discount}</span>}
+                                </div>
+                                <h3 className="subheading">{game.name}</h3>
+                                <p className="price">{game.price || "Free"}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
-<div className="carouselHeader">
-          <h2>Most Popular</h2>
-          <div className="carouselControls">
-            <button className="controlButton">←</button>
-            <button className="controlButton" onClick={loadMorePopular}>→</button>
-          </div>
-        </div>
-
-        {loading ? (
-          <p>Loading games...</p>
-        ) : (
-          <div className="gameGrid">
-            {mostPopular.slice(0, visiblePopular).map(game => (
-              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
-                <div className="game-image">
-                  <img src={game.imageUrl} alt={game.name} />
-                  {game.discount && <span className="discount">-{game.discount}</span>}
+                <div className="carouselHeader">
+                    <h2>Most Popular</h2>
+                    <div className="carouselControls">
+                        <button className="controlButton">←</button>
+                        <button className="controlButton" onClick={loadMorePopular}>→</button>
+                    </div>
                 </div>
-                <h3 className="subheading">{game.name}</h3>
-                <p className="price">{game.price || "Free"}</p>
-              </div>
-            ))}
-          </div>
-        )}
+
+                {loading ? (
+                    <p>Loading games...</p>
+                ) : (
+                    <div className="gameGrid">
+                        {mostPopular.slice(0, visiblePopular).map(game => (
+                            <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                                <div className="game-image">
+                                    <img src={game.imageUrl} alt={game.name} />
+                                    {game.discount && <span className="discount">-{game.discount}</span>}
+                                </div>
+                                <h3 className="subheading">{game.name}</h3>
+                                <p className="price">{game.price || "Free"}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
 
                 <footer className="footer">

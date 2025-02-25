@@ -108,6 +108,11 @@
   cursor: pointer;
   margin-top: 20px;
 }
+.buttons{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
 .game-section {
   margin-bottom: 40px;
@@ -296,8 +301,9 @@
 }
 
 .featuredImage {
-  width: 70%;
+  width: 100%;
   border-radius: 10px;
+  
 }
 
 .slide-in {

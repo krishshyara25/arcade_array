@@ -1,25 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./Searchbar";
+import axios from "axios";
 import logo from '../assets/arcade_alley_logo.png';
-import img1 from '../assets/wp1854784-the-witcher-3-wallpapers.png'
 import img2 from '../assets/wp9549839.png';
-import img3 from '../assets/tankhead-c7n4p.png'
-import img20 from '../assets/image2.png'
-import img5 from '../assets/image5.png'
-import img6 from '../assets/image6.png'
-import img7 from '../assets/image7.png'
-import img8 from '../assets/image8.png'
-import img9 from '../assets/image9.png'
-import img10 from '../assets/image10.png'
-import img11 from '../assets/image11.png'
-import img12 from '../assets/image12.png'
-import img13 from '../assets/image13.png'
-import img14 from '../assets/image14.png'
-import img15 from '../assets/image15.png'
-import img16 from '../assets/image16.png'
-import img17 from '../assets/image17.png'
-import img18 from '../assets/image18.png'
-import img19 from '../assets/image19.png'
+
 
 
 
@@ -35,7 +19,29 @@ const GamingPlatform = () => {
   const userId = localStorage.getItem("userId");
   const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown menu
   const [friendRequests, setFriendRequests] = useState(0); // State to store the count of friend requests
+  const [loading, setLoading] = useState(true);
+  const [savingSpotlight, setSavingSpotlight] = useState([]);
+  const [mostPopular, setMostPopular] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [games, setGames] = useState([]);
+  const [slide, setSlide] = useState(false);
+  const [discoverNew, setDiscoverNew] = useState([]);
+  const [visibleDiscover, setVisibleDiscover] = useState(6);
+  const [visibleSpotlight, setVisibleSpotlight] = useState(6);
+  const [visiblePopular, setVisiblePopular] = useState(6);
 
+
+
+
+
+  const loadMoreDiscover = () => {
+    setVisibleDiscover(prev => prev + 6);
+  };
+
+  const loadMoreSpotlight = () => {
+    setVisibleSpotlight(prev => prev + 6);
+  };
+  const loadMorePopular = () => setVisiblePopular(prev => prev + 6);
 
 
   const navigate = useNavigate();
@@ -58,33 +64,31 @@ const GamingPlatform = () => {
   }, [userId]);
 
 
+  useEffect(() => {
+    axios.get("https://arcade-array.onrender.com/api/games")
+      .then(response => {
+        const fetchedGames = response.data;
+        setGames(fetchedGames);
+        setLoading(false);
 
-  const gameData = [
-    { id: 1, title: 'TankHead', price: '₹1,300', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/mos3g07a8dqk9ddftmni.png" },
-    { id: 2, title: 'EA SPORTS FC™ 25', price: '₹3,999', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/iuthw8gvt6bbjp8u7x58.png" },
-    { id: 3, title: 'Space Marine 2', price: '₹2,799', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/lwlk9qdbswacidtrgb7r.png" },
-    { id: 4, title: 'Squirrel with a Gun', price: '₹719', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/smwheajgcqxnqtai8siq.png" },
-    { id: 5, title: 'Wild Bastards', price: '₹1,249', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/n4bmgrbkcu8lvau0lkp1.png" },
-    { id: 6, title: 'VALORANT', price: '₹ Free', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/amgfdsiyg0yph7aoezte.png "},
-  ];
+        // Filter games with discounts
+        const discountedGames = fetchedGames.filter(game => game.price && game.discount);
+        setSavingSpotlight(discountedGames.length > 0 ? discountedGames : fetchedGames);
 
-  const Savingspotlight = [
-    { id: 1, title: 'Dying Light 2 + Brecken + Rais Bundles', price: '₹1,158', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/fp9hmxdwo64po9s7a8u6.png" , discount: "60%"},
-    { id: 2, title: 'Tiny Tinas Wonderlands Chaotic Great Edition', price: '₹798', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/ut917gaf22nqcbmkwz11.png" , discount: "80%"},
-    { id: 3, title: 'Borderlands 3: Ultimate Edition', price: ' ₹1,255', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/dgbqmamjjfmekvpsivv1.png" , discount: "75%"},
-    { id: 4, title: 'Marvels Midnight Suns Legendary Edition', price: '₹1,424', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/ize6trkemrn0xdegtwxr.png" , discount: "75%"},
-    { id: 5, title: 'Goat Simulator 3', price: '₹520', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/tdihouenei5kqzn7pcr6.png", discount: "65%" },
-    { id: 6, title: 'Tony Hawks™ Pro Skater™ 1 +2', price: ' ₹884.10', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/syijluveutafcayvgevd.png" , discount: "60%"},
-  ];
+        // Sort games by release date (newest first) for "Discover Something New"
+        const sortedByRelease = [...fetchedGames].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+        setDiscoverNew(sortedByRelease.slice(0, 6));
 
-  const gameData2 = [
-    { id: 1, title: 'Grand Theft Auto V: Premium Edition', price: '₹2,321.44', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/dnggn7nfiwr9iopsq3ho.png" },
-    { id: 2, title: 'VALORANT', price: '₹ Free', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/amgfdsiyg0yph7aoezte.png" },
-    { id: 3, title: 'The Last Stand: Aftermath', price: ' ₹589', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/aseazclmnulkejgizjyo.png" },
-    { id: 4, title: 'EA SPORTS FCT™ 24 Standard Edition', price: '₹1,199', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/tihfukuhizvkwpu0lrsw.png" },
-    { id: 5, title: 'Satisfactory', price: '₹1,600', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/becudv5d8ajzvyapot7v.png" },
-    { id: 6, title: 'Farming Simulator 22', price: ' ₹1,559', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/uhvtwkenynbvtynqdlgo.png" },
-  ];
+        // Sort games by popularity (assuming `popularityScore` exists)
+        const sortedByPopularity = [...fetchedGames].sort((a, b) => b.popularityScore - a.popularityScore);
+        setMostPopular(sortedByPopularity.slice(0, 6));
+      })
+      .catch(error => {
+        console.error("Error fetching games:", error);
+        setLoading(false);
+      });
+  }, []);
+
 
   const recentlyPlayed = [
     { title: 'Grand Theft Auto V', progress: 72 },
@@ -129,6 +133,65 @@ const GamingPlatform = () => {
     navigate('/home'); // Navigate to login page after logout
   };
 
+  useEffect(() => {
+    axios.get("https://arcade-array.onrender.com/api/games")
+      .then(response => {
+        setGames(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error("Error fetching games:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlide(true);
+      setTimeout(() => {
+        setCurrentIndex(prev => (prev + 1) % games.length); // Cycle games
+        setSlide(false);
+      }, 500); // Match this with CSS transition duration
+    }, 3500); // Change game every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [games]);
+
+  const handleAddToWishlist = async (gameId) => {
+    if (!userId) {
+      alert("Please log in to add to wishlist.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post("https://arcade-array.onrender.com/api/games/add", {
+        userId,
+        gameId,
+      });
+  
+      if (response.status === 200) {
+        if (response.data.message === "Game already in wishlist") {
+          alert("This game is already in your wishlist!");
+        } else {
+          alert("Game added to wishlist!");
+        }
+      } else {
+        alert(response.data.message || "Failed to add to wishlist.");
+      }
+    } catch (error) {
+      console.error("Error adding to wishlist:", error);
+  
+      if (error.response && error.response.data && error.response.data.message === "Game already in wishlist") {
+        alert("This game is already in your wishlist!");
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    }
+  };
+  
+
+
+
   return (
     <>
       <div className="container">
@@ -142,7 +205,7 @@ const GamingPlatform = () => {
             <a href="#" className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
             <a href="#" className="sidebarItem">👥 Community</a>
             <a href="#" className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
-            <a href="#" className="sidebarItem">❤️ Wishlist</a>
+            <a href="#" className="sidebarItem" onClick={() => navigate("/wishlist")}>❤️ Wishlist</a>
             <a href="#" className="sidebarItem">⬇️ Download</a>
             <a href="#" className="sidebarItem">⚙️ Setting</a>
           </nav>
@@ -150,12 +213,12 @@ const GamingPlatform = () => {
           {/* Main Content */}
           <main className="mainContent">
             <header className="header">
-            <SearchBar />
+              <SearchBar />
               <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
                 <span onClick={() => navigate("/notifications")} className='notification_icon'>🔔{friendRequests > 0 && (
                   <span className="notificationCount">{friendRequests}</span> // Display notification count if friendRequests > 0
                 )}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' , position: 'relative' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', position: 'relative' }}>
                   <img
                     src={img2}
                     style={{ borderRadius: '50%', width: '3vw', cursor: 'pointer' }}
@@ -180,20 +243,23 @@ const GamingPlatform = () => {
               </div>
             </header>
 
-            {/* Featured Game */}
-            <div className="featuredGame">
-              <img src={img1} alt="The Witcher 3" className="featuredImage" />
-              <div className="featuredInfo">
-                <div>
-                  <h1>The Witcher 3</h1>
-                  <p>The most awarded game of a generation, now enhanced for the next!</p>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '20px', gap: '30px' }}>
-                  <button className="buyButton">Buy Now ₹1,163</button>
-                  <button className="controlButton" style={{ backgroundColor: '#2d2d3a' }}>❤️</button>
+            {/* Featured Game Section */}
+            {!loading && games.length > 0 && (
+              <div className={`featuredGame ${slide ? 'slide-out' : 'slide-in'}`} >
+                <img src={games[currentIndex].poster} alt={games[currentIndex].name} className="featuredImage" />
+                <div className="featuredInfo">
+                  <h1>{games[currentIndex].name}</h1>
+                  <p>{games[currentIndex].description}</p>
+                  <div className="buttons">
+                    <button className="buyButton">Buy Now {games[currentIndex].price || 'Free'}</button>
+                    <button className="controlButton" onClick={() => handleAddToWishlist(games[currentIndex]._id)}>
+                      ❤️
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
           </main>
 
           {/* Friends & Recently Played Section */}
@@ -228,24 +294,31 @@ const GamingPlatform = () => {
 
         {/* Game Carousel */}
         <div className="gameCarousel">
+          {/* Game Carousel */}
+          {/* Discover Something New Section */}
           <div className="carouselHeader">
-            <h2>Discover something new</h2>
+            <h2>Discover Something New</h2>
             <div className="carouselControls">
               <button className="controlButton">←</button>
-              <button className="controlButton">→</button>
+              <button className="controlButton" onClick={loadMoreDiscover}>→</button>
             </div>
           </div>
-          <div className="gameGrid">
-            {gameData.map(game => (
-              <div key={game.id} className="gameCard">
-                <img src={game.image} alt={game.title} className="gameCardImage" />
-                <div className="gameCardInfo">
-                  <h3>{game.title}</h3>
-                  <p className="price">{game.price}</p>
+          {loading ? (
+            <p>Loading games...</p>
+          ) : (
+            <div className="gameGrid">
+              {discoverNew.slice(0, visibleDiscover).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "loading.."}</p>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="carouselHeader">
             <h2>Saving Spotlight</h2>
@@ -254,36 +327,48 @@ const GamingPlatform = () => {
               <button className="controlButton">→</button>
             </div>
           </div>
-          <div className="gameGrid">
-            {Savingspotlight.map(game => (
-              <div key={game.id} className="gameCard">
-                <img src={game.image} alt={game.title} className="gameCardImage" />
-                <div className="gameCardInfo">
-                  <h3>{game.title}</h3>
-                  <p className="price">{game.price}</p>
+          {loading ? (
+            <p>Loading games...</p>
+          ) : (
+            <div className="gameGrid">
+              {savingSpotlight.slice(0, visibleSpotlight).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "Free"}</p>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="carouselHeader">
             <h2>Most Popular</h2>
             <div className="carouselControls">
               <button className="controlButton">←</button>
-              <button className="controlButton">→</button>
+              <button className="controlButton" onClick={loadMorePopular}>→</button>
             </div>
           </div>
-          <div className="gameGrid">
-            {gameData2.map(game => (
-              <div key={game.id} className="gameCard">
-                <img src={game.image} alt={game.title} className="gameCardImage" />
-                <div className="gameCardInfo">
-                  <h3>{game.title}</h3>
-                  <p className="price">{game.price}</p>
+
+          {loading ? (
+            <p>Loading games...</p>
+          ) : (
+            <div className="gameGrid">
+              {mostPopular.slice(0, visiblePopular).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "Free"}</p>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+
         </div>
       </div>
 

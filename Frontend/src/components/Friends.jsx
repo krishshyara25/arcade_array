@@ -209,9 +209,9 @@ const Friends = () => {
       </header>
 
       <main className="main">
-        <button className="back-button" onClick={() => navigate("/home1")}>
-          <i className="fas fa-arrow-left"></i> Back
-        </button>
+      <button className="backbutton1" onClick={() => navigate(-1)}>
+                ◀ Back
+            </button>
 
         <div className="search-container">
           <input

@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom';
 import "../styles/Gamepage.css";
 import img2 from "../assets/wp9549839.png";
 import logo from '../assets/arcade_alley_logo.png';
-
+import axios from "axios";
 
 const GamePage = () => {
   const { id } = useParams(); // Get game ID from URL
   const [game, setGame] = useState(null);
+  const [games, setGames] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -69,6 +71,41 @@ const GamePage = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!game) return <div>No game found</div>;
+
+
+  const handleAddToWishlist = async (gameId) => {
+    if (!userId) {
+      alert("Please log in to add to wishlist.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post("https://arcade-array.onrender.com/api/games/add", {
+        userId,
+        gameId,
+      });
+  
+      if (response.status === 200) {
+        if (response.data.message === "Game already in wishlist") {
+          alert("This game is already in your wishlist!");
+        } else {
+          alert("Game added to wishlist!");
+        }
+      } else {
+        alert(response.data.message || "Failed to add to wishlist.");
+      }
+    } catch (error) {
+      console.error("Error adding to wishlist:", error);
+  
+      if (error.response && error.response.data && error.response.data.message === "Game already in wishlist") {
+        alert("This game is already in your wishlist!");
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    }
+  };
+  
+
 
   return (
     <div className="game-page">
@@ -166,7 +203,7 @@ const GamePage = () => {
             <div className="gamedata">
               <div className="gamedata2">
                 <div className="gameimg">
-                  <img src={"https://res.cloudinary.com/drno4r3vd/image/upload/v1740395233/img15_jsn3xq.png"} alt="game_img" className="game_img"/>
+                  <img src={game.imageUrl} alt="game_img" className="game_img" />
                 </div>
 
 
@@ -208,7 +245,9 @@ const GamePage = () => {
                 {/* Buy Section */}
                 <div className="buy-section">
                   <button className="buy-button">Buy Now {game.price}</button>
-                  <button className="wishlist-button">❤️</button>
+                  <button className="controlButton" onClick={() => handleAddToWishlist(game._id)}>
+                  ❤️
+                  </button>
                 </div>
               </div>
 
@@ -240,93 +279,6 @@ const GamePage = () => {
           </div>
         )
       }
-
-
-
-
-
-
-
-
-
-
-      {/* <div className="game-page">
-        <nav className="nav-bar">
-          <div className="nav-left">
-            <button className="back-button" onClick={() => navigate(-1)}>
-              ◀ Back
-            </button>
-            <div className="logo1">
-              <img src="/logo.png" alt="Game Store Logo" />
-            </div>
-            <div className="nav-links">
-              <a href="/">Home</a>
-              <a href="/store">Store</a>
-              <a href="/about">About</a>
-            </div>
-          </div>
-          <div className="nav-right">
-            <button className="notification-button">🔔</button>
-            <div className="user-profile">
-              <img src="/user-avatar.png" alt="User Avatar" />
-              <div className="user-info">
-                <span className="username">John Doe</span>
-                <span className="user-email">johndoe@gmail.com</span>
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        <div className="game-container">
-
-          <div className="game-cover">
-            <img src={game.image} alt={game.title} />
-          </div>
-
-          <div className="game-info">
-            <h1>{game.title}</h1>
-            <p className="game-description">{game.description}</p>
-
-            <div className="platform-icons">
-              {game.platforms.map((platform, index) => (
-                <span key={index} className="platform-badge">
-                  {platform}
-                </span>
-              ))}
-            </div>
-
-            <div className="game-details">
-              <div className="detail-item">
-                <span className="detail-label">Developer:</span>
-                <span className="detail-value">{game.developer}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Publisher:</span>
-                <span className="detail-value">{game.publisher}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Release Date:</span>
-                <span className="detail-value">{game.releaseDate}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Genres:</span>
-                <span className="detail-value">{game.genre.join(", ")}</span>
-              </div>
-            </div>
-
-            <div className="buy-section">
-              <button className="buy-button">Buy Now - ${game.price}</button>
-              <button className="wishlist-button">❤️</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="screenshot-gallery">
-          {game.screenshots.map((screenshot, index) => (
-            <img key={index} src={screenshot} alt={`Screenshot ${index + 1}`} />
-          ))}
-        </div>
-      </div> */}
 
 
 

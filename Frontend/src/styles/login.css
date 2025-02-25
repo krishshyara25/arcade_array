@@ -94,4 +94,13 @@ a:hover {
     100% { transform: rotate(360deg); }
 }
 
-
+.backbutton2{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    margin-top: 10vh;
+}

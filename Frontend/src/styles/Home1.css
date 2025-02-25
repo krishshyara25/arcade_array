@@ -86,7 +86,7 @@
 .featuredImage {
   width: 100%;
   height: 500px;
-  object-fit: cover;
+  object-fit: inherit;
 }
 
 .featuredInfo {
@@ -94,9 +94,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px;
+  padding: 30px;
   background: linear-gradient(transparent, rgba(0,0,0,0.8));
-  display: flex;
   gap: 140px;
 }
 
@@ -131,8 +130,8 @@
   background-color: #404040;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -321,4 +320,34 @@
 
 .logoutButton:hover {
   background: darkred;
+}
+
+
+
+
+
+.featuredGame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  margin-left: 2.3rem;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.featuredImage {
+  width: 100%;
+  border-radius: 10px;
+  
+}
+
+.slide-in {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.slide-out {
+  transform: translateX(-100%);
+  opacity: 0;
 }
