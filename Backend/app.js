@@ -7,9 +7,9 @@ const authRoutes = require('./routes/authRoutes');
 const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
 const http = require("http");  // ✅ Import http module
-const server = http.createServer(app);  // ✅ Create an HTTP server
 
 const app = express();
+const server = http.createServer(app);  // ✅ Create an HTTP server
 const port = process.env.PORT || 3000;
 
 // ✅ Proper CORS configuration
