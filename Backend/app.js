@@ -1,15 +1,15 @@
-require('dotenv').config(); // Load environment variables
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require("http");
 
 const authRoutes = require('./routes/authRoutes');
 const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
-const http = require("http");  // ✅ Import http module
 
 const app = express();
-const server = http.createServer(app);  // ✅ Create an HTTP server
+const server = http.createServer(app);  // ✅ Correctly using HTTP server
 const port = process.env.PORT || 3000;
 
 // ✅ Proper CORS configuration
@@ -26,13 +26,10 @@ const corsOptions = {
     credentials: true
 };
 
-
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Handle CORS preflight
 
-// ✅ Handle Preflight Requests (Fixes CORS errors)
-app.options("*", cors(corsOptions)); 
-
-// ✅ Middleware for JSON and URL-encoded data
+// ✅ Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -53,36 +50,34 @@ app.use('/api/auth', authRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/games', gameRoutes);
 
-// ✅ Default Route (Optional)
+// ✅ Default Route
 app.get("/", (req, res) => {
     res.send("Welcome to Arcade Array API!");
 });
 
-
+// ✅ Initialize Socket.IO
 const io = require("socket.io")(server, {
     cors: { origin: "*" }
-  });
-  
-  const onlineUsers = new Map(); // Store online users
-  
-  io.on("connection", (socket) => {
+});
+
+const onlineUsers = new Map();
+
+io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
-  
+
     socket.on("userOnline", (userId) => {
-      onlineUsers.set(userId, socket.id);
-      io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Notify clients
+        onlineUsers.set(userId, socket.id);
+        io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); 
     });
-  
+
     socket.on("disconnect", () => {
-      const userId = [...onlineUsers.entries()].find(([_, id]) => id === socket.id)?.[0];
-      if (userId) onlineUsers.delete(userId);
-      io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Notify clients
+        const userId = [...onlineUsers.entries()].find(([_, id]) => id === socket.id)?.[0];
+        if (userId) onlineUsers.delete(userId);
+        io.emit("updateOnlineUsers", Array.from(onlineUsers.keys()));
     });
-  });
+});
 
-  
-
-// ✅ Start Server
-app.listen(port, () => {
+// ✅ FIX: Use `server.listen()` Instead of `app.listen()`
+server.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);
 });
