@@ -10,6 +10,8 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
+    margin-bottom: 4rem;
+
   }
   
   .wishlist-item {
@@ -59,18 +61,34 @@
   
   }
 
-  .popup {
-    position: fixed;
-    top: 20px;
-    right: -300px;
-    background: #ff4d4d;
+  .empty-wishlist {
+    text-align: center;
+    padding: 50px;
+    background-color: #1e1e1e;
     color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: right 0.5s ease-in-out;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
 }
 
-.popup.show {
-    right: 20px;
+.wishlist-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.shop-button {
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.shop-button:hover {
+    background-color: #b50404;
 }

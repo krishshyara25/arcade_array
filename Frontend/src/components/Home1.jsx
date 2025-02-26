@@ -3,13 +3,7 @@ import SearchBar from "./Searchbar";
 import axios from "axios";
 import logo from '../assets/arcade_alley_logo.png';
 import img2 from '../assets/wp9549839.png';
-
-
-
-
-
-
-
+import { toast } from "react-toastify";
 
 import React, { useState, useEffect } from 'react';
 import '../styles/Home1.css';
@@ -29,9 +23,6 @@ const GamingPlatform = () => {
   const [visibleDiscover, setVisibleDiscover] = useState(6);
   const [visibleSpotlight, setVisibleSpotlight] = useState(6);
   const [visiblePopular, setVisiblePopular] = useState(6);
-
-
-
 
 
   const loadMoreDiscover = () => {
@@ -145,50 +136,93 @@ const GamingPlatform = () => {
       });
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSlide(true);
-      setTimeout(() => {
-        setCurrentIndex(prev => (prev + 1) % games.length); // Cycle games
-        setSlide(false);
-      }, 500); // Match this with CSS transition duration
-    }, 3500); // Change game every 3 seconds
 
-    return () => clearInterval(interval);
-  }, [games]);
 
-  const handleAddToWishlist = async (gameId) => {
+
+  const handleAddToWishlist = async (gameId, gameName) => {
     if (!userId) {
-      alert("Please log in to add to wishlist.");
+      toast.error("Please log in to add to wishlist.");
       return;
     }
-  
+
     try {
       const response = await axios.post("https://arcade-array.onrender.com/api/games/add", {
         userId,
         gameId,
       });
-  
+
       if (response.status === 200) {
         if (response.data.message === "Game already in wishlist") {
-          alert("This game is already in your wishlist!");
+          toast.info("This game is already in your wishlist!");
         } else {
-          alert("Game added to wishlist!");
+          toast.success(`${gameName} added to wishlist!`);
         }
       } else {
-        alert(response.data.message || "Failed to add to wishlist.");
+        toast.error(response.data.message || "Failed to add to wishlist.");
       }
     } catch (error) {
       console.error("Error adding to wishlist:", error);
-  
-      if (error.response && error.response.data && error.response.data.message === "Game already in wishlist") {
-        alert("This game is already in your wishlist!");
+
+      if (error.response?.data?.message === "Game already in wishlist") {
+        toast.info("This game is already in your wishlist!");
       } else {
-        alert("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.");
       }
     }
   };
-  
+
+
+  const handleBuyNow = async (game) => {
+    if (!userId) {
+      toast.error("Please log in to purchase.");
+      return;
+    }
+
+    try {
+      // Send request to backend to create order
+      const response = await axios.post("https://arcade-array.onrender.com/api/payment/order", {
+        userId,
+        amount: game.price * 100, // Razorpay requires amount in paisa
+        gameId: game._id,
+      });
+
+      const { orderId, currency, amount, key } = response.data; // Get order details from backend
+
+      // Initialize Razorpay Checkout
+      const options = {
+        key,
+        amount,
+        currency,
+        name: "Arcade Alley",
+        description: `Purchase: ${game.name}`,
+        image: logo, // Your platform's logo
+        order_id: orderId,
+        handler: async function (response) {
+          // Handle successful payment
+          await axios.post("https://arcade-array.onrender.com/api/payment/verify", {
+            orderId,
+            paymentId: response.razorpay_payment_id,
+            signature: response.razorpay_signature,
+          });
+
+          toast.success(`Payment successful! You purchased ${game.name}`);
+        },
+        prefill: {
+          name: user.username,
+          email: user.email,
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("Payment failed. Please try again.");
+    }
+  };
 
 
 
@@ -251,10 +285,26 @@ const GamingPlatform = () => {
                   <h1>{games[currentIndex].name}</h1>
                   <p>{games[currentIndex].description}</p>
                   <div className="buttons">
-                    <button className="buyButton">Buy Now {games[currentIndex].price || 'Free'}</button>
-                    <button className="controlButton" onClick={() => handleAddToWishlist(games[currentIndex]._id)}>
-                      ❤️
+                    <button className="buyButton" onClick={() => handleBuyNow(games[currentIndex])}>
+                      Buy Now {games[currentIndex].price || 'Free'}
                     </button>
+                    {user ? (
+                      <button
+                        className="controlButton"
+                        onClick={() => {
+                          if (games[currentIndex]) {
+                            handleAddToWishlist(games[currentIndex]._id, games[currentIndex].name);
+                          } else {
+                            console.error("Game data is not available.");
+                          }
+                        }}>
+                        ❤️
+                      </button>
+
+                    ) : (
+                      <div></div>
+                    )}
+
                   </div>
                 </div>
               </div>

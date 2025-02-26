@@ -5,6 +5,7 @@ import "../styles/Gamepage.css";
 import img2 from "../assets/wp9549839.png";
 import logo from '../assets/arcade_alley_logo.png';
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const GamePage = () => {
   const { id } = useParams(); // Get game ID from URL
@@ -73,9 +74,9 @@ const GamePage = () => {
   if (!game) return <div>No game found</div>;
 
 
-  const handleAddToWishlist = async (gameId) => {
+  const handleAddToWishlist = async (gameId, gameName) => {
     if (!userId) {
-      alert("Please log in to add to wishlist.");
+      toast.error("Please log in to add to wishlist.");
       return;
     }
 
@@ -87,20 +88,20 @@ const GamePage = () => {
 
       if (response.status === 200) {
         if (response.data.message === "Game already in wishlist") {
-          alert("This game is already in your wishlist!");
+          toast.info("This game is already in your wishlist!");
         } else {
-          alert("Game added to wishlist!");
+          toast.success(`${gameName} added to wishlist!`);
         }
       } else {
-        alert(response.data.message || "Failed to add to wishlist.");
+        toast.error(response.data.message || "Failed to add to wishlist.");
       }
     } catch (error) {
       console.error("Error adding to wishlist:", error);
 
-      if (error.response && error.response.data && error.response.data.message === "Game already in wishlist") {
-        alert("This game is already in your wishlist!");
+      if (error.response?.data?.message === "Game already in wishlist") {
+        toast.info("This game is already in your wishlist!");
       } else {
-        alert("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.");
       }
     }
   };
@@ -108,6 +109,7 @@ const GamePage = () => {
 
 
   return (
+
     <div className="game-page">
       {/* Navigation Bar */}
       <nav className="nav-bar">
@@ -207,6 +209,7 @@ const GamePage = () => {
                 </div>
 
 
+
                 <div>
                   <h1>{game.name}</h1>
                   <p className="game-description">{game.description}</p>
@@ -246,9 +249,12 @@ const GamePage = () => {
                 <div className="buy-section">
                   <button className="buy-button">Buy Now {game.price}</button>
                   {user ? (
-                    <button className="controlButton" onClick={() => handleAddToWishlist(game._id)}>
+                    <button
+                      className="controlButton"
+                      onClick={() => handleAddToWishlist(game._id, game.name)}>
                       ❤️
                     </button>
+
                   ) : (
                     <div></div>
                   )}
@@ -259,14 +265,16 @@ const GamePage = () => {
 
             </div>
           </div>
+
+          {/* Screenshot Gallery */}
+          <div className="screenshot-gallery">
+            {game.screenshots?.map((screenshot, index) => (
+              <img key={index} src={screenshot} alt={`Screenshot ${index + 1}`} />
+            ))}
+          </div>
         </div>
 
-        {/* Screenshot Gallery */}
-        <div className="screenshot-gallery">
-          {game.screenshots?.map((screenshot, index) => (
-            <img key={index} src={screenshot} alt={`Screenshot ${index + 1}`} />
-          ))}
-        </div>
+
       </main>
 
       {/* Login Required Popup */}

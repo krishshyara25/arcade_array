@@ -277,6 +277,16 @@
 
 
 
+.gameGrid {
+  display: flex;
+  gap: 10px;
+  overflow: hidden;
+  transition: transform 0.5s ease-in-out;
+}
+
+.sliding {
+  transform: translateX(-100%);
+}
 
 
 
@@ -314,4 +324,15 @@
 .slide-out {
   transform: translateX(-100%);
   opacity: 0;
+}
+.gameGrid {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: transform 0.5s ease-in-out; /* Smooth transition effect */
+}
+
+.gameGrid .gameItem {
+  flex: 0 0 auto; /* Prevent items from shrinking */
+  margin-right: 10px; /* Adjust spacing */
 }

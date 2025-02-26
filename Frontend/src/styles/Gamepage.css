@@ -217,14 +217,13 @@
 
 /* Screenshot Gallery */
 .screenshot-gallery {
-  margin-top: 2rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
 .screenshot-gallery img {
-  width: 100%;
+  width: 90%;
   height: 192px;
   object-fit: cover;
   border-radius: 0.5rem;

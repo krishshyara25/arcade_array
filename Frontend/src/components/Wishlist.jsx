@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Wishlist.css"; // Create a new CSS file for styling
 import logo from '../assets/arcade_alley_logo.png';
 import img2 from "../assets/wp9549839.png";
-import { toast } from "react-toastify";
-
+import yourIcon from "../assets/yourIcon.png"
 
 const WishlistPage = () => {
     const navigate = useNavigate();
@@ -94,8 +93,95 @@ const WishlistPage = () => {
 
     if (loading) return <div>Loading wishlist...</div>;
     if (error) return <div>{error}</div>;
-    if (wishlist.length === 0) return <div>Your wishlist is empty.</div>;
+    if (wishlist.length === 0) {
+        return (
+            <>
+            <nav className="nav-bar">
+                <div className="nav-left">
+                    <div className="logo1">
+                        <img src={logo} alt="Arcade Alley" />
+                    </div>
 
+
+
+                    <div className="nav-links">
+                        <a href="#" onClick={() => {
+                            const storedUserId = localStorage.getItem("userId");
+                            navigate(storedUserId ? "/home1" : "/home");
+                        }}>Home</a>
+                        <a href="#" onClick={() => {
+                            const storedUserId = localStorage.getItem("userId");
+                            navigate(storedUserId ? "/catagory1" : "/catagory");
+                        }}>Category</a>
+                        <a href="#" >Community</a>
+                        <a href="#" onClick={() => navigate("/friends")}>Friends</a>
+                        <a href="#" onClick={() => navigate("/wishlist")}>Wishlist</a>
+                        <a href="#" >Download</a>
+                    </div>
+                </div>
+
+                <div className="nav-right">
+                    <div className="user-info">
+
+
+                        {/* If user is logged in, show profile and logout button */}
+                        {user ? (
+                            <div className="user-details">
+                                <img
+                                    src={img2}
+                                    style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
+                                    alt="Profile"
+                                    onClick={() => setDropdownVisible(!dropdownVisible)}
+                                />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div>
+                                        <h1 className="username">Welcome, {user?.username || "Guest"}</h1>
+                                        <p className="useremail">Email: {user?.email || "No email found"}</p>
+                                    </div>
+                                </div>
+
+                                {/* Dropdown Menu */}
+                                {dropdownVisible && (
+                                    <div className="dropdownMenu">
+                                        <button
+                                            className="logoutButton"
+                                            onClick={() => {
+                                                localStorage.removeItem("userId"); // Clear user ID from local storage
+                                                setUser(null); // Reset user state
+                                                navigate("/login"); // Redirect to login page
+                                            }}
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            /* If user is not logged in, show Login and Signup buttons */
+                            <div className="auth-buttons">
+                                <button className="login-button" onClick={() => navigate("/login")}>
+                                    Login
+                                </button>
+                                <button className="signup-button" onClick={() => navigate("/signup")}>
+                                    Signup
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </nav>
+
+            <div className="empty-wishlist">
+                <img src={yourIcon} alt="Empty Wishlist" className="wishlist-icon" />
+                <h2>You haven’t added to your Wishlist yet</h2>
+                <button onClick={() => navigate("/home1")} className="shop-button">
+                    Shop for games & apps
+                </button>
+            </div>
+            </>
+        );
+    }
+    
     return (
         <div className="wishlist-page">
             {/* Navigation Bar */}

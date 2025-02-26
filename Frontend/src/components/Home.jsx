@@ -17,12 +17,19 @@ const GameStore = () => {
   const [savingSpotlight, setSavingSpotlight] = useState([]);
   const [discoverNew, setDiscoverNew] = useState([]);
   const [mostPopular, setMostPopular] = useState([]);
-  const [visibleDiscover, setVisibleDiscover] = useState(6);
-  const [visibleSpotlight, setVisibleSpotlight] = useState(6);
-  const [visiblePopular, setVisiblePopular] = useState(6);
   const [slide, setSlide] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [sliding, setSliding] = useState(false);
 
+  const [discoverIndex, setDiscoverIndex] = useState(0);
+  const [spotlightIndex, setSpotlightIndex] = useState(0);
+  const [popularIndex, setPopularIndex] = useState(0);
+
+  const [slidingDiscover, setSlidingDiscover] = useState(false);
+const [slidingSpotlight, setSlidingSpotlight] = useState(false);
+const [slidingPopular, setSlidingPopular] = useState(false);
+
+  const gamesPerPage = 6; // Number of games shown at a time
 
 
 
@@ -107,15 +114,81 @@ const GameStore = () => {
     }
   }, []);
 
-  const loadMoreDiscover = () => {
-    setVisibleDiscover(prev => prev + 6);
+  const handleNextDiscover = () => {
+    if (discoverNew.length > gamesPerPage) {
+      setSlidingDiscover(true);
+      setTimeout(() => {
+        setDiscoverIndex((prevIndex) => (prevIndex + gamesPerPage) % discoverNew.length);
+        setSlidingDiscover(false);
+      }, 500);
+    }
   };
-
-  const loadMoreSpotlight = () => {
-    setVisibleSpotlight(prev => prev + 6);
+  
+  const handlePrevDiscover = () => {
+    if (discoverNew.length > gamesPerPage) {
+      setSlidingDiscover(true);
+      setTimeout(() => {
+        setDiscoverIndex((prevIndex) =>
+          prevIndex - gamesPerPage < 0
+            ? discoverNew.length - gamesPerPage
+            : prevIndex - gamesPerPage
+        );
+        setSlidingDiscover(false);
+      }, 500);
+    }
   };
-
-  const loadMorePopular = () => setVisiblePopular(prev => prev + 6);
+  
+  
+  const handleNextSpotlight = () => {
+    if (savingSpotlight.length > gamesPerPage) {
+      setSlidingSpotlight(true);
+      setTimeout(() => {
+        setSpotlightIndex((prevIndex) => (prevIndex + gamesPerPage) % savingSpotlight.length);
+        setSlidingSpotlight(false);
+      }, 500);
+    }
+  };
+  
+  const handlePrevSpotlight = () => {
+    if (savingSpotlight.length > gamesPerPage) {
+      setSlidingSpotlight(true);
+      setTimeout(() => {
+        setSpotlightIndex((prevIndex) =>
+          prevIndex - gamesPerPage < 0
+            ? savingSpotlight.length - gamesPerPage
+            : prevIndex - gamesPerPage
+        );
+        setSlidingSpotlight(false);
+      }, 500);
+    }
+  };
+  
+  
+  
+  const handleNextPopular = () => {
+    if (mostPopular.length > gamesPerPage) {
+      setSlidingPopular(true);
+      setTimeout(() => {
+        setPopularIndex((prev) => (prev + gamesPerPage) % mostPopular.length);
+        setSlidingPopular(false);
+      }, 500);
+    }
+  };
+  
+  const handlePrevPopular = () => {
+    if (mostPopular.length > gamesPerPage) {
+      setSlidingPopular(true);
+      setTimeout(() => {
+        setPopularIndex((prev) =>
+          prev - gamesPerPage < 0
+            ? mostPopular.length - gamesPerPage
+            : prev - gamesPerPage
+        );
+        setSlidingPopular(false);
+      }, 500);
+    }
+  };
+  
 
 
   useEffect(() => {
@@ -173,7 +246,7 @@ const GameStore = () => {
                   <h1>{games[currentIndex].name}</h1>
                   <p>{games[currentIndex].description}</p>
                   <div className="buttons">
-                    <button className="buyButton">Buy Now {games[currentIndex].price || 'Free'}</button>
+                    <button className="buyButton" onClick={() => navigate("/catagory")}>Buy Now {games[currentIndex].price || 'Price loading..'}</button>
                   </div>
                 </div>
               </div>
@@ -187,24 +260,26 @@ const GameStore = () => {
         <div className="carouselHeader">
           <h2>Discover Something New</h2>
           <div className="carouselControls">
-            <button className="controlButton">←</button>
-            <button className="controlButton" onClick={loadMoreDiscover}>→</button>
+            <button className="controlButton" onClick={handlePrevDiscover}>←</button>
+            <button className="controlButton" onClick={handleNextDiscover}>→</button>
           </div>
         </div>
         {loading ? (
           <p>Loading games...</p>
         ) : (
-          <div className="gameGrid">
-            {discoverNew.slice(0, visibleDiscover).map(game => (
+          <div className={`gameGrid ${slidingDiscover ? "sliding" : ""}`}>
+            {discoverNew.slice(discoverIndex, discoverIndex + gamesPerPage).map(game => (
               <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
                 <div className="game-image">
                   <img src={game.imageUrl} alt={game.name} />
                   {game.discount && <span className="discount">-{game.discount}</span>}
                 </div>
                 <h3 className="subheading">{game.name}</h3>
-                <p className="price">{game.price || "loading.."}</p>
+                <p className="price">{game.price || "Free"}</p>
               </div>
             ))}
+
+
           </div>
         )}
 
@@ -212,15 +287,15 @@ const GameStore = () => {
         <div className="carouselHeader">
           <h2>Saving Spotlight</h2>
           <div className="carouselControls">
-            <button className="controlButton">←</button>
-            <button className="controlButton">→</button>
+            <button className="controlButton" onClick={handlePrevSpotlight}>←</button>
+            <button className="controlButton" onClick={handleNextSpotlight}>→</button>
           </div>
         </div>
         {loading ? (
           <p>Loading games...</p>
         ) : (
-          <div className="gameGrid">
-            {savingSpotlight.slice(0, visibleSpotlight).map(game => (
+          <div className={`gameGrid ${slidingSpotlight ? "sliding" : ""}`}>
+            {savingSpotlight.slice(spotlightIndex, spotlightIndex + gamesPerPage).map(game => (
               <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
                 <div className="game-image">
                   <img src={game.imageUrl} alt={game.name} />
@@ -237,16 +312,16 @@ const GameStore = () => {
         <div className="carouselHeader">
           <h2>Most Popular</h2>
           <div className="carouselControls">
-            <button className="controlButton">←</button>
-            <button className="controlButton" onClick={loadMorePopular}>→</button>
+            <button className="controlButton" onClick={handlePrevPopular}>←</button>
+            <button className="controlButton" onClick={handleNextPopular}>→</button>
           </div>
         </div>
 
         {loading ? (
           <p>Loading games...</p>
         ) : (
-          <div className="gameGrid">
-            {mostPopular.slice(0, visiblePopular).map(game => (
+          <div className={`gameGrid ${slidingPopular ? "sliding" : ""}`}>
+            {mostPopular.slice(popularIndex, popularIndex + gamesPerPage).map(game => (
               <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
                 <div className="game-image">
                   <img src={game.imageUrl} alt={game.name} />
