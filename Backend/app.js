@@ -6,6 +6,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -50,6 +51,7 @@ mongoose.connect(mongoURI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/games', gameRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // ✅ Default Route (Optional)
 app.get("/", (req, res) => {
