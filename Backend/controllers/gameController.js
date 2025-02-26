@@ -1,6 +1,13 @@
 const Game = require('../models/Game');
 const User = require('../models/userModel');
 
+const Razorpay = require("razorpay");
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
 // Controller to fetch all games
 const getAllGames = async (req, res) => {
   try {
@@ -140,4 +147,80 @@ const getUserDetails = async (req, res) => {
 };
 
 
-module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails, searchGame, getGameById};
+
+// ✅ Controller to Purchase a Game
+const purchaseGame = async (req, res) => {
+  try {
+    const { userId, gameId } = req.body;
+
+    // Find the game
+    const game = await Game.findById(gameId);
+    if (!game) {
+      return res.status(404).json({ message: "Game not found" });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the user already owns the game
+    if (user.purchasedGames.includes(gameId)) {
+      return res.status(400).json({ message: "You already own this game" });
+    }
+
+    // Create a Razorpay order
+    const options = {
+      amount: game.price * 100, // Razorpay takes amount in paise
+      currency: "INR",
+      receipt: `receipt_${Date.now()}`,
+    };
+
+    const order = await razorpay.orders.create(options);
+
+    res.status(200).json(order);
+  } catch (error) {
+    console.error("Error purchasing game:", error);
+    res.status(500).json({ message: "Error processing purchase" });
+  }
+};
+
+// ✅ Controller to Verify Payment
+const verifyPayment = async (req, res) => {
+  try {
+    const { userId, gameId, paymentId } = req.body;
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Verify payment ID (In real cases, you should use Razorpay's webhook)
+    if (!paymentId) {
+      return res.status(400).json({ message: "Invalid payment" });
+    }
+
+    // Add game to user's purchased list
+    user.purchasedGames.push(gameId);
+    await user.save();
+
+    res.status(200).json({ message: "Payment successful, game purchased!", purchasedGames: user.purchasedGames });
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    res.status(500).json({ message: "Payment verification failed" });
+  }
+};
+
+module.exports = { 
+  getAllGames, 
+  addToWishlist, 
+  getUserWishlist, 
+  removeFromWishlist, 
+  getUserDetails, 
+  searchGame, 
+  getGameById, 
+  purchaseGame, 
+  verifyPayment 
+};

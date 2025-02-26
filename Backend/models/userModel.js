@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
+    purchasedGames: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }], // ✅ New field for purchased games
     isOnline: { type: Boolean, default: false } // Track online status
-    
 });
 
 const User = mongoose.model('User', userSchema);
