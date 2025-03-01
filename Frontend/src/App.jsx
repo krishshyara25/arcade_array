@@ -11,7 +11,7 @@ import Catagory1 from "./components/Catagory1.jsx";
 import GamePage from "./components/Gamepage.jsx";
 import WishlistPage from "./components/Wishlist.jsx";
 import LandingPage from "./components/landing.jsx";
-import Terms from "./pages/Tearms.jsx";
+import Policies from "./pages/Tearms.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Settings from "./components/Setting.jsx";
@@ -39,7 +39,7 @@ function App() {
                 <Route path="/game/:id" element={<GamePage />} />
                 <Route path="/wishlist" element={<WishlistPage />} />
                 <Route path="/setting" element={<Settings />} />
-                <Route path="/policies" element={<Terms />} />
+                <Route path="/policies" element={<Policies />} />
                 <Route path="*" element={<NotFound />} /> {/* Fix 404 errors */}
             </Routes>
         </>
