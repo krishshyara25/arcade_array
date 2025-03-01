@@ -6,7 +6,7 @@ import logo from '../assets/arcade_alley_logo.png';
 import defaultProfilePic from '../assets/wp9549839.png';
 import '../styles/Setting.css';
 import img2 from "../assets/wp9549839.png";
-
+import Loader from './Loader';
 const Settings = () => {
     const navigate = useNavigate();
     const userId = localStorage.getItem("userId");
@@ -24,52 +24,44 @@ const Settings = () => {
     const [previewUrl, setPreviewUrl] = useState('');
     const [wishlist, setWishlist] = useState([]);
     const [wishlistLoading, setWishlistLoading] = useState(true);
+    const [wishlistCount, setWishlistCount] = useState(0);
 
 
-    useEffect(() => {
-        fetchWishlist();
-    }, []);
-
-    const fetchWishlist = async () => {
-        try {
-            const response = await axios.get(
-                "https://arcade-array.onrender.com/api/wishlist"
-            );
-            setWishlist(response.data.wishlistItems);
-        } catch (error) {
-            console.error("Failed to fetch wishlist:", error);
-        }
-    };
-
-
-
-    // Fetch user details on component mount
-    useEffect(() => {
-        if (!userId) {
-            toast.error("Please log in to access settings.");
-            navigate('/home');
-            return;
-        }
-
-        const fetchUserDetails = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get(`https://arcade-array.onrender.com/api/games/user/details/${userId}`);
-                const userData = response.data;
-                setUser(userData);
-                setUsername(userData.username || '');
-                setEmail(userData.email || '');
-                setPreviewUrl(userData.profilePicture || defaultProfilePic);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching user details:", error);
-                toast.error("Failed to load user information");
-                setLoading(false);
+        // Fetch user details on component mount
+        useEffect(() => {
+            if (!userId) {
+                toast.error("Please log in to access settings.");
+                navigate('/home');
+                return;
             }
-        };
+    
+            const fetchUserDetails = async () => {
+                try {
+                    setLoading(true);
+                    const response = await axios.get(`https://arcade-array.onrender.com/api/games/user/details/${userId}`);
+                    const userData = response.data;
+                    setUser(userData);
+                    setUsername(userData.username || '');
+                    setEmail(userData.email || '');
+                    setPreviewUrl(userData.profilePicture || defaultProfilePic);
+                    setLoading(false);
+                } catch (error) {
+                    console.error("Error fetching user details:", error);
+                    toast.error("Failed to load user information");
+                    setLoading(false);
+                }
+            };
+    
+            fetchUserDetails();
+        }, [userId, navigate]);
 
-        fetchUserDetails();
-    }, [userId, navigate]);
+
+ 
+  useEffect(() => {
+    if (user?.wishlist) {
+      setWishlistCount(user.wishlist.length);
+    }
+  }, [user?.wishlist]);
 
     // Handle profile picture change
     const handleProfilePictureChange = (e) => {
@@ -129,7 +121,7 @@ const Settings = () => {
     };
 
     if (loading) {
-        return <div className="loading">Loading user data...</div>;
+        return <Loader />;
     }
 
 

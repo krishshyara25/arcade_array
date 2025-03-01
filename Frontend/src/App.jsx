@@ -15,6 +15,8 @@ import Policies from "./pages/Tearms.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Settings from "./components/Setting.jsx";
+import StripeWrapper from "./components/Payment.jsx"; // Adjust your path if needed
+
 
 // Optional: Create a simple NotFound component
 const NotFound = () => <h2>Page Not Found</h2>;
@@ -41,6 +43,8 @@ function App() {
                 <Route path="/setting" element={<Settings />} />
                 <Route path="/policies" element={<Policies />} />
                 <Route path="*" element={<NotFound />} /> {/* Fix 404 errors */}
+                <Route path="/payment/:amount" element={<StripeWrapper />} />
+
             </Routes>
         </>
     );

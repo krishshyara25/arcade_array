@@ -25,6 +25,14 @@ const GamingPlatform = () => {
   const [visiblePopular, setVisiblePopular] = useState(6);
 
 
+  const handleBuyNow = (game) => {
+    if (game.price && game.price !== "Free") {
+      navigate(`/payment/${game.price}`);
+    } else {
+      alert("This Game is Free 🔥");
+    }
+  };
+
   const loadMoreDiscover = () => {
     setVisibleDiscover(prev => prev + 6);
   };
@@ -172,57 +180,7 @@ const GamingPlatform = () => {
   };
 
 
-  const handleBuyNow = async (game) => {
-    if (!userId) {
-      toast.error("Please log in to purchase.");
-      return;
-    }
-
-    try {
-      // Send request to backend to create order
-      const response = await axios.post("https://arcade-array.onrender.com/api/payment/order", {
-        userId,
-        amount: game.price * 100, // Razorpay requires amount in paisa
-        gameId: game._id,
-      });
-
-      const { orderId, currency, amount, key } = response.data; // Get order details from backend
-
-      // Initialize Razorpay Checkout
-      const options = {
-        key,
-        amount,
-        currency,
-        name: "Arcade Alley",
-        description: `Purchase: ${game.name}`,
-        image: logo, // Your platform's logo
-        order_id: orderId,
-        handler: async function (response) {
-          // Handle successful payment
-          await axios.post("https://arcade-array.onrender.com/api/payment/verify", {
-            orderId,
-            paymentId: response.razorpay_payment_id,
-            signature: response.razorpay_signature,
-          });
-
-          toast.success(`Payment successful! You purchased ${game.name}`);
-        },
-        prefill: {
-          name: user.username,
-          email: user.email,
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
-
-      const rzp1 = new window.Razorpay(options);
-      rzp1.open();
-    } catch (error) {
-      console.error("Payment error:", error);
-      toast.error("Payment failed. Please try again.");
-    }
-  };
+  
 
 
 

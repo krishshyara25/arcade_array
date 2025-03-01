@@ -202,7 +202,7 @@ const GameStore = () => {
             <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>👫 Friends</a>
             <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>❤️ Wishlist</a>
             <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>⬇️ Download</a>
-            <a href="#" className="sidebarItem">⚙️ Setting</a>
+            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>⚙️ Setting</a>
           </nav>
 
           {/* Main Content */}
