@@ -1,9 +1,7 @@
 const express = require("express");
-const { purchaseGame, verifyPayment } = require("../controllers/gameController");
-
 const router = express.Router();
+const { createPaymentIntent } = require("../controllers/paymentController");
 
-router.post("/purchase", purchaseGame); // Route to initiate payment
-router.post("/verify", verifyPayment); // Route to verify payment
+router.post("/create-payment-intent", createPaymentIntent);
 
 module.exports = router;
