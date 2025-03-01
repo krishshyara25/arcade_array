@@ -272,6 +272,24 @@ const GamePage = () => {
               <img key={index} src={screenshot} alt={`Screenshot ${index + 1}`} />
             ))}
           </div>
+
+          {game.videos?.map((video, index) => (
+            <video
+              key={index}
+              className="screenshot-gallery video-player"
+              controls
+              onPlay={(e) => {
+                document.querySelectorAll('.video-player').forEach((v) => {
+                  if (v !== e.target) {
+                    v.pause();
+                  }
+                });
+              }}
+            >
+              <source src={video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          ))}
         </div>
 
 

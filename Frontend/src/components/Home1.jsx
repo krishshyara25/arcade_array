@@ -241,7 +241,7 @@ const GamingPlatform = () => {
             <a href="#" className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
             <a href="#" className="sidebarItem" onClick={() => navigate("/wishlist")}>❤️ Wishlist</a>
             <a href="#" className="sidebarItem">⬇️ Download</a>
-            <a href="#" className="sidebarItem">⚙️ Setting</a>
+            <a href="#" className="sidebarItem" onClick={() => navigate("/setting")}>⚙️ Setting</a>
           </nav>
 
           {/* Main Content */}

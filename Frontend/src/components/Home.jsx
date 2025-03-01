@@ -5,8 +5,8 @@ import '../styles/Home.css';
 import SearchBar from './Searchbar';
 import logo from '../assets/arcade_alley_logo.png';
 import axios from "axios";
-
-
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 const GameStore = () => {
   const [user, setUser] = useState(null);
@@ -19,20 +19,87 @@ const GameStore = () => {
   const [mostPopular, setMostPopular] = useState([]);
   const [slide, setSlide] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [sliding, setSliding] = useState(false);
 
   const [discoverIndex, setDiscoverIndex] = useState(0);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [popularIndex, setPopularIndex] = useState(0);
 
   const [slidingDiscover, setSlidingDiscover] = useState(false);
-const [slidingSpotlight, setSlidingSpotlight] = useState(false);
-const [slidingPopular, setSlidingPopular] = useState(false);
+  const [slidingSpotlight, setSlidingSpotlight] = useState(false);
+  const [slidingPopular, setSlidingPopular] = useState(false);
 
   const gamesPerPage = 6; // Number of games shown at a time
 
 
+  // Handle Popular Games Navigation
+  const handlePrevPopular = () => {
+    if (popularIndex > 0) {
+      setSlidingPopular('left');
+      setTimeout(() => {
+        setPopularIndex(prev => Math.max(0, prev - gamesPerPage));
+        setSlidingPopular('in');
+      }, 500);
+    }
+  };
 
+  const handleNextPopular = () => {
+    if (popularIndex + gamesPerPage < mostPopular.length) {
+      setSlidingPopular('right');
+      setTimeout(() => {
+        setPopularIndex(prev => Math.min(mostPopular.length - gamesPerPage, prev + gamesPerPage));
+        setSlidingPopular('in');
+      }, 500);
+    }
+  };
+
+  // Handle Discover New Games Navigation
+  const handlePrevDiscover = () => {
+    if (discoverIndex > 0) {
+      setSlidingDiscover('left');
+      setTimeout(() => {
+        setDiscoverIndex(prev => Math.max(0, prev - gamesPerPage));
+        setSlidingDiscover('in');
+      }, 500);
+    }
+  };
+
+  const handleNextDiscover = () => {
+    if (discoverIndex + gamesPerPage < discoverNew.length) {
+      setSlidingDiscover('right');
+      setTimeout(() => {
+        setDiscoverIndex(prev => Math.min(discoverNew.length - gamesPerPage, prev + gamesPerPage));
+        setSlidingDiscover('in');
+      }, 500);
+    }
+  };
+
+  // Handle Spotlight Games Navigation
+  const handlePrevSpotlight = () => {
+    if (spotlightIndex > 0) {
+      setSlidingSpotlight('left');
+      setTimeout(() => {
+        setSpotlightIndex(prev => Math.max(0, prev - gamesPerPage));
+        setSlidingSpotlight('in');
+      }, 500);
+    }
+  };
+
+  const handleNextSpotlight = () => {
+    if (spotlightIndex + gamesPerPage < savingSpotlight.length) {
+      setSlidingSpotlight('right');
+      setTimeout(() => {
+        setSpotlightIndex(prev => Math.min(savingSpotlight.length - gamesPerPage, prev + gamesPerPage));
+        setSlidingSpotlight('in');
+      }, 500);
+    }
+  };
+
+  // Reset sliding states when component mounts
+  useEffect(() => {
+    setSlidingDiscover('in');
+    setSlidingSpotlight('in');
+    setSlidingPopular('in');
+  }, []);
 
   const fetchUserProfile = async (token) => {
     try {
@@ -71,35 +138,22 @@ const [slidingPopular, setSlidingPopular] = useState(false);
   };
 
   useEffect(() => {
-    axios.get("https://arcade-array.onrender.com/api/games")
-      .then(response => {
-        setGames(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Error fetching games:", error);
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
+    setLoading(true);
     axios.get("https://arcade-array.onrender.com/api/games")
       .then(response => {
         const fetchedGames = response.data;
         setGames(fetchedGames);
-        setLoading(false);
 
-        // Filter games with discounts
         const discountedGames = fetchedGames.filter(game => game.price && game.discount);
         setSavingSpotlight(discountedGames.length > 0 ? discountedGames : fetchedGames);
 
-        // Sort games by release date (newest first) for "Discover Something New"
         const sortedByRelease = [...fetchedGames].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
-        setDiscoverNew(sortedByRelease.slice(0, 6));
+        setDiscoverNew(sortedByRelease);
 
-        // Sort games by popularity (assuming `popularityScore` exists)
         const sortedByPopularity = [...fetchedGames].sort((a, b) => b.popularityScore - a.popularityScore);
-        setMostPopular(sortedByPopularity.slice(0, 6));
+        setMostPopular(sortedByPopularity);
+
+        setLoading(false);
       })
       .catch(error => {
         console.error("Error fetching games:", error);
@@ -114,83 +168,6 @@ const [slidingPopular, setSlidingPopular] = useState(false);
     }
   }, []);
 
-  const handleNextDiscover = () => {
-    if (discoverNew.length > gamesPerPage) {
-      setSlidingDiscover(true);
-      setTimeout(() => {
-        setDiscoverIndex((prevIndex) => (prevIndex + gamesPerPage) % discoverNew.length);
-        setSlidingDiscover(false);
-      }, 500);
-    }
-  };
-  
-  const handlePrevDiscover = () => {
-    if (discoverNew.length > gamesPerPage) {
-      setSlidingDiscover(true);
-      setTimeout(() => {
-        setDiscoverIndex((prevIndex) =>
-          prevIndex - gamesPerPage < 0
-            ? discoverNew.length - gamesPerPage
-            : prevIndex - gamesPerPage
-        );
-        setSlidingDiscover(false);
-      }, 500);
-    }
-  };
-  
-  
-  const handleNextSpotlight = () => {
-    if (savingSpotlight.length > gamesPerPage) {
-      setSlidingSpotlight(true);
-      setTimeout(() => {
-        setSpotlightIndex((prevIndex) => (prevIndex + gamesPerPage) % savingSpotlight.length);
-        setSlidingSpotlight(false);
-      }, 500);
-    }
-  };
-  
-  const handlePrevSpotlight = () => {
-    if (savingSpotlight.length > gamesPerPage) {
-      setSlidingSpotlight(true);
-      setTimeout(() => {
-        setSpotlightIndex((prevIndex) =>
-          prevIndex - gamesPerPage < 0
-            ? savingSpotlight.length - gamesPerPage
-            : prevIndex - gamesPerPage
-        );
-        setSlidingSpotlight(false);
-      }, 500);
-    }
-  };
-  
-  
-  
-  const handleNextPopular = () => {
-    if (mostPopular.length > gamesPerPage) {
-      setSlidingPopular(true);
-      setTimeout(() => {
-        setPopularIndex((prev) => (prev + gamesPerPage) % mostPopular.length);
-        setSlidingPopular(false);
-      }, 500);
-    }
-  };
-  
-  const handlePrevPopular = () => {
-    if (mostPopular.length > gamesPerPage) {
-      setSlidingPopular(true);
-      setTimeout(() => {
-        setPopularIndex((prev) =>
-          prev - gamesPerPage < 0
-            ? mostPopular.length - gamesPerPage
-            : prev - gamesPerPage
-        );
-        setSlidingPopular(false);
-      }, 500);
-    }
-  };
-  
-
-
   useEffect(() => {
     const interval = setInterval(() => {
       setSlide(true);
@@ -203,10 +180,15 @@ const [slidingPopular, setSlidingPopular] = useState(false);
     return () => clearInterval(interval);
   }, [games]);
 
+  // Determine slider class based on sliding state
+  const getSliderClass = (slidingState) => {
+    if (slidingState === 'left') return 'game-slider sliding-left';
+    if (slidingState === 'right') return 'game-slider sliding-right';
+    return 'game-slider sliding-in';
+  };
 
   return (
     <>
-
       <div className="container">
         <div className="upper">
           {/* Sidebar */}
@@ -235,7 +217,6 @@ const [slidingPopular, setSlidingPopular] = useState(false);
                   <button>Signup</button>
                 </Link>
               </div>
-
             </header>
 
             {/* Featured Game Section */}
@@ -252,105 +233,130 @@ const [slidingPopular, setSlidingPopular] = useState(false);
               </div>
             )}
           </main>
-
         </div>
 
-        {/* Game Carousel */}
         {/* Discover Something New Section */}
         <div className="carouselHeader">
           <h2>Discover Something New</h2>
           <div className="carouselControls">
-            <button className="controlButton" onClick={handlePrevDiscover}>←</button>
-            <button className="controlButton" onClick={handleNextDiscover}>→</button>
+            <button
+              className="controlButton"
+              onClick={handlePrevDiscover}
+              disabled={discoverIndex === 0}
+            >←</button>
+            <button
+              className="controlButton"
+              onClick={handleNextDiscover}
+              disabled={discoverIndex + gamesPerPage >= discoverNew.length}
+            >→</button>
           </div>
         </div>
+
         {loading ? (
           <p>Loading games...</p>
         ) : (
-          <div className={`gameGrid ${slidingDiscover ? "sliding" : ""}`}>
-            {discoverNew.slice(discoverIndex, discoverIndex + gamesPerPage).map(game => (
-              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
-                <div className="game-image">
-                  <img src={game.imageUrl} alt={game.name} />
-                  {game.discount && <span className="discount">-{game.discount}</span>}
+          <div className={getSliderClass(slidingDiscover)}>
+            <div className="gameGrid">
+              {discoverNew.slice(discoverIndex, discoverIndex + gamesPerPage).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "Free"}</p>
                 </div>
-                <h3 className="subheading">{game.name}</h3>
-                <p className="price">{game.price || "Free"}</p>
-              </div>
-            ))}
-
-
+              ))}
+            </div>
           </div>
         )}
 
-
+        {/* Saving Spotlight Section */}
         <div className="carouselHeader">
           <h2>Saving Spotlight</h2>
           <div className="carouselControls">
-            <button className="controlButton" onClick={handlePrevSpotlight}>←</button>
-            <button className="controlButton" onClick={handleNextSpotlight}>→</button>
+            <button
+              className="controlButton"
+              onClick={handlePrevSpotlight}
+              disabled={spotlightIndex === 0}
+            >←</button>
+            <button
+              className="controlButton"
+              onClick={handleNextSpotlight}
+              disabled={spotlightIndex + gamesPerPage >= savingSpotlight.length}
+            >→</button>
           </div>
         </div>
+
         {loading ? (
           <p>Loading games...</p>
         ) : (
-          <div className={`gameGrid ${slidingSpotlight ? "sliding" : ""}`}>
-            {savingSpotlight.slice(spotlightIndex, spotlightIndex + gamesPerPage).map(game => (
-              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
-                <div className="game-image">
-                  <img src={game.imageUrl} alt={game.name} />
-                  {game.discount && <span className="discount">-{game.discount}</span>}
+          <div className={getSliderClass(slidingSpotlight)}>
+            <div className="gameGrid">
+              {savingSpotlight.slice(spotlightIndex, spotlightIndex + gamesPerPage).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "Free"}</p>
                 </div>
-                <h3 className="subheading">{game.name}</h3>
-                <p className="price">{game.price || "Free"}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
-
+        {/* Most Popular Section */}
         <div className="carouselHeader">
           <h2>Most Popular</h2>
           <div className="carouselControls">
-            <button className="controlButton" onClick={handlePrevPopular}>←</button>
-            <button className="controlButton" onClick={handleNextPopular}>→</button>
+            <button
+              className="controlButton"
+              onClick={handlePrevPopular}
+              disabled={popularIndex === 0}
+            >←</button>
+            <button
+              className="controlButton"
+              onClick={handleNextPopular}
+              disabled={popularIndex + gamesPerPage >= mostPopular.length}
+            >→</button>
           </div>
         </div>
 
         {loading ? (
           <p>Loading games...</p>
         ) : (
-          <div className={`gameGrid ${slidingPopular ? "sliding" : ""}`}>
-            {mostPopular.slice(popularIndex, popularIndex + gamesPerPage).map(game => (
-              <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
-                <div className="game-image">
-                  <img src={game.imageUrl} alt={game.name} />
-                  {game.discount && <span className="discount">-{game.discount}</span>}
+          <div className={getSliderClass(slidingPopular)}>
+            <div className="gameGrid">
+              {mostPopular.slice(popularIndex, popularIndex + gamesPerPage).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "Free"}</p>
                 </div>
-                <h3 className="subheading">{game.name}</h3>
-                <p className="price">{game.price || "Free"}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
-
       </div>
 
       {/* Login Required Popup */}
-      {
-        showPopup && (
-          <div className="popup-overlay">
-            <div className="popup">
-              <h2>Login Required</h2>
-              <p>You need to log in to access this page.</p>
-              <div className="popup-buttons">
-                <button onClick={() => setShowPopup(false)}>Close</button>
-                <Link to="/login"><button>Login</button></Link>
-              </div>
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <h2>Login Required</h2>
+            <p>You need to log in to access this page.</p>
+            <div className="popup-buttons">
+              <button onClick={() => setShowPopup(false)}>Close</button>
+              <Link to="/login"><button>Login</button></Link>
             </div>
           </div>
-        )
-      }
+        </div>
+      )}
 
       <footer className="footer">
         <div className="footerContainer">
@@ -409,7 +415,9 @@ const [slidingPopular, setSlidingPopular] = useState(false);
           </div>
 
           <div className="legalLinks">
-            <a href="#" className="link">Terms of Service</a>
+            <a href="/terms-and-conditions" target="_blank" className="underline">
+              Terms and Conditions
+            </a>
             <a href="#" className="link">Privacy Policy/Store</a>
             <a href="#" className="link">Refund Policy</a>
           </div>
@@ -420,4 +428,3 @@ const [slidingPopular, setSlidingPopular] = useState(false);
 };
 
 export default GameStore;
-

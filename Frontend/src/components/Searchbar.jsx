@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Loader from "./Loader"; // Import Loader component
 import "../styles/Searchbar.css"; // External CSS for styling
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [navigating, setNavigating] = useState(false); // New state for navigation loading
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
@@ -46,13 +48,37 @@ const SearchBar = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest(".search-container")) {
+        setShowDropdown(false);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  
   const handleGameClick = (game) => {
-    navigate(`/game/${game._id}`, { state: game });
+    setNavigating(true); // Show full-screen loader when navigating
     setShowDropdown(false);
+
+    setTimeout(() => {
+      navigate(`/game/${game._id}`, { state: game });
+      setNavigating(false); // Hide loader after navigation
+    }, 500);
   };
 
   return (
     <div className="search-container">
+      {/* Full-Screen Loader when navigating */}
+      {navigating && (
+        <div className="full-screen-loader">
+          <Loader />
+        </div>
+      )}
+
       {/* Search Input */}
       <input
         type="text"
@@ -63,12 +89,11 @@ const SearchBar = () => {
         onFocus={() => setShowDropdown(true)}
       />
 
-      {/* Loading & Error Messages */}
-      {loading && <p className="search-message">Loading...</p>}
+      {/* Error Message */}
       {error && <p className="search-message error">{error}</p>}
 
       {/* Search Results Dropdown */}
-      {showDropdown && games.length > 0 && (
+      {showDropdown && !loading && !navigating && games.length > 0 && (
         <div className="search-dropdown">
           {games.map((game) => (
             <div
