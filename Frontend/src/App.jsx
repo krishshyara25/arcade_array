@@ -39,7 +39,7 @@ function App() {
                 <Route path="/game/:id" element={<GamePage />} />
                 <Route path="/wishlist" element={<WishlistPage />} />
                 <Route path="/setting" element={<Settings />} />
-                <Route path="/terms-and-conditions" element={<Terms />} />
+                <Route path="/policies" element={<Terms />} />
                 <Route path="*" element={<NotFound />} /> {/* Fix 404 errors */}
             </Routes>
         </>

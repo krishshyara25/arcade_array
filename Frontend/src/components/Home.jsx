@@ -415,7 +415,7 @@ const GameStore = () => {
           </div>
 
           <div className="legalLinks">
-            <a href="/terms-and-conditions" target="_blank" className="underline">
+            <a href="/policies" target="_blank" className="underline">
               Terms and Conditions
             </a>
             <a href="#" className="link">Privacy Policy/Store</a>
