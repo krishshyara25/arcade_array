@@ -53,6 +53,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/games', gameRoutes);
 app.use("/payment", paymentRoutes);
+app.use('/uploads', express.static('uploads'));
 
 
 // ✅ Default Route (Optional)

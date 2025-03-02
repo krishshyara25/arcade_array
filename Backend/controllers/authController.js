@@ -76,3 +76,26 @@ exports.login = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
+
+const updateProfile = async (req, res) => {
+    const { userId } = req.params;
+    const { bio } = req.body;
+    const profilePicture = req.file ? req.file.filename : null; // File Path
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { 
+                bio,
+                ...(profilePicture && { profilePicture })
+            },
+            { new: true }
+        );
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(400).json({ message: 'Failed to update profile', error });
+    }
+};
