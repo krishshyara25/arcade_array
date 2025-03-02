@@ -79,7 +79,7 @@ exports.login = async (req, res) => {
 
 
 
-const updateProfile = async (req, res) => {
+exports.updateProfile = async (req, res) => {
     const { userId } = req.params;
     const { bio } = req.body;
     const profilePicture = req.file ? req.file.filename : null; // File Path
