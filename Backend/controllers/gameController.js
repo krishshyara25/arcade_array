@@ -114,13 +114,23 @@ const getUserDetails = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const user = await User.findById(userId).select('username email profilePicture');
+    const user = await User.findById(userId).select('username email profilePicture friends');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    res.status(200).json(user);
+    // Calculate the number of friends
+    const friendCount = user.friends ? user.friends.length : 0;
+
+    // Include friendCount in the response
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      profilePicture: user.profilePicture,
+      friendCount: friendCount,
+      friends: user.friends, // Send friend list too
+    });    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error fetching user details' });
