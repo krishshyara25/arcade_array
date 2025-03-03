@@ -34,7 +34,6 @@ const searchGame = async (req, res) => {
   }
 };
 
-
 // Controller to fetch game by ID
 const getGameById = async (req, res) => {
   try {
@@ -49,26 +48,20 @@ const getGameById = async (req, res) => {
   }
 };
 
-
-
-
 // Controller to add a game to the wishlist
 const addToWishlist = async (req, res) => {
   const { userId, gameId } = req.body;
 
   try {
-    // Find the user
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if the game already exists in the wishlist
     if (user.wishlist.includes(gameId)) {
       return res.status(400).json({ message: 'Game already in wishlist' });
     }
 
-    // Add the game ID to the wishlist (instead of the full game object)
     user.wishlist.push(gameId);
     await user.save();
 
@@ -79,33 +72,30 @@ const addToWishlist = async (req, res) => {
   }
 };
 
-
-//remove game from wishlist
+// Remove game from wishlist
 const removeFromWishlist = async (req, res) => {
   try {
-      const { userId, gameId } = req.params; // Use req.params instead of req.body
+    const { userId, gameId } = req.params;
 
-      if (!userId || !gameId) return res.status(400).json({ message: 'User ID and Game ID are required' });
+    if (!userId || !gameId) return res.status(400).json({ message: 'User ID and Game ID are required' });
 
-      const user = await User.findById(userId);
-      if (!user) return res.status(404).json({ message: 'User not found' });
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-      user.wishlist = user.wishlist.filter(id => id.toString() !== gameId);
-      await user.save();
-      
-      res.status(200).json({ message: 'Game removed from wishlist', wishlist: user.wishlist });
+    user.wishlist = user.wishlist.filter(id => id.toString() !== gameId);
+    await user.save();
+
+    res.status(200).json({ message: 'Game removed from wishlist', wishlist: user.wishlist });
   } catch (error) {
-      res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error', error });
   }
 };
-
 
 // Controller to get the user's wishlist
 const getUserWishlist = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    // Find the user and populate the wishlist with game details
     const user = await User.findById(userId).populate('wishlist');
 
     if (!user) {
@@ -119,25 +109,31 @@ const getUserWishlist = async (req, res) => {
   }
 };
 
-
-// Controller to get the user's username and email
+// Controller to get the user's username , email and profile picture
 const getUserDetails = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    // Find the user and only return username & email
-    const user = await User.findById(userId).select('username email');
+    const user = await User.findById(userId).select('username email profilePicture');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    res.status(200).json(user); // Returns { username: "user123", email: "user@example.com" }
+    res.status(200).json(user);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error fetching user details' });
   }
 };
 
+module.exports = {
+  getAllGames,
+  addToWishlist,
+  getUserWishlist,
+  removeFromWishlist,
+  getUserDetails,
+  searchGame,
+  getGameById
+};
 
-module.exports = { getAllGames, addToWishlist, getUserWishlist, removeFromWishlist, getUserDetails, searchGame, getGameById};

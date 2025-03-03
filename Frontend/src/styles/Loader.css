@@ -1,0 +1,18 @@
+.payment {
+  text-align: center;
+  margin-top: 50px;
+}
+
+button {
+  padding: 10px 20px;
+  background: #ff0000;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.loader {
+  margin-top: 20px;
+  color: #ff0000;
+  font-weight: bold;
+}

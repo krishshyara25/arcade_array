@@ -1,4 +1,5 @@
 require('dotenv').config(); // Load environment variables
+const Stripe = require("stripe");
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -6,6 +7,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
+const paymentRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -50,6 +52,9 @@ mongoose.connect(mongoURI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/friends', friendsRoutes);
 app.use('/api/games', gameRoutes);
+app.use('/payment', paymentRoutes);
+app.use('/uploads', express.static('uploads'));
+
 
 // ✅ Default Route (Optional)
 app.get("/", (req, res) => {
