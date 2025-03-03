@@ -75,19 +75,19 @@ const addToWishlist = async (req, res) => {
 // Remove game from wishlist
 const removeFromWishlist = async (req, res) => {
   try {
-      const { userId, gameId } = req.params;
+    const { userId, gameId } = req.params;
 
-      if (!userId || !gameId) return res.status(400).json({ message: 'User ID and Game ID are required' });
+    if (!userId || !gameId) return res.status(400).json({ message: 'User ID and Game ID are required' });
 
-      const user = await User.findById(userId);
-      if (!user) return res.status(404).json({ message: 'User not found' });
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-      user.wishlist = user.wishlist.filter(id => id.toString() !== gameId);
-      await user.save();
-      
-      res.status(200).json({ message: 'Game removed from wishlist', wishlist: user.wishlist });
+    user.wishlist = user.wishlist.filter(id => id.toString() !== gameId);
+    await user.save();
+
+    res.status(200).json({ message: 'Game removed from wishlist', wishlist: user.wishlist });
   } catch (error) {
-      res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error', error });
   }
 };
 
@@ -114,7 +114,7 @@ const getUserDetails = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const user = await User.findById(userId).select('username email');
+    const user = await User.findById(userId).select('username email profilePicture');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -127,13 +127,13 @@ const getUserDetails = async (req, res) => {
   }
 };
 
-module.exports = { 
-  getAllGames, 
-  addToWishlist, 
-  getUserWishlist, 
-  removeFromWishlist, 
-  getUserDetails, 
-  searchGame, 
-  getGameById 
+module.exports = {
+  getAllGames,
+  addToWishlist,
+  getUserWishlist,
+  removeFromWishlist,
+  getUserDetails,
+  searchGame,
+  getGameById
 };
 

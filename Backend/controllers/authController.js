@@ -95,3 +95,23 @@ exports.updateProfile = async (req, res) => {
       res.status(400).json({ message: 'Failed to update profile', error });
     }
   };
+
+
+  // Fetch User Profile
+exports.fetchUserProfile = async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const user = await User.findById(id).select("-password"); // Yeh password ko exclude karega
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      res.status(200).json(user);
+    } catch (error) {
+      console.error("Fetch Profile Error:", error);
+      res.status(500).json({ message: "Failed to load user information" });
+    }
+  };
+  
