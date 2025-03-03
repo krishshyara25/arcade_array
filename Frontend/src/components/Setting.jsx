@@ -212,7 +212,7 @@ const Settings = () => {
                                     </div>
                                     <div className="stat-card">
                                         <h4>Wishlist Items</h4>
-                                        <p>{user.wishlist?.length || 0}</p>
+                                        <p>{user.wishlistCount || 0}</p> {/* Display wishlist count */}
                                     </div>
                                     <div className="stat-card">
                                         <h4>Friends</h4>
