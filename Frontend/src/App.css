@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+@font-face {
+  font-family: 'Colfax';
+  src: url('https://js.stripe.com/type-font/Colfax-Medium.woff') format('woff');
+  font-display: swap;
+}

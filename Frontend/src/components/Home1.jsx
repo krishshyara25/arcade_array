@@ -2,8 +2,10 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "./Searchbar";
 import axios from "axios";
 import logo from '../assets/arcade_alley_logo.png';
-import img2 from '../assets/wp9549839.png';
+import defaultProfilePic from "../assets/wp9549839.png"; // Default profile picture
 import { toast } from "react-toastify";
+import Loader from "./Loader"; // Loader component for loading states
+
 
 import React, { useState, useEffect } from 'react';
 import '../styles/Home1.css';
@@ -46,22 +48,51 @@ const GamingPlatform = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userId) return; // Prevent fetching if no user is logged in
-
+    if (!userId) {
+      toast.error("User ID not found. Please log in again.");
+      navigate("/login");
+      return;
+    }
+  
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch(`https://arcade-array.onrender.com/api/games/user/details/${userId}`);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message);
-        setUser(data); // Set user details in state
+        setLoading(true);
+        console.log("Fetching user details for userId:", userId);
+  
+        const response = await axios.get(
+          `https://arcade-array.onrender.com/api/games/user/details/${userId}`
+        );
+  
+        console.log("Response from backend:", response);
+  
+        if (response.status === 200) {
+          const userData = response.data;
+          console.log("User data received:", userData);
+  
+          if (!userData || !userData.username) {
+            toast.error("Invalid user data received");
+            return;
+          }
+  
+          setUser(userData);
+          setUsername(userData.username || "");
+          setEmail(userData.email || "");
+          setPreviewUrl(userData.profilePicture || defaultProfilePic);
+          setLoading(false);
+        } else {
+          console.error("Unexpected response status:", response.status);
+          toast.error("Failed to load user information");
+          setLoading(false);
+        }
       } catch (error) {
-        console.error("Error fetching user details:", error.message);
+        console.error("Error fetching user details:", error);
+        toast.error("Failed to load user information");
+        setLoading(false);
       }
     };
-
+  
     fetchUserDetails();
-  }, [userId]);
-
+  }, [userId, navigate]);
 
   useEffect(() => {
     axios.get("https://arcade-array.onrender.com/api/games")
@@ -100,16 +131,16 @@ const GamingPlatform = () => {
   useEffect(() => {
     if (!userId) return; // Prevent fetching if no user is logged in
 
-    const fetchUserDetails = async () => {
-      try {
-        const response = await fetch(`https://arcade-array.onrender.com/api/games/user/details/${userId}`);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message);
-        setUser(data); // Set user details in state
-      } catch (error) {
-        console.error("Error fetching user details:", error.message);
-      }
-    };
+    // const fetchUserDetails = async () => {
+    //   try {
+    //     const response = await fetch(`https://arcade-array.onrender.com/api/games/user/details/${userId}`);
+    //     const data = await response.json();
+    //     if (!response.ok) throw new Error(data.message);
+    //     setUser(data); // Set user details in state
+    //   } catch (error) {
+    //     console.error("Error fetching user details:", error.message);
+    //   }
+    // };
 
     const fetchFriendRequests = async () => {
       try {
@@ -122,7 +153,7 @@ const GamingPlatform = () => {
       }
     };
 
-    fetchUserDetails();
+    // fetchUserDetails();
     fetchFriendRequests(); // Fetch friend requests when the component mounts
   }, [userId]);
 
@@ -179,8 +210,15 @@ const GamingPlatform = () => {
     }
   };
 
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData) {
+      setUser(userData);
+    }
+  }, []);
 
-  
+
+
 
 
 
@@ -212,11 +250,12 @@ const GamingPlatform = () => {
                 )}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', position: 'relative' }}>
                   <img
-                    src={img2}
-                    style={{ borderRadius: '50%', width: '3vw', cursor: 'pointer' }}
+                    src={user?.profilePicture ? user.profilePicture : defaultProfilePic}
+                    style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
                     alt="Profile"
                     onClick={() => setDropdownVisible(!dropdownVisible)}
                   />
+
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div>
                       <h1 className="username">Welcome, {user?.username || "Guest"}</h1>

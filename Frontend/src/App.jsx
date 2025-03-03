@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import React from "react";
+import React, {useEffect } from 'react';
 import Login from "./components/login.jsx";
 import Signup from "./components/Signup.jsx";
 import Home from "./components/Home.jsx";
@@ -22,6 +22,12 @@ import StripeWrapper from "./components/Payment.jsx"; // Adjust your path if nee
 const NotFound = () => <h2>Page Not Found</h2>;
 
 function App() {
+    useEffect(() => {
+        window.Stripe = window.Stripe || {};
+        console.log = () => {};
+        console.warn = () => {};
+        console.error = () => {};
+      }, []);
     return (
         <>
             {/* Toast notifications */}
