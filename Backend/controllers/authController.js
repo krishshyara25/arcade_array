@@ -82,37 +82,44 @@ exports.login = async (req, res) => {
 // Update Profile Controller ✅ (Final Version)
 exports.updateProfile = async (req, res) => {
   const { userId } = req.params;
-  const username = req.body["username"];
-  const { profilePicture } = req.body;
+  const { username, profilePicture } = req.body; // Use destructuring
 
   try {
-      const user = await User.findById(userId);
+    const user = await User.findById(userId);
 
-      if (!user) {
-          return res.status(404).json({ message: "User not found" });
-      }
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-      if (username) {
-          user.username = username; // 🔥 Update Username
-      }
+    // Update username if provided
+    if (username) {
+      user.username = username;
+    }
 
-      if (req.file) {
-          user.profilePicture = req.file.path; // Update Profile Picture
-      }
+    // Update profile picture if provided
+    if (profilePicture) {
+      user.profilePicture = profilePicture;
+    }
 
-      await user.save();
+    // Save the updated user
+    await user.save();
 
-      res.status(200).json({
-          message: "Profile updated successfully",
-          profilePicture: user.profilePicture,
-          username: user.username, // ✅ Send updated username
-      });
+    res.status(200).json({
+      message: "Profile updated successfully",
+      profilePicture: user.profilePicture,
+      username: user.username,
+    });
   } catch (error) {
-      console.error("Error updating profile:", error);
-      res.status(500).json({ message: "Server Error" });
+    console.error("Error updating profile:", error);
+
+    // Handle duplicate username error
+    if (error.code === 11000 && error.keyPattern.username) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+
+    res.status(500).json({ message: "Server Error" });
   }
 };
-
 
 // Fetch User Profile
 exports.fetchUserProfile = async (req, res) => {
