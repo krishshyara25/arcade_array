@@ -78,24 +78,20 @@ exports.login = async (req, res) => {
 };
 
 
-
-exports.updateProfile = async (req, res) => {
+const updateProfile = async (req, res) => {
     const { userId } = req.params;
     const { bio } = req.body;
-    const profilePicture = req.file ? req.file.filename : null; // File Path
-
+    const profilePicture = req.file ? req.file.path : null;
+  
     try {
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { 
-                bio,
-                ...(profilePicture && { profilePicture })
-            },
-            { new: true }
-        );
-
-        res.status(200).json(updatedUser);
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { bio, ...(profilePicture && { profilePicture }) },
+        { new: true }
+      );
+  
+      res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(400).json({ message: 'Failed to update profile', error });
+      res.status(400).json({ message: 'Failed to update profile', error });
     }
-};
+  };

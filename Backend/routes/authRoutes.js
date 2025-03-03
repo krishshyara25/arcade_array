@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const upload = require('../uploadMiddleware');
-const { updateProfile } = require('../controllers/authController'); // ✅ Make sure this is correct
+const { updateProfile } = require('../controllers/authController');
+
 
 router.put('/profile/:userId', upload.single('profilePicture'), updateProfile);
 router.post('/signup', authController.signup);
