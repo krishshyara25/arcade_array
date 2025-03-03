@@ -2,10 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const upload = require('../uploadMiddleware');
-const { updateProfile } = require('../controllers/authController');
 
-
-router.put('/profile/:userId', upload.single('profilePicture'), updateProfile);
+router.put("/update-profile/:userId", upload.single("profilePicture"), authController.updateProfile);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 

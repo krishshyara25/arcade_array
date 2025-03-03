@@ -109,7 +109,7 @@ const getUserWishlist = async (req, res) => {
   }
 };
 
-// Controller to get the user's username and email
+// Controller to get the user's username , email and profile picture
 const getUserDetails = async (req, res) => {
   const { userId } = req.params;
 
