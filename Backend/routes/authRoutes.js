@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const upload = require('../uploadMiddleware');
-const { socialLogin } = require("../controllers/authController");
+const { auth0Login } = require("../controllers/authController");
 const { auth0Signup } = require("../controllers/authController");
 
 router.post("/auth0", auth0Login);
