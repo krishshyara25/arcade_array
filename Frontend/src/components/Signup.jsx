@@ -57,55 +57,49 @@ function SignUpForm() {
       setError("Signup failed. Please try again.");
     }
   };
-
+  
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user) {
       const auth0Callback = async () => {
         try {
-          const token = await getAccessTokenSilently();
-          console.log("Auth0 Token: ", token);
-          localStorage.setItem("authToken", token);
+          console.log("Auth0 User Data:", user);
   
           const userData = {
-            firstname: user.given_name,
-            lastname: user.family_name,
-            username: user.nickname,
+            firstname: user.given_name || user.name.split(" ")[0],
+            lastname: user.family_name || user.name.split(" ")[1] || "",
+            username: user.nickname || user.email.split("@")[0],
             email: user.email,
             profilePicture: user.picture,
-            password: "googleAuth", // Dummy password
+            password: "googleAuth",
           };
   
           const res = await axios.post(
             "https://arcade-array.onrender.com/api/auth/auth0signup",
-            userData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+            userData
           );
   
-          console.log("Auth0 Signup Response:", res.data);
+          console.log("Google Signup Response:", res.data);
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("userId", res.data.userId);
           navigate("/home1");
         } catch (err) {
-          console.error("Auth0 Callback Error:", err);
+          console.log("Google Auth Error:", err);
         }
       };
   
       auth0Callback();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
   
-  
-
   const handleGoogleLogin = async () => {
     await loginWithRedirect({
       authorizationParams: {
-        connection: "google-oauth2", // This is for Google
-        prompt: "login", // 💪 This will FORCE Google Popup Every Time
+        connection: "google-oauth2",
+        prompt: "login",
       },
     });
   };
+  
   
   const handleFacebookLogin = async () => {
     await loginWithRedirect({

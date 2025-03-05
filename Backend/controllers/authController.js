@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.AUTH0_CLIENT_ID);
 
 
 
@@ -171,6 +173,44 @@ exports.auth0Signup = async (req, res) => {
     });
   } catch (err) {
     console.error("Auth0 Signup Error:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+// controllers/authController.js
+
+exports.auth0Login = async (req, res) => {
+  const { email, name, picture } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        firstname: name.split(" ")[0],
+        lastname: name.split(" ")[1] || "",
+        email,
+        profilePicture: picture,
+        username: email.split("@")[0],
+        password: "auth0_password",
+      });
+    }
+
+    const token = jwt.sign(
+      { userId: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.status(200).json({
+      message: "Login Successful via Google",
+      token,
+      userId: user._id,
+      username: user.username,
+    });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
