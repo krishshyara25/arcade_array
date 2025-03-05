@@ -54,6 +54,7 @@ app.use('/api/friends', friendsRoutes);
 app.use('/api/games', gameRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/uploads', express.static('uploads'));
+app.use("/api/auth", require("./routes/authRoutes"));
 
 
 // ✅ Default Route (Optional)
