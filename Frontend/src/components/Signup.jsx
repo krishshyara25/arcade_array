@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/signup.css";
-import logo from '../assets/arcade_alley_logo.png'
 import seen from '../assets/visibility_off_24dp_E8EAED.svg'
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 function SignUpForm() {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ function SignUpForm() {
     password: "",
   });
 
+  const { loginWithRedirect, isAuthenticated, user, getAccessTokenSilently } = useAuth0();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -55,6 +57,59 @@ function SignUpForm() {
       setError("Signup failed. Please try again.");
     }
   };
+  
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const auth0Callback = async () => {
+        try {
+          console.log("Auth0 User Data:", user);
+  
+          const userData = {
+            firstname: user.given_name || user.name.split(" ")[0],
+            lastname: user.family_name || user.name.split(" ")[1] || "",
+            username: user.nickname || user.email.split("@")[0],
+            email: user.email,
+            profilePicture: user.picture,
+            password: "googleAuth",
+          };
+  
+          const res = await axios.post(
+            "https://arcade-array.onrender.com/api/auth/auth0signup",
+            userData
+          );
+  
+          console.log("Google Signup Response:", res.data);
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("userId", res.data.userId);
+          navigate("/home1");
+        } catch (err) {
+          console.log("Google Auth Error:", err);
+        }
+      };
+  
+      auth0Callback();
+    }
+  }, [isAuthenticated, user]);
+  
+  const handleGoogleLogin = async () => {
+    await loginWithRedirect({
+      authorizationParams: {
+        connection: "google-oauth2",
+        prompt: "login",
+      },
+    });
+  };
+  
+  
+  const handleFacebookLogin = async () => {
+    await loginWithRedirect({
+      authorizationParams: {
+        connection: "facebook", // This is for Facebook
+      },
+    });
+  };
+  
+  
 
   return (
     <div className="signup-container">
@@ -64,9 +119,9 @@ function SignUpForm() {
       {/* Main Form */}
       <main className="form-container">
         <div className="form-header">
-        <button className="backbutton2" onClick={() => navigate(-1)}>
-                ◀ Back
-            </button>
+          <button className="backbutton2" onClick={() => navigate(-1)}>
+            ◀ Back
+          </button>
         </div>
 
         {error && <p className="error">{error}</p>}
@@ -120,7 +175,7 @@ function SignUpForm() {
               className="password-toggle"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <img src={seen} alt="" className="eyeicon"/> : "👁"}
+              {showPassword ? <img src={seen} alt="" className="eyeicon" /> : "👁"}
             </button>
           </div>
 
@@ -138,12 +193,17 @@ function SignUpForm() {
           <div className="divider-text">Or Sign up with</div>
 
           <div className="social-buttons">
-            <button type="button" className="social-button">G</button>
-            <button type="button" className="social-button">F</button>
+            <button type="button" className="social-button" onClick={handleGoogleLogin}>
+              G
+            </button>
+            <button type="button" className="social-button" onClick={handleFacebookLogin}>
+              F
+            </button>
+
           </div>
           <div onClick={() => navigate("/login")} className="login-button">
-              already have an accout?
-            </div>
+            already have an accout?
+          </div>
         </form>
       </main>
     </div>

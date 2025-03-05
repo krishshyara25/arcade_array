@@ -86,7 +86,6 @@ const GamingPlatform = () => {
         }
       } catch (error) {
         console.error("Error fetching user details:", error);
-        toast.error("Failed to load user information");
         setLoading(false);
       }
     };
