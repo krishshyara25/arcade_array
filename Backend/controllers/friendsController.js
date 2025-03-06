@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 // controllers/userController.js
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find({ profileVisibility: true }); // Only return users with profileVisibility: true
+        const users = await User.find({}); // Fetch all users
         res.status(200).json(users);
     } catch (error) {
         console.error("Error fetching users:", error);
