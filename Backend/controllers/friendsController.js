@@ -58,12 +58,23 @@ exports.sendFriendRequest = async (req, res) => {
             return res.status(400).json({ message: 'You have already sent a friend request' });
         }
 
+        // Check if the target user's account is public
+        if (targetUser.profileVisibility) {
+            // Automatically accept the friend request for public accounts
+            user.friends.push(targetUserId);
+            targetUser.friends.push(userId);
 
+            await user.save();
+            await targetUser.save();
 
-        targetUser.friendRequests.push(userId);
-        await targetUser.save();
+            return res.status(200).json({ message: 'Friend request accepted automatically' });
+        } else {
+            // For private accounts, send a friend request
+            targetUser.friendRequests.push(userId);
+            await targetUser.save();
 
-        return res.status(200).json({ message: 'Friend request sent successfully' });
+            return res.status(200).json({ message: 'Friend request sent successfully' });
+        }
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: 'Internal server error' });
