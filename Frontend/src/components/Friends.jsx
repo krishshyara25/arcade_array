@@ -8,6 +8,7 @@ import pendingrequest from '../assets/pending.png';
 import bin from '../assets/bin.png';
 import acceptIcon from '../assets/correct.png'; // Add Accept icon
 import rejectIcon from '../assets/reject.png'; // Add Reject icon
+import defaultProfilePic from "../assets/wp9549839.png";
 
 const Friends = () => {
   const navigate = useNavigate();
@@ -171,10 +172,10 @@ const Friends = () => {
       !friendsList.some(friend => friend._id === user._id) // Exclude users who are already friends
     );
 
-    const handleLogout = () => {
-      localStorage.removeItem('userId'); // Remove user ID from localStorage
-      navigate('/home'); // Navigate to login page after logout
-    };
+  const handleLogout = () => {
+    localStorage.removeItem('userId'); // Remove user ID from localStorage
+    navigate('/home'); // Navigate to login page after logout
+  };
 
   return (
     <div className="app">
@@ -187,8 +188,8 @@ const Friends = () => {
           <i className="fas fa-bell icon"></i>
           <div className="user-details">
             <img
-              src={img2}
-              style={{ borderRadius: '50%', width: '3vw', cursor: 'pointer' }}
+              src={user?.profilePicture ? user.profilePicture : defaultProfilePic}
+              style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
               alt="Profile"
               onClick={() => setDropdownVisible(!dropdownVisible)}
             />
@@ -199,19 +200,19 @@ const Friends = () => {
 
             {/* Dropdown Menu */}
             {dropdownVisible && (
-                    <div className="dropdownMenu">
-                      <button onClick={handleLogout} className="logoutButton">Logout</button>
-                    </div>
-                  )}
+              <div className="dropdownMenu">
+                <button onClick={handleLogout} className="logoutButton">Logout</button>
+              </div>
+            )}
 
           </div>
         </div>
       </header>
 
       <main className="main">
-      <button className="backbutton1" onClick={() => navigate(-1)}>
-                ◀ Back
-            </button>
+        <button className="backbutton1" onClick={() => navigate("/home1")}>
+          ◀ Back
+        </button>
 
         <div className="search-container">
           <input
