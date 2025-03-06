@@ -1,14 +1,15 @@
 const User = require('../models/userModel');
 
+// controllers/userController.js
 exports.getAllUsers = async (req, res) => {
     try {
-      const users = await User.find();
-      res.json(users);
+        const users = await User.find({ profileVisibility: true }); // Only return users with profileVisibility: true
+        res.status(200).json(users);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error fetching games.' });
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Failed to fetch users" });
     }
-  };
+};
 
 // Search users route
 exports.searchUsers = async (req, res) => {

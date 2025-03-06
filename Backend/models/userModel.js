@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema({
     isOnline: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }, // ✅ User registration date
     authType: { type: String, enum: ["email", "social"], default: "email" }, // New Field
+    profileVisibility: { type: Boolean, default: true }, // Add this field
+
 
 });
 

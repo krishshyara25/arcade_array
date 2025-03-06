@@ -144,22 +144,35 @@ exports.fetchUserProfile = async (req, res) => {
 exports.auth0Signup = async (req, res) => {
   const { firstname, lastname, username, email, profilePicture } = req.body;
 
+  console.log("Received User Data:", req.body); // Log the incoming data
+
   try {
+    // Validate required fields
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    // Check if the user already exists
     let user = await User.findOne({ email });
 
     if (!user) {
+      // Create a new user if they don't exist
       user = new User({
-        firstname,
-        lastname,
-        username,
+        firstname: firstname || "Unknown",
+        lastname: lastname || "",
+        username: username || email.split("@")[0], // Fallback to email prefix if username is missing
         email,
-        profilePicture,
-        password: "googleAuth", // Dummy Password
+        profilePicture: profilePicture || "",
+        password: "googleAuth", // Dummy password for social signup
       });
 
       await user.save();
+      console.log("New User Created:", user); // Log the newly created user
+    } else {
+      console.log("Existing User Found:", user); // Log the existing user
     }
 
+    // Generate a JWT token
     const token = jwt.sign(
       { userId: user._id, username: user.username },
       process.env.JWT_SECRET,
@@ -173,6 +186,12 @@ exports.auth0Signup = async (req, res) => {
     });
   } catch (err) {
     console.error("Auth0 Signup Error:", err);
+
+    // Handle duplicate username error
+    if (err.code === 11000 && err.keyPattern.username) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -184,17 +203,26 @@ exports.auth0Login = async (req, res) => {
   const { email, name, picture } = req.body;
 
   try {
+    // Validate required fields
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    // Find or create the user
     let user = await User.findOne({ email });
 
     if (!user) {
-      user = await User.create({
-        firstname: name.split(" ")[0],
-        lastname: name.split(" ")[1] || "",
+      // Create a new user if they don't exist
+      user = new User({
+        firstname: name?.split(" ")[0] || "Unknown",
+        lastname: name?.split(" ")[1] || "",
         email,
-        profilePicture: picture,
-        username: email.split("@")[0],
-        password: "auth0_password",
+        profilePicture: picture || "",
+        username: email.split("@")[0], // Fallback to email prefix
+        password: "auth0_password", // Dummy password for social login
       });
+
+      await user.save();
     }
 
     const token = jwt.sign(
@@ -210,7 +238,36 @@ exports.auth0Login = async (req, res) => {
       username: user.username,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Auth0 Login Error:", error);
+
+    // Handle duplicate username error
+    if (error.code === 11000 && error.keyPattern.username) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Update profile visibility
+exports.updateProfileVisibility = async (req, res) => {
+  try {
+      const { userId } = req.params;
+      const { profileVisibility } = req.body;
+
+      const updatedUser = await User.findByIdAndUpdate(
+          userId,
+          { profileVisibility },
+          { new: true }
+      );
+
+      if (!updatedUser) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json(updatedUser);
+  } catch (error) {
+      console.error("Error updating profile visibility:", error);
+      res.status(500).json({ message: "Failed to update profile visibility" });
   }
 };
