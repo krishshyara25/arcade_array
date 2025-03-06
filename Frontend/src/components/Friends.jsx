@@ -81,23 +81,37 @@ const Friends = () => {
 
   const sendFriendRequest = async (targetUserId) => {
     try {
-      const response = await fetch("https://arcade-array.onrender.com/api/friends/friend-request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, targetUserId }),
-      });
+      const response = await fetch(
+        "https://arcade-array.onrender.com/api/friends/friend-request",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, targetUserId }),
+        }
+      );
 
       const data = await response.json();
+
       if (response.ok) {
-        setRequestStatus(prevState => ({
+        if (data.message === "Friend request accepted automatically") {
+          toast.success("Friend request accepted automatically");
+          // Update the friends list in the UI
+          setFriendsList((prev) => [...prev, targetUserId]);
+        } else {
+          toast.success("Friend request sent");
+        }
+
+        // Update request status in the UI
+        setRequestStatus((prevState) => ({
           ...prevState,
-          [targetUserId]: true
+          [targetUserId]: true,
         }));
       } else {
         alert(data.message || "Error sending request");
       }
     } catch (error) {
       console.error("Error sending friend request:", error);
+      toast.error("Failed to send friend request");
     }
   };
 
@@ -166,10 +180,11 @@ const Friends = () => {
   };
 
   const filteredUsers = users
-    .filter(user =>
-      user.username.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      user._id !== userId && // Exclude the logged-in user
-      !friendsList.some(friend => friend._id === user._id) // Exclude users who are already friends
+    .filter(
+      (user) =>
+        user.username.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        user._id !== userId && // Exclude the logged-in user
+        !friendsList.some((friend) => friend._id === user._id) // Exclude users who are already friends
     );
 
   const handleLogout = () => {
@@ -282,7 +297,18 @@ const Friends = () => {
                         alt={`${user.username} Avatar`}
                         className="friend-avatar"
                       />
-                      <span className="friend-name">{user.username}</span>
+                      <span className="friend-name">
+                        {user.username} {/* Username */}
+                        <span
+                          style={{
+                            fontSize: "0.8rem",
+                            color: user.profileVisibility ? "green" : "red",
+                            marginLeft: "8px",
+                          }}
+                        >
+                          {user.profileVisibility ? "(Public)" : "(Private)"} {/* Visibility Indicator */}
+                        </span>
+                      </span>
                     </div>
                     <div className="friend-actions">
                       {requestStatus[user._id] ? (
