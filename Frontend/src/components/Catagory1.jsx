@@ -192,14 +192,14 @@ const GameStore = () => {
                         <div className="logo">
                             <img src={logo} alt="Arcade Alley" />
                         </div>
-                        <a href="#" className="sidebarItem" onClick={() => navigate("/home1")}>🏠 Home</a>
-                        <a href="#" className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
-                        <a href="#" className="sidebarItem" >👥 Community</a>
-                        <a href="#" className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
-                        <a href="#" className="sidebarItem" onClick={() => navigate("/wishlist")}>❤️ Wishlist</a>
-                        <a href="#" className="sidebarItem">⬇️ Download</a>
-                        <a href="#" className="sidebarItem">⚙️ Setting</a>
-                    </nav>
+                        <a className="sidebarItem" onClick={() => navigate("/home1")}>🏠 Home</a>
+                        <a className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
+                        <a className="sidebarItem" >👥 Community</a>
+                        <a className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
+                        <a className="sidebarItem" onClick={() => navigate("/wishlist")}>❤️ Wishlist</a>
+                        <a className="sidebarItem">⬇️ Download</a>
+                        <a className="sidebarItem" onClick={() => navigate("/setting")}>⚙️ Setting</a>
+                        </nav>
 
                     {/* Main Content */}
                     <main className="main-content">
