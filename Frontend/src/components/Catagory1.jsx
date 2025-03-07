@@ -86,33 +86,6 @@ const GameStore = () => {
         }
     ];
 
-    const newReleases = [
-        { id: 1, title: "EA SPORTS FCT™ 24 Standard Edition", price: "₹1,599.60", imageUrl: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/tihfukuhizvkwpu0lrsw.png", discount: "60%" },
-        { id: 2, title: "Marvel’s Spider-Man 2", price: "₹3,999", imageUrl: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740168767/image20_tq2dmu.png" },
-        { id: 3, title: "Kingdom Come: Deliverance II", price: "₹3,360", imageUrl: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740168768/image21_xlpkxr.png" },
-        { id: 4, title: "Sid Meier's Civilization® VII", price: "₹3,999", imageUrl: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740168767/image22_ldfqqm.png" },
-        { id: 1, title: "EA SPORTS™ Madden NFL 25", price: "₹1,199.70", imageUrl: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740168768/image23_qnma9l.png", discount: "70%" },
-        { id: 2, title: "Black Myth: Wukong", price: "₹3,599", imageUrl: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740168768/image24_rnmhlz.png" }
-    ];
-
-    const SavingSpotlight = [
-        { id: 1, title: 'Dying Light 2 + Brecken + Rais Bundles', price: '₹1,158', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/fp9hmxdwo64po9s7a8u6.png" , discount: "60%"},
-        { id: 2, title: 'Tiny Tinas Wonderlands Chaotic Great Edition', price: '₹798', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/ut917gaf22nqcbmkwz11.png" , discount: "80%"},
-        { id: 3, title: 'Borderlands 3: Ultimate Edition', price: ' ₹1,255', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/dgbqmamjjfmekvpsivv1.png" , discount: "75%"},
-        { id: 4, title: 'Marvels Midnight Suns Legendary Edition', price: '₹1,424', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118320/ize6trkemrn0xdegtwxr.png" , discount: "75%"},
-        { id: 5, title: 'Goat Simulator 3', price: '₹520', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/tdihouenei5kqzn7pcr6.png", discount: "65%" },
-        { id: 6, title: 'Tony Hawks™ Pro Skater™ 1 +2', price: ' ₹884.10', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118323/syijluveutafcayvgevd.png" , discount: "60%"},
-      ];
-
-      const MostPopular = [
-        { id: 1, title: 'Grand Theft Auto V: Premium Edition', price: '₹2,321.44', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/dnggn7nfiwr9iopsq3ho.png" },
-        { id: 2, title: 'VALORANT', price: '₹ Free', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118322/amgfdsiyg0yph7aoezte.png" },
-        { id: 3, title: 'The Last Stand: Aftermath', price: ' ₹589', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/aseazclmnulkejgizjyo.png" },
-        { id: 4, title: 'EA SPORTS FCT™ 24 Standard Edition', price: '₹1,199', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/tihfukuhizvkwpu0lrsw.png" },
-        { id: 5, title: 'Satisfactory', price: '₹1,600', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118324/becudv5d8ajzvyapot7v.png" },
-        { id: 6, title: 'Farming Simulator 22', price: ' ₹1,559', image: "https://res.cloudinary.com/drno4r3vd/image/upload/v1740118321/uhvtwkenynbvtynqdlgo.png" },
-      ];
-
 
     useEffect(() => {
         if (!userId) return; // Prevent fetching if no user is logged in

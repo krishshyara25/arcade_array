@@ -130,16 +130,7 @@ const GamingPlatform = () => {
   useEffect(() => {
     if (!userId) return; // Prevent fetching if no user is logged in
 
-    // const fetchUserDetails = async () => {
-    //   try {
-    //     const response = await fetch(`https://arcade-array.onrender.com/api/games/user/details/${userId}`);
-    //     const data = await response.json();
-    //     if (!response.ok) throw new Error(data.message);
-    //     setUser(data); // Set user details in state
-    //   } catch (error) {
-    //     console.error("Error fetching user details:", error.message);
-    //   }
-    // };
+
 
     const fetchFriendRequests = async () => {
       try {
@@ -230,13 +221,13 @@ const GamingPlatform = () => {
             <div className="logo">
               <img src={logo} alt="Arcade Alley" />
             </div>
-            <a href="#" className="sidebarItem">🏠 Home</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
-            <a href="#" className="sidebarItem">👥 Community</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/wishlist")}>❤️ Wishlist</a>
-            <a href="#" className="sidebarItem">⬇️ Download</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/setting")}>⚙️ Setting</a>
+            <a className="sidebarItem">🏠 Home</a>
+            <a className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
+            <a className="sidebarItem">👥 Community</a>
+            <a className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
+            <a className="sidebarItem" onClick={() => navigate("/wishlist")}>❤️ Wishlist</a>
+            <a className="sidebarItem">⬇️ Download</a>
+            <a className="sidebarItem" onClick={() => navigate("/setting")}>⚙️ Setting</a>
           </nav>
 
           {/* Main Content */}
@@ -255,7 +246,7 @@ const GamingPlatform = () => {
                     onClick={() => setDropdownVisible(!dropdownVisible)}
                   />
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: 'max-content'}}>
                     <div>
                       <h1 className="username">Welcome, {user?.username || "Guest"}</h1>
                       <p className="useremail">Email: {user?.email || "No email found"}</p>
@@ -486,3 +477,31 @@ const GamingPlatform = () => {
 };
 
 export default GamingPlatform;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

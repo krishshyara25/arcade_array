@@ -196,13 +196,13 @@ const GameStore = () => {
             <div className="logo">
               <img src={logo} alt="Arcade Alley" />
             </div>
-            <a href="#" className="sidebarItem">🏠 Home</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/catagory")}>📁 Category</a>
-            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>👥 Community</a>
-            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>👫 Friends</a>
-            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>❤️ Wishlist</a>
-            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>⬇️ Download</a>
-            <a href="#" className="sidebarItem" onClick={handleRestrictedAccess}>⚙️ Setting</a>
+            <a className="sidebarItem">🏠 Home</a>
+            <a className="sidebarItem" onClick={() => navigate("/catagory")}>📁 Category</a>
+            <a className="sidebarItem" onClick={handleRestrictedAccess}>👥 Community</a>
+            <a className="sidebarItem" onClick={handleRestrictedAccess}>👫 Friends</a>
+            <a className="sidebarItem" onClick={handleRestrictedAccess}>❤️ Wishlist</a>
+            <a className="sidebarItem" onClick={handleRestrictedAccess}>⬇️ Download</a>
+            <a className="sidebarItem" onClick={handleRestrictedAccess}>⚙️ Setting</a>
           </nav>
 
           {/* Main Content */}
@@ -227,7 +227,7 @@ const GameStore = () => {
                   <h1>{games[currentIndex].name}</h1>
                   <p>{games[currentIndex].description}</p>
                   <div className="buttons">
-                    <button className="buyButton" onClick={() => navigate("/catagory")}>Buy Now {games[currentIndex].price || 'Price loading..'}</button>
+                    <button className="buyButton" onClick={handleRestrictedAccess}>Buy Now {games[currentIndex].price || 'Price loading..'}</button>
                   </div>
                 </div>
               </div>

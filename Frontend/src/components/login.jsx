@@ -41,7 +41,7 @@ const Login = () => {
                 <div className="heading">Login</div>
             </header>
             <div className="form-header">
-          <button className="backbutton2" onClick={() => navigate(-1)}>
+          <button className="backbutton2" onClick={() => navigate("/home")}>
                 ◀ Back
             </button>
         </div>

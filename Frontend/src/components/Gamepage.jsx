@@ -117,9 +117,6 @@ const GamePage = () => {
           <div className="logo1">
             <img src={logo} alt="Arcade Alley" />
           </div>
-
-
-
           <div className="nav-links">
             <a href="#" onClick={() => {
               const storedUserId = localStorage.getItem("userId");
@@ -138,8 +135,6 @@ const GamePage = () => {
 
         <div className="nav-right">
           <div className="user-info">
-
-
             {/* If user is logged in, show profile and logout button */}
             {user ? (
               <div className="user-details">

@@ -80,8 +80,8 @@ const Notification = () => {
   return (
     <div className="notifications-page">
       <header className="notifications-header">
-        <button className="back-button" onClick={() => navigate("/home1")}>
-          <i className="fas fa-arrow-left"></i>  ◀ Back
+      <button className="backbutton1" onClick={() => navigate("/home1")}>
+          ◀ Back
         </button>
       </header>
 

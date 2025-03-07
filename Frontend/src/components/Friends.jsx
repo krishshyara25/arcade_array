@@ -81,39 +81,49 @@ const Friends = () => {
 
   const sendFriendRequest = async (targetUserId) => {
     try {
-      const response = await fetch(
-        "https://arcade-array.onrender.com/api/friends/friend-request",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, targetUserId }),
-        }
-      );
+        const response = await fetch(
+            "https://arcade-array.onrender.com/api/friends/friend-request",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, targetUserId }),
+            }
+        );
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (response.ok) {
-        if (data.message === "Friend request accepted automatically") {
-          toast.success("Friend request accepted automatically");
-          // Update the friends list in the UI
-          setFriendsList((prev) => [...prev, targetUserId]);
+        if (response.ok) {
+            if (data.message === "Friend request accepted automatically") {
+                toast.success("Friend request accepted automatically");
+
+                // Find the target user in the `users` array
+                const targetUser = users.find((user) => user._id === targetUserId);
+                if (targetUser) {
+                    // Add the target user to the `friendsList` state
+                    setFriendsList((prev) => [...prev, targetUser]);
+
+                    // Remove the target user from the `users` state
+                    setUsers((prevUsers) =>
+                        prevUsers.filter((user) => user._id !== targetUserId)
+                    );
+                }
+            } else {
+                toast.success("Friend request sent");
+            }
+
+            // Update request status in the UI
+            setRequestStatus((prevState) => ({
+                ...prevState,
+                [targetUserId]: true,
+            }));
         } else {
-          toast.success("Friend request sent");
+            alert(data.message || "Error sending request");
         }
-
-        // Update request status in the UI
-        setRequestStatus((prevState) => ({
-          ...prevState,
-          [targetUserId]: true,
-        }));
-      } else {
-        alert(data.message || "Error sending request");
-      }
     } catch (error) {
-      console.error("Error sending friend request:", error);
-      toast.error("Failed to send friend request");
+        console.error("Error sending friend request:", error);
+        toast.error("Failed to send friend request");
     }
-  };
+};
 
   const removeFriend = async (friendId) => {
     if (!userId) {
