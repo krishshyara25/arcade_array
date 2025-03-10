@@ -42,7 +42,6 @@
 .logo {
   height: 50px;
   transition: transform 0.3s;
-  margin-bottom: 70px;
 }
 
 .logo:hover {

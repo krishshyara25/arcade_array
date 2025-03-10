@@ -1,3 +1,40 @@
+:root {
+    --primary-color: #7d3bff;
+    --secondary-color: #ff3b8a;
+    --background-dark: #0f1622;
+    --background-light: #1a2332;
+    --text-color: #ffffff;
+    --text-secondary: #a1a7b3;
+    --accent-color: #3bffb8;
+    --card-bg: rgba(26, 35, 50, 0.7);
+    --overlay-bg: rgba(10, 14, 25, 0.6);
+    --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --transition-speed: 0.3s;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background-color: var(--background-dark);
+    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+
 .game-store1{
     background-color: #1a1b1f;
     color: white;

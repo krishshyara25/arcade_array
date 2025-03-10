@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import '../styles/Friends.css';
 import { useNavigate } from "react-router-dom";
 import img from '../assets/arcade_alley_logo.png';
-import img2 from '../assets/wp9549839.png';
 import addUserImage from '../assets/add-user.png';
 import pendingrequest from '../assets/pending.png';
 import bin from '../assets/bin.png';
