@@ -11,6 +11,9 @@ router.put("/update-profile/:userId", upload.single("profilePicture"), authContr
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.put("/update-profile-visibility/:userId", authController.updateProfileVisibility);
+router.post('/logout', authController.logout);
+router.post('/forgot-password', authController.forgotPassword); // New
+router.post('/reset-password', authController.resetPassword); // New
 
 
 
