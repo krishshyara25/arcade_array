@@ -1,31 +1,106 @@
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 import SearchBar from "./Searchbar";
 import axios from "axios";
 import logo from '../assets/arcade_alley_logo.png';
 import defaultProfilePic from "../assets/wp9549839.png"; // Default profile picture
 import { toast } from "react-toastify";
 import Loader from "./Loader"; // Loader component for loading states
-
-
-import React, { useState, useEffect } from 'react';
 import '../styles/Home1.css';
 
-const GamingPlatform = () => {
+const GamingPlatform = ({ socket }) => {
   const [user, setUser] = useState(null);
+  const [username, setUsername] = useState(""); // Added
+  const [email, setEmail] = useState(""); // Added
+  const [previewUrl, setPreviewUrl] = useState(defaultProfilePic); // Added
   const userId = localStorage.getItem("userId");
-  const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown menu
-  const [friendRequests, setFriendRequests] = useState(0); // State to store the count of friend requests
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [friendRequests, setFriendRequests] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [savingSpotlight, setSavingSpotlight] = useState([]);
-  const [mostPopular, setMostPopular] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [games, setGames] = useState([]);
-  const [slide, setSlide] = useState(false);
+  const [savingSpotlight, setSavingSpotlight] = useState([]);
   const [discoverNew, setDiscoverNew] = useState([]);
-  const [visibleDiscover, setVisibleDiscover] = useState(6);
-  const [visibleSpotlight, setVisibleSpotlight] = useState(6);
-  const [visiblePopular, setVisiblePopular] = useState(6);
+  const [mostPopular, setMostPopular] = useState([]);
+  const [slide, setSlide] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [discoverIndex, setDiscoverIndex] = useState(0);
+  const [spotlightIndex, setSpotlightIndex] = useState(0);
+  const [popularIndex, setPopularIndex] = useState(0);
+  const [slidingDiscover, setSlidingDiscover] = useState(false);
+  const [slidingSpotlight, setSlidingSpotlight] = useState(false);
+  const [slidingPopular, setSlidingPopular] = useState(false);
+  const gamesPerPage = 6;
+  
+  
+    // Handle Popular Games Navigation
+    const handlePrevPopular = () => {
+      if (popularIndex > 0) {
+        setSlidingPopular('left');
+        setTimeout(() => {
+          setPopularIndex(prev => Math.max(0, prev - gamesPerPage));
+          setSlidingPopular('in');
+        }, 500);
+      }
+    };
+  
+    const handleNextPopular = () => {
+      if (popularIndex + gamesPerPage < mostPopular.length) {
+        setSlidingPopular('right');
+        setTimeout(() => {
+          setPopularIndex(prev => Math.min(mostPopular.length - gamesPerPage, prev + gamesPerPage));
+          setSlidingPopular('in');
+        }, 500);
+      }
+    };
+  
+    // Handle Discover New Games Navigation
+    const handlePrevDiscover = () => {
+      if (discoverIndex > 0) {
+        setSlidingDiscover('left');
+        setTimeout(() => {
+          setDiscoverIndex(prev => Math.max(0, prev - gamesPerPage));
+          setSlidingDiscover('in');
+        }, 500);
+      }
+    };
+  
+    const handleNextDiscover = () => {
+      if (discoverIndex + gamesPerPage < discoverNew.length) {
+        setSlidingDiscover('right');
+        setTimeout(() => {
+          setDiscoverIndex(prev => Math.min(discoverNew.length - gamesPerPage, prev + gamesPerPage));
+          setSlidingDiscover('in');
+        }, 500);
+      }
+    };
+  
+    // Handle Spotlight Games Navigation
+    const handlePrevSpotlight = () => {
+      if (spotlightIndex > 0) {
+        setSlidingSpotlight('left');
+        setTimeout(() => {
+          setSpotlightIndex(prev => Math.max(0, prev - gamesPerPage));
+          setSlidingSpotlight('in');
+        }, 500);
+      }
+    };
+  
+    const handleNextSpotlight = () => {
+      if (spotlightIndex + gamesPerPage < savingSpotlight.length) {
+        setSlidingSpotlight('right');
+        setTimeout(() => {
+          setSpotlightIndex(prev => Math.min(savingSpotlight.length - gamesPerPage, prev + gamesPerPage));
+          setSlidingSpotlight('in');
+        }, 500);
+      }
+    };
 
+      // Reset sliding states when component mounts
+      useEffect(() => {
+        setSlidingDiscover('in');
+        setSlidingSpotlight('in');
+        setSlidingPopular('in');
+      }, []);
 
   const handleBuyNow = (game) => {
     if (game.price && game.price !== "Free") {
@@ -56,42 +131,29 @@ const GamingPlatform = () => {
   
     const fetchUserDetails = async () => {
       try {
-        setLoading(true);
-        console.log("Fetching user details for userId:", userId);
-  
-        const response = await axios.get(
-          `https://arcade-array.onrender.com/api/games/user/details/${userId}`
-        );
-  
-        console.log("Response from backend:", response);
-  
-        if (response.status === 200) {
-          const userData = response.data;
-          console.log("User data received:", userData);
-  
-          if (!userData || !userData.username) {
-            toast.error("Invalid user data received");
-            return;
+          setLoading(true);
+          const response = await axios.get(
+              `https://arcade-array.onrender.com/api/games/user/details/${userId}`
+          );
+          if (response.status === 200) {
+              const userData = response.data;
+              setUser(userData);
+              setUsername(userData.username || "");
+              setEmail(userData.email || "");
+              setPreviewUrl(userData.profilePicture || defaultProfilePic);
+          } else {
+              toast.error("Failed to load user information");
           }
-  
-          setUser(userData);
-          setUsername(userData.username || "");
-          setEmail(userData.email || "");
-          setPreviewUrl(userData.profilePicture || defaultProfilePic);
-          setLoading(false);
-        } else {
-          console.error("Unexpected response status:", response.status);
-          toast.error("Failed to load user information");
-          setLoading(false);
-        }
       } catch (error) {
-        console.error("Error fetching user details:", error);
-        setLoading(false);
+          console.error("Error fetching user details:", error);
+          toast.error("Error loading user data");
+      } finally {
+          setLoading(false);
       }
-    };
-  
-    fetchUserDetails();
-  }, [userId, navigate]);
+  };
+
+  fetchUserDetails();
+}, [userId, navigate]);
 
   useEffect(() => {
     axios.get("https://arcade-array.onrender.com/api/games")
@@ -130,16 +192,7 @@ const GamingPlatform = () => {
   useEffect(() => {
     if (!userId) return; // Prevent fetching if no user is logged in
 
-    // const fetchUserDetails = async () => {
-    //   try {
-    //     const response = await fetch(`https://arcade-array.onrender.com/api/games/user/details/${userId}`);
-    //     const data = await response.json();
-    //     if (!response.ok) throw new Error(data.message);
-    //     setUser(data); // Set user details in state
-    //   } catch (error) {
-    //     console.error("Error fetching user details:", error.message);
-    //   }
-    // };
+
 
     const fetchFriendRequests = async () => {
       try {
@@ -158,21 +211,31 @@ const GamingPlatform = () => {
 
 
   const handleLogout = () => {
-    localStorage.removeItem('userId'); // Remove user ID from localStorage
-    navigate('/home'); // Navigate to login page after logout
-  };
-
+    if (socket && userId) {
+        socket.emit('set-status', { userId, status: 'offline' });
+        console.log(`Logout: Emitted offline for ${userId}`);
+    }
+    localStorage.removeItem('userId');
+    navigate('/home');
+};
   useEffect(() => {
     axios.get("https://arcade-array.onrender.com/api/games")
-      .then(response => {
-        setGames(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Error fetching games:", error);
-        setLoading(false);
-      });
-  }, []);
+        .then(response => {
+            const fetchedGames = response.data;
+            setGames(fetchedGames);
+            setLoading(false);
+            const discountedGames = fetchedGames.filter(game => game.price && game.discount);
+            setSavingSpotlight(discountedGames.length > 0 ? discountedGames : fetchedGames);
+            const sortedByRelease = [...fetchedGames].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+            setDiscoverNew(sortedByRelease.slice(0, 6));
+            const sortedByPopularity = [...fetchedGames].sort((a, b) => (b.popularityScore || 0) - (a.popularityScore || 0));
+            setMostPopular(sortedByPopularity.slice(0, 6));
+        })
+        .catch(error => {
+            console.error("Error fetching games:", error);
+            setLoading(false);
+        });
+}, []);
 
 
 
@@ -218,8 +281,12 @@ const GamingPlatform = () => {
 
 
 
-
-
+  // Determine slider class based on sliding state
+  const getSliderClass = (slidingState) => {
+    if (slidingState === 'left') return 'game-slider sliding-left';
+    if (slidingState === 'right') return 'game-slider sliding-right';
+    return 'game-slider sliding-in';
+  };
 
   return (
     <>
@@ -230,13 +297,13 @@ const GamingPlatform = () => {
             <div className="logo">
               <img src={logo} alt="Arcade Alley" />
             </div>
-            <a href="#" className="sidebarItem">🏠 Home</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
-            <a href="#" className="sidebarItem">👥 Community</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/wishlist")}>❤️ Wishlist</a>
-            <a href="#" className="sidebarItem">⬇️ Download</a>
-            <a href="#" className="sidebarItem" onClick={() => navigate("/setting")}>⚙️ Setting</a>
+            <a className="sidebarItem">🏠 Home</a>
+            <a className="sidebarItem" onClick={() => navigate("/catagory1")}>📁 Category</a>
+            <a className="sidebarItem">👥 Community</a>
+            <a className="sidebarItem" onClick={() => navigate("/friends")}>👫 Friends</a>
+            <a className="sidebarItem" onClick={() => navigate("/wishlist")}>❤️ Wishlist</a>
+            <a className="sidebarItem">⬇️ Download</a>
+            <a className="sidebarItem" onClick={() => navigate("/setting")}>⚙️ Setting</a>
           </nav>
 
           {/* Main Content */}
@@ -249,13 +316,13 @@ const GamingPlatform = () => {
                 )}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', position: 'relative' }}>
                   <img
-                    src={user?.profilePicture ? user.profilePicture : defaultProfilePic}
-                    style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
-                    alt="Profile"
-                    onClick={() => setDropdownVisible(!dropdownVisible)}
+                   src={previewUrl}
+                   style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
+                   alt="Profile"
+                   onClick={() => setDropdownVisible(!dropdownVisible)}
                   />
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: 'max-content'}}>
                     <div>
                       <h1 className="username">Welcome, {user?.username || "Guest"}</h1>
                       <p className="useremail">Email: {user?.email || "No email found"}</p>
@@ -342,80 +409,113 @@ const GamingPlatform = () => {
         <div className="gameCarousel">
           {/* Game Carousel */}
           {/* Discover Something New Section */}
-          <div className="carouselHeader">
-            <h2>Discover Something New</h2>
-            <div className="carouselControls">
-              <button className="controlButton">←</button>
-              <button className="controlButton" onClick={loadMoreDiscover}>→</button>
-            </div>
+        <div className="carouselHeader">
+          <h2>Discover Something New</h2>
+          <div className="carouselControls">
+            <button
+              className="controlButton"
+              onClick={handlePrevDiscover}
+              disabled={discoverIndex === 0}
+            >←</button>
+            <button
+              className="controlButton"
+              onClick={handleNextDiscover}
+              disabled={discoverIndex + gamesPerPage >= discoverNew.length}
+            >→</button>
           </div>
-          {loading ? (
-            <p>Loading games...</p>
-          ) : (
-            <div className="gameGrid">
-              {discoverNew.slice(0, visibleDiscover).map(game => (
-                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
-                  <div className="game-image">
-                    <img src={game.imageUrl} alt={game.name} />
-                    {game.discount && <span className="discount">-{game.discount}</span>}
-                  </div>
-                  <h3 className="subheading">{game.name}</h3>
-                  <p className="price">{game.price || "loading.."}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="carouselHeader">
-            <h2>Saving Spotlight</h2>
-            <div className="carouselControls">
-              <button className="controlButton">←</button>
-              <button className="controlButton">→</button>
-            </div>
-          </div>
-          {loading ? (
-            <p>Loading games...</p>
-          ) : (
-            <div className="gameGrid">
-              {savingSpotlight.slice(0, visibleSpotlight).map(game => (
-                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
-                  <div className="game-image">
-                    <img src={game.imageUrl} alt={game.name} />
-                    {game.discount && <span className="discount">-{game.discount}</span>}
-                  </div>
-                  <h3 className="subheading">{game.name}</h3>
-                  <p className="price">{game.price || "Free"}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="carouselHeader">
-            <h2>Most Popular</h2>
-            <div className="carouselControls">
-              <button className="controlButton">←</button>
-              <button className="controlButton" onClick={loadMorePopular}>→</button>
-            </div>
-          </div>
-
-          {loading ? (
-            <p>Loading games...</p>
-          ) : (
-            <div className="gameGrid">
-              {mostPopular.slice(0, visiblePopular).map(game => (
-                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
-                  <div className="game-image">
-                    <img src={game.imageUrl} alt={game.name} />
-                    {game.discount && <span className="discount">-{game.discount}</span>}
-                  </div>
-                  <h3 className="subheading">{game.name}</h3>
-                  <p className="price">{game.price || "Free"}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
         </div>
+
+        {loading ? (
+          <p>Loading games...</p>
+        ) : (
+          <div className={getSliderClass(slidingDiscover)}>
+            <div className="gameGrid">
+              {discoverNew.slice(discoverIndex, discoverIndex + gamesPerPage).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "Free"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Saving Spotlight Section */}
+        <div className="carouselHeader">
+          <h2>Saving Spotlight</h2>
+          <div className="carouselControls">
+            <button
+              className="controlButton"
+              onClick={handlePrevSpotlight}
+              disabled={spotlightIndex === 0}
+            >←</button>
+            <button
+              className="controlButton"
+              onClick={handleNextSpotlight}
+              disabled={spotlightIndex + gamesPerPage >= savingSpotlight.length}
+            >→</button>
+          </div>
+        </div>
+
+        {loading ? (
+          <p>Loading games...</p>
+        ) : (
+          <div className={getSliderClass(slidingSpotlight)}>
+            <div className="gameGrid">
+              {savingSpotlight.slice(spotlightIndex, spotlightIndex + gamesPerPage).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "Free"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Most Popular Section */}
+        <div className="carouselHeader">
+          <h2>Most Popular</h2>
+          <div className="carouselControls">
+            <button
+              className="controlButton"
+              onClick={handlePrevPopular}
+              disabled={popularIndex === 0}
+            >←</button>
+            <button
+              className="controlButton"
+              onClick={handleNextPopular}
+              disabled={popularIndex + gamesPerPage >= mostPopular.length}
+            >→</button>
+          </div>
+        </div>
+
+        {loading ? (
+          <p>Loading games...</p>
+        ) : (
+          <div className={getSliderClass(slidingPopular)}>
+            <div className="gameGrid">
+              {mostPopular.slice(popularIndex, popularIndex + gamesPerPage).map(game => (
+                <div key={game._id} className="game-card" onClick={() => navigate(`/game/${game._id}`)}>
+                  <div className="game-image">
+                    <img src={game.imageUrl} alt={game.name} />
+                    {game.discount && <span className="discount">-{game.discount}</span>}
+                  </div>
+                  <h3 className="subheading">{game.name}</h3>
+                  <p className="price">{game.price || "Free"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
       </div>
 
       <footer className="footer">

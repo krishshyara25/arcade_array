@@ -1,24 +1,32 @@
-require('dotenv').config(); // Load environment variables
-const Stripe = require("stripe");
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require('http');
+const setupSocket = require('./socket');
+
+const app = express();
+const server = http.createServer(app);
+const io = setupSocket(server); // Initialize socket
+global.io = io; // Make io globally available
+
+console.log('EMAIL_USER:', process.env.EMAIL_USER); // Debug
+console.log('EMAIL_PASS:', process.env.EMAIL_PASS); //
 
 const authRoutes = require('./routes/authRoutes');
 const friendsRoutes = require('./routes/friendsRoutes');
 const gameRoutes = require('./routes/gamesRoutes');
 const paymentRoutes = require("./routes/paymentRoutes");
 
-const app = express();
 const port = process.env.PORT || 3000;
 
-// ✅ Proper CORS configuration
 const corsOptions = {
     origin: [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:5174",
-        "https://arcadearray.netlify.app", 
+        "http://localhost:5175",
+        "https://arcadearray.netlify.app",
         "https://arcade-array.onrender.com"
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -26,19 +34,23 @@ const corsOptions = {
     credentials: true
 };
 
-
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
-// ✅ Handle Preflight Requests (Fixes CORS errors)
-app.options("*", cors(corsOptions)); 
-
-// ✅ Middleware for JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ MongoDB Connection
-const mongoURI = process.env.MONGO_URI;
+app.use('/api/auth', authRoutes);
+app.use('/api/friends', friendsRoutes);
+app.use('/api/games', gameRoutes);
+app.use('/payment', paymentRoutes);
+app.use('/uploads', express.static('uploads'));
 
+app.get("/", (req, res) => {
+    res.send("Welcome to Arcade Array API!");
+});
+
+const mongoURI = process.env.MONGO_URI;
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -48,21 +60,6 @@ mongoose.connect(mongoURI, {
     console.error('❌ MongoDB connection error:', err);
 });
 
-// ✅ API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/friends', friendsRoutes);
-app.use('/api/games', gameRoutes);
-app.use('/payment', paymentRoutes);
-app.use('/uploads', express.static('uploads'));
-app.use("/api/auth", require("./routes/authRoutes"));
-
-
-// ✅ Default Route (Optional)
-app.get("/", (req, res) => {
-    res.send("Welcome to Arcade Array API!");
-});
-
-// ✅ Start Server
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);
 });
