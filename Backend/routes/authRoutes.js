@@ -10,6 +10,11 @@ router.post("/auth0signup", auth0Signup);
 router.put("/update-profile/:userId", upload.single("profilePicture"), authController.updateProfile);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
+router.put("/update-profile-visibility/:userId", authController.updateProfileVisibility);
+router.post('/logout', authController.logout);
+router.post('/forgot-password', authController.forgotPassword); // New
+router.post('/reset-password', authController.resetPassword); // New
+
 
 
 module.exports = router;

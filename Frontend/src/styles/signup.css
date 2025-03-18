@@ -1,219 +1,309 @@
-/* General Signup Container */
+/* Modern Arcade Theme Signup Styles */
 .signup-container {
+  max-width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.heading {
+  color: #e94560;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  margin: 2rem 0;
+  text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+  position: relative;
+}
+
+.heading::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
   width: 100%;
-  max-width: 700px;
-  margin: 50px auto;
-  padding: 44px;
-  background: #1e1e2f;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  color: #fff;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e94560, transparent);
 }
 
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background: #29293d;
-}
-.heading{
-  font-size: 35px;
-}
-
-.header-left, .header-right {
-  display: flex;
-  align-items: center;
-}
-
-.logo {
-  font-size: 24px;
-    margin-right: 60px;
-    margin-top: -6%;
-
-
-}
-
-.search-bar input {
-  padding: 8px;
-  border: none;
-  border-radius: 5px;
-  background: #3a3a4f;
-  color: white;
-  outline: none;
-}
-
-.notification-icon {
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.profile-info {
-  display: flex;
-  align-items: center;
-}
-
-.profile-avatar {
-  width: 30px;
-  height: 30px;
-  background: #ff4d4d;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-.username {
-  font-weight: bold;
-}
-
-/* Form Styling */
 .form-container {
-  margin-top: 20px;
+  background: rgba(26, 26, 46, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(233, 69, 96, 0.1);
 }
 
 .form-header {
-  align-items: center;
-  justify-content: center;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1.5rem;
 }
 
-.back-button {
-  background: none;
+.backbutton2 {
+  background: transparent;
+  color: #e94560;
   border: none;
-  font-size: 20px;
+  font-size: 1rem;
   cursor: pointer;
-  margin-right: 95%;
-  color: #fff;
+  transition: all 0.3s ease;
 }
 
-h1 {
-  font-size: 24px;
-}
-
-.error {
-  color: #ff4d4d;
-  font-size: 14px;
-  margin-bottom: 10px;
+.backbutton2:hover {
+  transform: translateX(-5px);
+  text-shadow: 0 0 5px rgba(233, 69, 96, 0.8);
 }
 
 .input-grid {
-  display: flex;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-input {
+input[type="text"], 
+input[type="email"], 
+input[type="password"] {
   width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  background: #29293d;
+  padding: 1rem;
+  background: rgba(15, 52, 96, 0.2);
+  border: 2px solid rgba(233, 69, 96, 0.2);
+  border-radius: 8px;
   color: #fff;
-  outline: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 input::placeholder {
-  color: #bbb;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-/* Password Input & Toggle */
+input:focus {
+  outline: none;
+  border-color: #e94560;
+  box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.3);
+  background: rgba(15, 52, 96, 0.4);
+}
+
 .password-container {
   position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 .password-toggle {
   position: absolute;
-  right: -20px;
-  top: 33%;
+  right: 1rem;
+  top: 50%;
   transform: translateY(-50%);
-  background: none;
+  background: transparent;
   border: none;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  font-size: 18px;
-  color: white;
+  font-size: 1.2rem;
+  padding: 0;
 }
 
-/* Signup Button */
-.signup-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  background: #ff4d4d;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: 0.3s;
+.eyeicon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
 }
 
-.signup-button:hover {
-  background: #ff3333;
+.forgot-password {
+  text-align: right;
+  margin-bottom: 1.5rem;
 }
 
-/* Divider */
-.divider-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.divider-line {
-  width: 40%;
-  height: 1px;
-  background: #555;
-}
-
-.divider-text {
-  margin: 10px 10px;
-  font-size: 14px;
-}
-
-/* Social Buttons */
-.social-buttons {
-  display: flex;
-  margin-bottom: 3%;
-  justify-content: center;
-  gap: 10px;
-}
-
-.social-button {
-  width: 40px;
-  height: 40px;
-  background: #3a3a4f;
-  border: none;
-  border-radius: 50%;
-  font-size: 18px;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.social-button:hover {
-  background: #ff4d4d;
-}
-
-/* Forgot Password */
 .forgot-password button {
-  background: none;
+  background: transparent;
   border: none;
-  color: #ff4d4d;
+  color: #e94560;
+  font-size: 0.9rem;
   cursor: pointer;
-  font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 .forgot-password button:hover {
   text-decoration: underline;
+  color: #ff6b81;
 }
 
-.login-button:hover{
+.signup-button {
+  width: 100%;
+  padding: 1rem;
+  background: #e94560;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  color:#ff3333;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
 }
-.eyeicon{
-  width: 70%;
+
+.signup-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+}
+
+.signup-button:hover {
+  background: #ff6b81;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(233, 69, 96, 0.3);
+}
+
+.signup-button:hover::before {
+  left: 100%;
+}
+
+.divider-container {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.divider-line {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.divider-text {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  top: -10px;
+  background: rgba(26, 26, 46, 0.8);
+  display: inline-block;
+  padding: 0 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.social-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.social-button:nth-child(1) {
+  background: linear-gradient(135deg, #4285F4, #34A853, #FBBC05, #EA4335);
+  color: white;
+}
+
+.social-button:nth-child(2) {
+  background: #3b5998;
+  color: white;
+}
+
+.social-button:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.login-button {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.login-button:hover {
+  color: #e94560;
+}
+
+.error {
+  background: rgba(255, 87, 87, 0.2);
+  color: #ff5757;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #ff5757;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .input-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .heading {
+    font-size: 2rem;
+  }
+  
+  .form-container {
+    padding: 1.5rem;
+  }
+  
+  input[type="text"], 
+  input[type="email"], 
+  input[type="password"] {
+    padding: 0.8rem;
+  }
+  
+  .social-button {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Gaming-inspired animations */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(233, 69, 96, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(233, 69, 96, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(233, 69, 96, 0.5);
+  }
+}
+
+input:focus {
+  animation: glow 1.5s infinite;
+}
+
+/* Add subtle hover effect on form container */
+.form-container:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
 }
