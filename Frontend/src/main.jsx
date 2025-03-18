@@ -17,7 +17,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   domain="dev-i10bvs6vb7rlrzib.us.auth0.com"
   clientId="MOfNJ3UEbiRUo6k9YuRxEwzbM5E94olu"
   authorizationParams={{
-    redirect_uri: window.location.origin + "/home1" 
+    redirect_uri: window.location.origin + "/home1" ,
+    prompt: "select_account", // This Will Force Google Account Popup Globally 🔥
+
   }}
 >
   <BrowserRouter>

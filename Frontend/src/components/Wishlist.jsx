@@ -211,8 +211,6 @@ const WishlistPage = () => {
 
                 <div className="nav-right">
                     <div className="user-info">
-
-
                         {/* If user is logged in, show profile and logout button */}
                         {user ? (
                             <div className="user-details">
@@ -227,23 +225,16 @@ const WishlistPage = () => {
                                         <h1 className="username">Welcome, {user?.username || "Guest"}</h1>
                                         <p className="useremail">Email: {user?.email || "No email found"}</p>
                                     </div>
+
+                                    {/* Dropdown Menu */}
+                                    {dropdownVisible && (
+                                        <div className="dropdownMenu">
+                                            <button onClick={handleLogout} className="logoutButton">Logout</button>
+                                        </div>
+                                    )}
                                 </div>
 
-                                {/* Dropdown Menu */}
-                                {dropdownVisible && (
-                                    <div className="dropdownMenu">
-                                        <button
-                                            className="logoutButton"
-                                            onClick={() => {
-                                                localStorage.removeItem("userId"); // Clear user ID from local storage
-                                                setUser(null); // Reset user state
-                                                navigate("/login"); // Redirect to login page
-                                            }}
-                                        >
-                                            Logout
-                                        </button>
-                                    </div>
-                                )}
+                                
                             </div>
                         ) : (
                             /* If user is not logged in, show Login and Signup buttons */

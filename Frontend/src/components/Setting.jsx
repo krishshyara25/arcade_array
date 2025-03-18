@@ -15,6 +15,7 @@ const Settings = () => {
     const [loading, setLoading] = useState(true);
     const [updatingProfile, setUpdatingProfile] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [profileVisibility, setProfileVisibility] = useState(user?.profileVisibility || true);
 
     // Form states
     const [username, setUsername] = useState("");
@@ -114,6 +115,42 @@ const Settings = () => {
         localStorage.removeItem('userId'); // Remove user ID from localStorage
         navigate('/home'); // Navigate to login page after logout
     };
+
+    const handleProfileVisibilityToggle = async (e) => {
+    const isVisible = e.target.checked;
+    setProfileVisibility(isVisible);
+
+    try {
+        console.log("Sending request to update profile visibility...");
+        console.log("User ID:", userId);
+        console.log("New Profile Visibility:", isVisible);
+
+        const response = await axios.put(
+            `https://arcade-array.onrender.com/api/auth/update-profile-visibility/${userId}`,
+            { profileVisibility: isVisible },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`, // Add this if authentication is required
+                },
+            }
+        );
+
+        console.log("Response from server:", response);
+
+        if (response.status === 200) {
+            toast.success(`Profile visibility set to ${isVisible ? "public" : "private"}`);
+            setUser({ ...user, profileVisibility: isVisible }); // Update local state
+        }
+    } catch (error) {
+        console.error("Error updating profile visibility:", error);
+        if (error.response) {
+            console.error("Server responded with:", error.response.data);
+        }
+        toast.error("Failed to update profile visibility");
+        setProfileVisibility(!isVisible); // Revert the toggle if the request fails
+    }
+};
 
     return (
         <div className="settings-container">
@@ -237,10 +274,14 @@ const Settings = () => {
                             <div className="settings-card">
                                 <h3>Profile Visibility</h3>
                                 <label className="toggle">
-                                    <input type="checkbox" defaultChecked />
+                                    <input
+                                        type="checkbox"
+                                        checked={profileVisibility}
+                                        onChange={handleProfileVisibilityToggle}
+                                    />
                                     <span className="slider"></span>
                                 </label>
-                                <p>Make profile public</p>
+                                <p>{profileVisibility ? "Your profile is public" : "Your profile is private"}</p>
                             </div>
                         </div>
                     )}
