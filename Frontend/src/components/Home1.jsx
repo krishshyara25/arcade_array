@@ -1,39 +1,35 @@
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 import SearchBar from "./Searchbar";
 import axios from "axios";
 import logo from '../assets/arcade_alley_logo.png';
 import defaultProfilePic from "../assets/wp9549839.png"; // Default profile picture
 import { toast } from "react-toastify";
 import Loader from "./Loader"; // Loader component for loading states
-
-
-import React, { useState, useEffect } from 'react';
 import '../styles/Home1.css';
 
-const GamingPlatform = () => {
+const GamingPlatform = ({ socket }) => {
   const [user, setUser] = useState(null);
+  const [username, setUsername] = useState(""); // Added
+  const [email, setEmail] = useState(""); // Added
+  const [previewUrl, setPreviewUrl] = useState(defaultProfilePic); // Added
   const userId = localStorage.getItem("userId");
-  const [dropdownVisible, setDropdownVisible] = useState(false); // State for dropdown menu
-  const [friendRequests, setFriendRequests] = useState(0); // State to store the count of friend requests
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [friendRequests, setFriendRequests] = useState(0);
   const [loading, setLoading] = useState(true);
-
   const [games, setGames] = useState([]);
-
   const [savingSpotlight, setSavingSpotlight] = useState([]);
-    const [discoverNew, setDiscoverNew] = useState([]);
-    const [mostPopular, setMostPopular] = useState([]);
-    const [slide, setSlide] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
-  
-    const [discoverIndex, setDiscoverIndex] = useState(0);
-    const [spotlightIndex, setSpotlightIndex] = useState(0);
-    const [popularIndex, setPopularIndex] = useState(0);
-  
-    const [slidingDiscover, setSlidingDiscover] = useState(false);
-    const [slidingSpotlight, setSlidingSpotlight] = useState(false);
-    const [slidingPopular, setSlidingPopular] = useState(false);
-  
-    const gamesPerPage = 6; // Number of games shown at a time
+  const [discoverNew, setDiscoverNew] = useState([]);
+  const [mostPopular, setMostPopular] = useState([]);
+  const [slide, setSlide] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [discoverIndex, setDiscoverIndex] = useState(0);
+  const [spotlightIndex, setSpotlightIndex] = useState(0);
+  const [popularIndex, setPopularIndex] = useState(0);
+  const [slidingDiscover, setSlidingDiscover] = useState(false);
+  const [slidingSpotlight, setSlidingSpotlight] = useState(false);
+  const [slidingPopular, setSlidingPopular] = useState(false);
+  const gamesPerPage = 6;
   
   
     // Handle Popular Games Navigation
@@ -135,42 +131,29 @@ const GamingPlatform = () => {
   
     const fetchUserDetails = async () => {
       try {
-        setLoading(true);
-        console.log("Fetching user details for userId:", userId);
-  
-        const response = await axios.get(
-          `https://arcade-array.onrender.com/api/games/user/details/${userId}`
-        );
-  
-        console.log("Response from backend:", response);
-  
-        if (response.status === 200) {
-          const userData = response.data;
-          console.log("User data received:", userData);
-  
-          if (!userData || !userData.username) {
-            toast.error("Invalid user data received");
-            return;
+          setLoading(true);
+          const response = await axios.get(
+              `https://arcade-array.onrender.com/api/games/user/details/${userId}`
+          );
+          if (response.status === 200) {
+              const userData = response.data;
+              setUser(userData);
+              setUsername(userData.username || "");
+              setEmail(userData.email || "");
+              setPreviewUrl(userData.profilePicture || defaultProfilePic);
+          } else {
+              toast.error("Failed to load user information");
           }
-  
-          setUser(userData);
-          setUsername(userData.username || "");
-          setEmail(userData.email || "");
-          setPreviewUrl(userData.profilePicture || defaultProfilePic);
-          setLoading(false);
-        } else {
-          console.error("Unexpected response status:", response.status);
-          toast.error("Failed to load user information");
-          setLoading(false);
-        }
       } catch (error) {
-        console.error("Error fetching user details:", error);
-        setLoading(false);
+          console.error("Error fetching user details:", error);
+          toast.error("Error loading user data");
+      } finally {
+          setLoading(false);
       }
-    };
-  
-    fetchUserDetails();
-  }, [userId, navigate]);
+  };
+
+  fetchUserDetails();
+}, [userId, navigate]);
 
   useEffect(() => {
     axios.get("https://arcade-array.onrender.com/api/games")
@@ -228,21 +211,31 @@ const GamingPlatform = () => {
 
 
   const handleLogout = () => {
-    localStorage.removeItem('userId'); // Remove user ID from localStorage
-    navigate('/home'); // Navigate to login page after logout
-  };
-
+    if (socket && userId) {
+        socket.emit('set-status', { userId, status: 'offline' });
+        console.log(`Logout: Emitted offline for ${userId}`);
+    }
+    localStorage.removeItem('userId');
+    navigate('/home');
+};
   useEffect(() => {
     axios.get("https://arcade-array.onrender.com/api/games")
-      .then(response => {
-        setGames(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Error fetching games:", error);
-        setLoading(false);
-      });
-  }, []);
+        .then(response => {
+            const fetchedGames = response.data;
+            setGames(fetchedGames);
+            setLoading(false);
+            const discountedGames = fetchedGames.filter(game => game.price && game.discount);
+            setSavingSpotlight(discountedGames.length > 0 ? discountedGames : fetchedGames);
+            const sortedByRelease = [...fetchedGames].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+            setDiscoverNew(sortedByRelease.slice(0, 6));
+            const sortedByPopularity = [...fetchedGames].sort((a, b) => (b.popularityScore || 0) - (a.popularityScore || 0));
+            setMostPopular(sortedByPopularity.slice(0, 6));
+        })
+        .catch(error => {
+            console.error("Error fetching games:", error);
+            setLoading(false);
+        });
+}, []);
 
 
 
@@ -295,9 +288,6 @@ const GamingPlatform = () => {
     return 'game-slider sliding-in';
   };
 
-
-
-
   return (
     <>
       <div className="container">
@@ -326,10 +316,10 @@ const GamingPlatform = () => {
                 )}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', position: 'relative' }}>
                   <img
-                    src={user?.profilePicture ? user.profilePicture : defaultProfilePic}
-                    style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
-                    alt="Profile"
-                    onClick={() => setDropdownVisible(!dropdownVisible)}
+                   src={previewUrl}
+                   style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
+                   alt="Profile"
+                   onClick={() => setDropdownVisible(!dropdownVisible)}
                   />
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: 'max-content'}}>
@@ -596,31 +586,3 @@ const GamingPlatform = () => {
 };
 
 export default GamingPlatform;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
