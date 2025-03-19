@@ -19,7 +19,7 @@
   background-color: var(--darker-bg);
   min-height: 100vh;
   color: var(--light-text);
-}
+} 
 
 /* Header Styles */
 .header {
