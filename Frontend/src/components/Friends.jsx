@@ -9,7 +9,6 @@ import acceptIcon from '../assets/correct.png';
 import rejectIcon from '../assets/reject.png';
 import defaultProfilePic from "../assets/wp9549839.png";
 import { toast } from 'react-toastify';
-// import Loader from './loader';
 
 const Friends = ({ socket }) => {
     const navigate = useNavigate();
@@ -125,11 +124,12 @@ const Friends = ({ socket }) => {
                     }
                 } else {
                     toast.success("Friend request sent");
+                    // Immediately update request status to show pending icon
+                    setRequestStatus((prevState) => ({
+                        ...prevState,
+                        [targetUserId]: 'pending', // Use 'pending' instead of true for clarity
+                    }));
                 }
-                setRequestStatus((prevState) => ({
-                    ...prevState,
-                    [targetUserId]: true,
-                }));
             } else {
                 toast.error(data.message || "Error sending request");
             }
@@ -186,7 +186,6 @@ const Friends = ({ socket }) => {
         }, 500);
     };
 
-    // The return statement remains unchanged as it doesn't contain any URLs
     return (
         <div className="app">
             <nav className="nav-bar">
@@ -248,7 +247,7 @@ const Friends = ({ socket }) => {
             <main className="main">
                 {isLoading ? (
                     <div className="loader-container">
-                        <Loader />
+                        <p>Loading...</p> {/* Temporary placeholder since Loader is removed */}
                     </div>
                 ) : (
                     <>
@@ -303,14 +302,20 @@ const Friends = ({ socket }) => {
                                                 </span>
                                             </div>
                                             <div className="friend-actions">
-                                                {requestStatus[user._id] ? (
-                                                    <img src={pendingrequest} alt="Pending Request" className="add-friend-icon" />
+                                                {requestStatus[user._id] === 'pending' ? (
+                                                    <img 
+                                                        src={pendingrequest} 
+                                                        alt="Request Pending" 
+                                                        className="add-friend-icon" 
+                                                        title="Friend request pending"
+                                                    />
                                                 ) : (
                                                     <img
                                                         src={addUserImage}
                                                         alt="Add Friend"
                                                         onClick={() => sendFriendRequest(user._id)}
                                                         className="add-friend-icon"
+                                                        title="Send friend request"
                                                     />
                                                 )}
                                             </div>
