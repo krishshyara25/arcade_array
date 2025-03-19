@@ -9,7 +9,7 @@ import acceptIcon from '../assets/correct.png';
 import rejectIcon from '../assets/reject.png';
 import defaultProfilePic from "../assets/wp9549839.png";
 import { toast } from 'react-toastify';
-import Loader from './loader';
+// import Loader from './loader';
 
 const Friends = ({ socket }) => {
     const navigate = useNavigate();
@@ -44,10 +44,10 @@ const Friends = ({ socket }) => {
     }, [socket, userId]);
 
     useEffect(() => {
-        fetch("http://localhost:3000/api/friends/users")
+        fetch("https://arcade-array.onrender.com/api/friends/users")
             .then(response => response.json())
             .then(data => {
-                console.log("Fetched users:", data); // Debug: Check the API response
+                console.log("Fetched users:", data);
                 setUsers(data);
             })
             .catch(error => console.error("Error fetching users:", error));
@@ -57,7 +57,7 @@ const Friends = ({ socket }) => {
         if (!userId) return;
         const fetchUserDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/games/user/details/${userId}`);
+                const response = await fetch(`https://arcade-array.onrender.com/api/games/user/details/${userId}`);
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message);
                 setUser(data);
@@ -72,7 +72,7 @@ const Friends = ({ socket }) => {
         if (activeTab === "friends" && userId) {
             const fetchFriends = async () => {
                 try {
-                    const response = await fetch(`http://localhost:3000/api/friends/user_friends/${userId}`);
+                    const response = await fetch(`https://arcade-array.onrender.com/api/friends/user_friends/${userId}`);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const data = await response.json();
                     setFriendsList(data.map(friend => ({
@@ -93,7 +93,7 @@ const Friends = ({ socket }) => {
         if (!userId) return;
         const fetchPendingRequests = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/friends/pending-requests/${userId}`);
+                const response = await fetch(`https://arcade-array.onrender.com/api/friends/pending-requests/${userId}`);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 setNotifications(data);
@@ -107,7 +107,7 @@ const Friends = ({ socket }) => {
     const sendFriendRequest = async (targetUserId) => {
         try {
             const response = await fetch(
-                "http://localhost:3000/api/friends/friend-request",
+                "https://arcade-array.onrender.com/api/friends/friend-request",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -145,7 +145,7 @@ const Friends = ({ socket }) => {
             return;
         }
         try {
-            const response = await fetch("http://localhost:3000/api/friends/remove-friend", {
+            const response = await fetch("https://arcade-array.onrender.com/api/friends/remove-friend", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId, friendId }),
@@ -186,6 +186,7 @@ const Friends = ({ socket }) => {
         }, 500);
     };
 
+    // The return statement remains unchanged as it doesn't contain any URLs
     return (
         <div className="app">
             <nav className="nav-bar">
