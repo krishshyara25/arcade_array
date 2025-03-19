@@ -8,7 +8,6 @@ import axios from "axios";
 
 import logo from '../assets/arcade_alley_logo.png';
 import img2 from '../assets/wp9549839.png';
-import img1 from '../assets/wp1854784-the-witcher-3-wallpapers.png'
 import img5 from '../assets/image5.png';
 import img6 from '../assets/image6.png';
 import img7 from '../assets/image7.png';

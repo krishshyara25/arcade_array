@@ -14,16 +14,6 @@ const userSchema = new mongoose.Schema({
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
     purchasedGames: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Game' }],
     isOnline: { type: Boolean, default: false },
-
-
-
-});
-
-// Middleware to update `updatedAt` before saving
-userSchema.pre('save', function (next) {
-    this.updatedAt = Date.now();
-    next();
-
     createdAt: { type: Date, default: Date.now },
     authType: { type: String, enum: ["email", "social"], default: "email" },
     profileVisibility: { type: Boolean, default: true },

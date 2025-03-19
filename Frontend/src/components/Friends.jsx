@@ -5,8 +5,8 @@ import img from '../assets/arcade_alley_logo.png';
 import addUserImage from '../assets/add-user.png';
 import pendingrequest from '../assets/pending.png';
 import bin from '../assets/bin.png';
-import acceptIcon from '../assets/correct.png'; // Add Accept icon
-import rejectIcon from '../assets/reject.png'; // Add Reject icon
+import acceptIcon from '../assets/correct.png';
+import rejectIcon from '../assets/reject.png';
 import defaultProfilePic from "../assets/wp9549839.png";
 import { toast } from 'react-toastify';
 
@@ -41,53 +41,7 @@ const Friends = ({ socket }) => {
         };
     }, [socket, userId]);
 
-  const sendFriendRequest = async (targetUserId) => {
-    try {
-        const response = await fetch(
-            "https://arcade-array.onrender.com/api/friends/friend-request",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, targetUserId }),
-            }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            if (data.message === "Friend request accepted automatically") {
-                toast.success("Friend request accepted automatically");
-
-                // Find the target user in the `users` array
-                const targetUser = users.find((user) => user._id === targetUserId);
-                if (targetUser) {
-                    // Add the target user to the `friendsList` state
-                    setFriendsList((prev) => [...prev, targetUser]);
-
-                    // Remove the target user from the `users` state
-                    setUsers((prevUsers) =>
-                        prevUsers.filter((user) => user._id !== targetUserId)
-                    );
-                }
-            } else {
-                toast.success("Friend request sent");
-            }
-
-            // Update request status in the UI
-            setRequestStatus((prevState) => ({
-                ...prevState,
-                [targetUserId]: true,
-            }));
-        } else {
-            alert(data.message || "Error sending request");
-        }
-    } catch (error) {
-        console.error("Error sending friend request:", error);
-        toast.error("Failed to send friend request");
-    }
-};
-
-  useEffect(() => {
+    useEffect(() => {
         fetch("http://localhost:3000/api/friends/users")
             .then(response => response.json())
             .then(data => setUsers(data))
@@ -145,6 +99,40 @@ const Friends = ({ socket }) => {
         fetchPendingRequests();
     }, [userId]);
 
+    const sendFriendRequest = async (targetUserId) => {
+        try {
+            const response = await fetch(
+                "http://localhost:3000/api/friends/friend-request",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId, targetUserId }),
+                }
+            );
+            const data = await response.json();
+            if (response.ok) {
+                if (data.message === "Friend request accepted automatically") {
+                    toast.success("Friend request accepted automatically");
+                    const targetUser = users.find((user) => user._id === targetUserId);
+                    if (targetUser) {
+                        setFriendsList((prev) => [...prev, { ...targetUser, status: 'offline' }]);
+                        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== targetUserId));
+                    }
+                } else {
+                    toast.success("Friend request sent");
+                }
+                setRequestStatus((prevState) => ({
+                    ...prevState,
+                    [targetUserId]: true,
+                }));
+            } else {
+                toast.error(data.message || "Error sending request");
+            }
+        } catch (error) {
+            console.error("Error sending friend request:", error);
+            toast.error("Failed to send friend request");
+        }
+    };
 
     const removeFriend = async (friendId) => {
         if (!userId) {
@@ -208,7 +196,22 @@ const Friends = ({ socket }) => {
         }
     };
 
+    const filteredUsers = users
+        .filter(
+            (user) =>
+                user.username.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                user._id !== userId &&
+                !friendsList.some((friend) => friend._id === user._id)
+        );
 
+    const handleLogout = () => {
+        if (socket && userId) {
+            socket.emit('set-status', { userId, status: 'offline' });
+            console.log(`Logout: Emitted offline for ${userId}`);
+        }
+        localStorage.removeItem('userId');
+        navigate('/home');
+    };
 
     return (
         <div className="app">
