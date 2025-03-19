@@ -9,6 +9,7 @@ import acceptIcon from '../assets/correct.png';
 import rejectIcon from '../assets/reject.png';
 import defaultProfilePic from "../assets/wp9549839.png";
 import { toast } from 'react-toastify';
+import Loader from './loader';
 
 const Friends = ({ socket }) => {
     const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Friends = ({ socket }) => {
     const [requestStatus, setRequestStatus] = useState({});
     const [notifications, setNotifications] = useState([]);
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const userId = localStorage.getItem("userId");
 
     useEffect(() => {
@@ -31,7 +33,7 @@ const Friends = ({ socket }) => {
                 const updatedList = prev.map((friend) =>
                     friend._id === friendId ? { ...friend, status } : friend
                 );
-                console.log('Updated friendsList:', updatedList); // Debug
+                console.log('Updated friendsList:', updatedList);
                 return updatedList;
             });
         });
@@ -44,7 +46,10 @@ const Friends = ({ socket }) => {
     useEffect(() => {
         fetch("http://localhost:3000/api/friends/users")
             .then(response => response.json())
-            .then(data => setUsers(data))
+            .then(data => {
+                console.log("Fetched users:", data); // Debug: Check the API response
+                setUsers(data);
+            })
             .catch(error => console.error("Error fetching users:", error));
     }, []);
 
@@ -72,7 +77,7 @@ const Friends = ({ socket }) => {
                     const data = await response.json();
                     setFriendsList(data.map(friend => ({
                         ...friend,
-                        status: friend.status || 'offline' // Use DB status as initial value
+                        status: friend.status || 'offline'
                     })));
                     console.log('Fetched friends with statuses:', data);
                 } catch (error) {
@@ -156,46 +161,6 @@ const Friends = ({ socket }) => {
         }
     };
 
-    const acceptFriendRequest = async (requesterId) => {
-        try {
-            const response = await fetch("http://localhost:3000/api/friends/accept-request", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, requesterId }),
-            });
-            const data = await response.json();
-            if (response.ok) {
-                setNotifications((prev) => prev.filter(req => req._id !== requesterId));
-                const newFriend = notifications.find(req => req._id === requesterId);
-                if (newFriend) {
-                    setFriendsList((prev) => [...prev, { ...newFriend, status: 'offline' }]);
-                }
-            } else {
-                toast.error(data.message || "Error accepting request");
-            }
-        } catch (error) {
-            console.error("Error accepting friend request:", error);
-        }
-    };
-
-    const rejectFriendRequest = async (requesterId) => {
-        try {
-            const response = await fetch("http://localhost:3000/api/friends/reject-request", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, requesterId }),
-            });
-            const data = await response.json();
-            if (response.ok) {
-                setNotifications(notifications.filter(req => req._id !== requesterId));
-            } else {
-                toast.error(data.message || "Error rejecting request");
-            }
-        } catch (error) {
-            console.error("Error rejecting friend request:", error);
-        }
-    };
-
     const filteredUsers = users
         .filter(
             (user) =>
@@ -213,135 +178,182 @@ const Friends = ({ socket }) => {
         navigate('/home');
     };
 
+    const handleNavigation = (path) => {
+        setIsLoading(true);
+        setTimeout(() => {
+            navigate(path);
+            setIsLoading(false);
+        }, 500);
+    };
+
     return (
         <div className="app">
-            <header className="header">
-                <div className="logo-container">
-                    <img src={img} alt="Arcade Alley Logo" className="logo" />
+            <nav className="nav-bar">
+                <div className="nav-left">
+                    <div className="logo1">
+                        <img src={img} alt="Arcade Alley" />
+                    </div>
+                    <div className="nav-links">
+                        <a href="#" onClick={() => {
+                            const storedUserId = localStorage.getItem("userId");
+                            handleNavigation(storedUserId ? "/home1" : "/home");
+                        }}>Home</a>
+                        <a href="#" onClick={() => {
+                            const storedUserId = localStorage.getItem("userId");
+                            handleNavigation(storedUserId ? "/catagory1" : "/catagory");
+                        }}>Category</a>
+                        <a href="#" onClick={() => handleNavigation("/community")}>Community</a>
+                        <a href="#" onClick={() => handleNavigation("/friends")}>Friends</a>
+                        <a href="#" onClick={() => handleNavigation("/wishlist")}>Wishlist</a>
+                        <a href="#" onClick={() => handleNavigation("/download")}>Download</a>
+                    </div>
                 </div>
-                <div className="user-info">
-                    <span onClick={() => navigate("/notifications")} className='notification_icon'>🔔</span>
-                    <div className="user-details">
-                        <img
-                            src={user?.profilePicture ? user.profilePicture : defaultProfilePic}
-                            style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
-                            alt="Profile"
-                            onClick={() => setDropdownVisible(!dropdownVisible)}
-                        />
-                        <div>
-                            <h1 className="username">Welcome, {user?.username || "Guest"}</h1>
-                            <p className="useremail">Email: {user?.email || "No email found"}</p>
-                        </div>
-                        {dropdownVisible && (
-                            <div className="dropdownMenu">
-                                <button onClick={handleLogout} className="logoutButton">Logout</button>
+                <div className="nav-right">
+                    <div className="user-info">
+                        {user ? (
+                            <div className="user-details">
+                                <img
+                                    src={user?.profilePicture ? user.profilePicture : defaultProfilePic}
+                                    style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
+                                    alt="Profile"
+                                    onClick={() => setDropdownVisible(!dropdownVisible)}
+                                />
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div>
+                                        <h1 className="username">Welcome, {user?.username || "Guest"}</h1>
+                                        <p className="useremail">Email: {user?.email || "No email found"}</p>
+                                    </div>
+                                </div>
+                                {dropdownVisible && (
+                                    <div className="dropdownMenu">
+                                        <button onClick={handleLogout} className="logoutButton">Logout</button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="auth-buttons">
+                                <button className="login-button" onClick={() => handleNavigation("/login")}>
+                                    Login
+                                </button>
+                                <button className="signup-button" onClick={() => handleNavigation("/signup")}>
+                                    Signup
+                                </button>
                             </div>
                         )}
                     </div>
                 </div>
-            </header>
+            </nav>
+
             <main className="main">
-                <button className="backbutton1" onClick={() => navigate("/home1")}>
-                    ◀ Back
-                </button>
-                <div className="search-container">
-                    <input
-                        type="text"
-                        placeholder="Search profile"
-                        className="search-input"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                </div>
-                <div className="tabs">
-                    <button
-                        className={`tab search-tab ${activeTab === "search" ? "active" : ""}`}
-                        onClick={() => setActiveTab("search")}
-                    >
-                        Search
-                    </button>
-                    <button
-                        className={`tab friends-tab ${activeTab === "friends" ? "active" : ""}`}
-                        onClick={() => setActiveTab("friends")}
-                    >
-                        Friends
-                    </button>
-                </div>
-                <div className="friends-list">
-                    {activeTab === "search" ? (
-                        filteredUsers.length > 0 ? (
-                            filteredUsers.map((user) => (
-                                <div key={user._id} className="friend-item">
-                                    <div className="friend-info">
-                                        <img
-                                            src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
-                                            alt={`${user.username} Avatar`}
-                                            className="friend-avatar"
-                                        />
-                                        <span className="friend-name">
-                                            {user.username}{" "}
-                                            <span
-                                                style={{
-                                                    fontSize: "0.8rem",
-                                                    color: user.profileVisibility ? "green" : "red",
-                                                    marginLeft: "8px",
-                                                }}
-                                            >
-                                                {user.profileVisibility ? "(Public)" : "(Private)"}
-                                            </span>
-                                        </span>
-                                    </div>
-                                    <div className="friend-actions">
-                                        {requestStatus[user._id] ? (
-                                            <img src={pendingrequest} alt="Pending Request" className="add-friend-icon" />
-                                        ) : (
-                                            <img
-                                                src={addUserImage}
-                                                alt="Add Friend"
-                                                onClick={() => sendFriendRequest(user._id)}
-                                                className="add-friend-icon"
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No users found</p>
-                        )
-                    ) : (
-                        friendsList.length > 0 ? (
-                            friendsList.map((friend) => (
-                                <div key={friend._id} className="friend-item">
-                                    <div className="friend-info">
-                                        <img
-                                            src={`https://ui-avatars.com/api/?name=${friend.username}&background=random`}
-                                            alt={`${friend.username} Avatar`}
-                                            className="friend-avatar"
-                                        />
-                                        <span className="friend-name">
-                                            {friend.username}{" "}
-                                            {friend.status === "online" ? (
-                                                <span style={{ color: "green", fontWeight: "bold" }}>🟢 Online</span>
-                                            ) : (
-                                                <span style={{ color: "red", fontWeight: "bold" }}>🔴 Offline</span>
-                                            )}
-                                        </span>
-                                    </div>
-                                    <div className="friend-actions">
-                                        <img
-                                            src={bin}
-                                            alt="Remove Friend"
-                                            onClick={() => removeFriend(friend._id)}
-                                            className="remove-friend-icon"
-                                        />
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No friends found</p>
-                        )
-                    )}
-                </div>
+                {isLoading ? (
+                    <div className="loader-container">
+                        <Loader />
+                    </div>
+                ) : (
+                    <>
+                        <button className="backbutton1" onClick={() => handleNavigation("/home1")}>
+                            ◀ Back
+                        </button>
+                        <div className="search-container">
+                            <input
+                                type="text"
+                                placeholder="Search profile"
+                                className="search-input"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                        <div className="tabs">
+                            <button
+                                className={`tab search-tab ${activeTab === "search" ? "active" : ""}`}
+                                onClick={() => setActiveTab("search")}
+                            >
+                                Search
+                            </button>
+                            <button
+                                className={`tab friends-tab ${activeTab === "friends" ? "active" : ""}`}
+                                onClick={() => setActiveTab("friends")}
+                            >
+                                Friends
+                            </button>
+                        </div>
+                        <div className="friends-list">
+                            {activeTab === "search" ? (
+                                filteredUsers.length > 0 ? (
+                                    filteredUsers.map((user) => (
+                                        <div key={user._id} className="friend-item">
+                                            <div className="friend-info">
+                                                <img
+                                                    src={`https://ui-avatars.com/api/?name=${user.username}&background=random`}
+                                                    alt={`${user.username} Avatar`}
+                                                    className="friend-avatar"
+                                                />
+                                                <span className="friend-name">
+                                                    {user.username}{" "}
+                                                    <span
+                                                        style={{
+                                                            fontSize: "0.8rem",
+                                                            color: user.profileVisibility === true ? "green" : "red",
+                                                            marginLeft: "8px",
+                                                        }}
+                                                    >
+                                                        {user.profileVisibility === true ? "(Public)" : "(Private)"}
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            <div className="friend-actions">
+                                                {requestStatus[user._id] ? (
+                                                    <img src={pendingrequest} alt="Pending Request" className="add-friend-icon" />
+                                                ) : (
+                                                    <img
+                                                        src={addUserImage}
+                                                        alt="Add Friend"
+                                                        onClick={() => sendFriendRequest(user._id)}
+                                                        className="add-friend-icon"
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>No users found</p>
+                                )
+                            ) : (
+                                friendsList.length > 0 ? (
+                                    friendsList.map((friend) => (
+                                        <div key={friend._id} className="friend-item">
+                                            <div className="friend-info">
+                                                <img
+                                                    src={`https://ui-avatars.com/api/?name=${friend.username}&background=random`}
+                                                    alt={`${friend.username} Avatar`}
+                                                    className="friend-avatar"
+                                                />
+                                                <span className="friend-name">
+                                                    {friend.username}{" "}
+                                                    {friend.status === "online" ? (
+                                                        <span style={{ color: "green", fontWeight: "bold" }}>🟢 Online</span>
+                                                    ) : (
+                                                        <span style={{ color: "red", fontWeight: "bold" }}>🔴 Offline</span>
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div className="friend-actions">
+                                                <img
+                                                    src={bin}
+                                                    alt="Remove Friend"
+                                                    onClick={() => removeFriend(friend._id)}
+                                                    className="remove-friend-icon"
+                                                />
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>No friends found</p>
+                                )
+                            )}
+                        </div>
+                    </>
+                )}
             </main>
         </div>
     );

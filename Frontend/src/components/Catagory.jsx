@@ -15,7 +15,6 @@ import img11 from '../assets/image11.png';
 import img12 from '../assets/image12.png';
 import img13 from '../assets/image13.png';
 
-
 const GameStore = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -91,15 +90,12 @@ const GameStore = () => {
                 setGames(fetchedGames);
                 setLoading(false);
 
-                // Filter games with discounts
                 const discountedGames = fetchedGames.filter(game => game.price && game.discount);
                 setSavingSpotlight(discountedGames.length > 0 ? discountedGames : fetchedGames);
 
-                // Sort games by release date (newest first) for "Discover Something New"
                 const sortedByRelease = [...fetchedGames].sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
                 setDiscoverNew(sortedByRelease.slice(0, 6));
 
-                // Sort games by popularity (assuming `popularityScore` exists)
                 const sortedByPopularity = [...fetchedGames].sort((a, b) => b.popularityScore - a.popularityScore);
                 setMostPopular(sortedByPopularity.slice(0, 6));
             })
@@ -109,16 +105,17 @@ const GameStore = () => {
             });
     }, []);
 
-
-    const loadMoreDiscover = () => {
-        setVisibleDiscover(prev => prev + 6);
-    };
-
-    const loadMoreSpotlight = () => {
-        setVisibleSpotlight(prev => prev + 6);
-    };
-
+    const loadMoreDiscover = () => setVisibleDiscover(prev => prev + 6);
+    const loadMoreSpotlight = () => setVisibleSpotlight(prev => prev + 6);
     const loadMorePopular = () => setVisiblePopular(prev => prev + 6);
+
+    // Loading Spinner Component
+    const LoadingSpinner = () => (
+        <div className="loading-spinner">
+            <div className="spinner"></div>
+            <p>Loading games...</p>
+        </div>
+    );
 
     return (
         <>
@@ -137,23 +134,16 @@ const GameStore = () => {
                         <a className="sidebarItem">⚙️ Setting</a>
                     </nav>
 
-                    {/* Main Content */}
                     <main className="main-content">
                         <div className='main-content'>
-                            {/* Header */}
                             <header className="header">
                                 <SearchBar />
                                 <div className="auth-buttons">
-                                    <Link to="/login">
-                                        <button>Login</button>
-                                    </Link>
-                                    <Link to="/signup">
-                                        <button>Signup</button>
-                                    </Link>
+                                    <Link to="/login"><button>Login</button></Link>
+                                    <Link to="/signup"><button>Signup</button></Link>
                                 </div>
                             </header>
 
-                            {/* Popular Games Section */}
                             <section className="popular-section">
                                 <div className="section-header">
                                     <h2 className="heading-secondary">Popular Genres</h2>
@@ -177,14 +167,9 @@ const GameStore = () => {
                                 </div>
                             </section>
                         </div>
-
-
                     </main>
-
-
                 </div>
-                {/* Game Carousel */}
-                {/* Discover Something New Section */}
+
                 <div className="carouselHeader">
                     <h2>New Released</h2>
                     <div className="carouselControls">
@@ -193,7 +178,7 @@ const GameStore = () => {
                     </div>
                 </div>
                 {loading ? (
-                    <p>Loading games...</p>
+                    <LoadingSpinner />
                 ) : (
                     <div className="gameGrid">
                         {discoverNew.slice(0, visibleDiscover).map(game => (
@@ -213,11 +198,11 @@ const GameStore = () => {
                     <h2>Saving Spotlight</h2>
                     <div className="carouselControls">
                         <button className="controlButton">←</button>
-                        <button className="controlButton">→</button>
+                        <button className="controlButton" onClick={loadMoreSpotlight}>→</button>
                     </div>
                 </div>
                 {loading ? (
-                    <p>Loading games...</p>
+                    <LoadingSpinner />
                 ) : (
                     <div className="gameGrid">
                         {savingSpotlight.slice(0, visibleSpotlight).map(game => (
@@ -240,9 +225,8 @@ const GameStore = () => {
                         <button className="controlButton" onClick={loadMorePopular}>→</button>
                     </div>
                 </div>
-
                 {loading ? (
-                    <p>Loading games...</p>
+                    <LoadingSpinner />
                 ) : (
                     <div className="gameGrid">
                         {mostPopular.slice(0, visiblePopular).map(game => (
@@ -258,8 +242,7 @@ const GameStore = () => {
                     </div>
                 )}
 
-
-                <footer className="footer">
+<footer className="footer">
                     <div className="footerContainer">
                         <div className="socialIcons">
                             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="socialIconLink">
@@ -323,8 +306,6 @@ const GameStore = () => {
                     </div>
                 </footer>
             </div>
-
-
         </>
     );
 };

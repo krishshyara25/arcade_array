@@ -89,6 +89,11 @@ const WishlistPage = () => {
             console.error("Failed to remove game from wishlist", error);
         }
     };
+    
+    const handleLogout = () => {
+        localStorage.removeItem('userId'); // Remove user ID from localStorage
+        navigate('/home'); // Navigate to login page after logout
+    };
 
 
     if (loading) return <div>Loading wishlist...</div>;
@@ -173,7 +178,7 @@ const WishlistPage = () => {
 
                 <div className="empty-wishlist">
                     <img src={yourIcon} alt="Empty Wishlist" className="wishlist-icon" />
-                    <h2>You haven’t added to your Wishlist yet</h2>
+                    <h2 className="wishlist-message">You haven't added to your Wishlist yet</h2>
                     <button onClick={() => navigate("/home1")} className="shop-button">
                         Shop for games & apps
                     </button>
@@ -234,7 +239,7 @@ const WishlistPage = () => {
                                     )}
                                 </div>
 
-                                
+
                             </div>
                         ) : (
                             /* If user is not logged in, show Login and Signup buttons */
@@ -253,13 +258,13 @@ const WishlistPage = () => {
             <button className="backbutton1" onClick={() => navigate(-1)}>
                 ◀ Back
             </button>
-            <h1>Your Wishlist</h1>
+            <h1 className="page-title">Your Wishlist</h1>
             <div className="wishlist-container">
                 {wishlist.map((game) => (
                     <div key={game._id} className="wishlist-item">
                         <img src={game.poster} alt={game.name} className="wishlist-img" />
-                        <h2>{game.name}</h2>
-                        <p>Price: {game.price}</p>
+                        <h2 className="wishlist-title">{game.name}</h2>
+                        <p className="wishlist-price">Price: {game.price}</p>
                         <button onClick={() => removeFromWishlist(game._id)}>Remove from wishlist</button>
 
                     </div>

@@ -186,11 +186,6 @@ const GamePage = () => {
       <main className="maincontent">
         <div className="game-container">
 
-          {/* Game Cover */}
-          <div className="game-cover">
-            <img src={game.poster} alt={game.name} />
-          </div>
-
 
           {/* Game Info */}
           <div className="game-info">
@@ -266,25 +261,28 @@ const GamePage = () => {
             {game.screenshots?.map((screenshot, index) => (
               <img key={index} src={screenshot} alt={`Screenshot ${index + 1}`} />
             ))}
+
+            {game.videos?.map((video, index) => (
+              <video
+                key={index}
+                className="screenshot-gallery video-player"
+                controls
+                onPlay={(e) => {
+                  document.querySelectorAll('.video-player').forEach((v) => {
+                    if (v !== e.target) {
+                      v.pause();
+                    }
+                  });
+                }}
+              >
+                <source src={video} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ))}
+
           </div>
 
-          {game.videos?.map((video, index) => (
-            <video
-              key={index}
-              className="screenshot-gallery video-player"
-              controls
-              onPlay={(e) => {
-                document.querySelectorAll('.video-player').forEach((v) => {
-                  if (v !== e.target) {
-                    v.pause();
-                  }
-                });
-              }}
-            >
-              <source src={video} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ))}
+
         </div>
 
 

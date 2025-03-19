@@ -3,7 +3,6 @@ import { Elements, CardElement, useElements, useStripe } from "@stripe/react-str
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import Loader from "./Loader.jsx";
 import "../styles/Payment.css";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);

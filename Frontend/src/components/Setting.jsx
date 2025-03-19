@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import defaultProfilePic from "../assets/wp9549839.png"; // Default profile picture
-import Loader from "./Loader"; // Loader component for loading states
-import "../styles/Setting.css"; // CSS for styling
+import defaultProfilePic from "../assets/wp9549839.png";
+import "../styles/Setting.css";
 import logo from '../assets/arcade_alley_logo.png';
 
 const Settings = () => {
@@ -15,21 +14,21 @@ const Settings = () => {
     const [loading, setLoading] = useState(true);
     const [updatingProfile, setUpdatingProfile] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [profileVisibility, setProfileVisibility] = useState(user?.profileVisibility || true);
+    const [profileVisibility, setProfileVisibility] = useState(true);
 
-    // Form states
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [profilePicture, setProfilePicture] = useState(null);
     const [previewUrl, setPreviewUrl] = useState("");
 
-    // Fetch user details on component mount
     useEffect(() => {
         if (!userId) {
             toast.error("Please log in to access settings.");
             navigate("/login");
             return;
         }
+
+        let isMounted = true;
 
         const fetchUserDetails = async () => {
             try {
@@ -38,35 +37,42 @@ const Settings = () => {
                     `https://arcade-array.onrender.com/api/games/user/details/${userId}`
                 );
                 const userData = response.data;
-                setUser(userData);
-                setUsername(userData.username || "");
-                setEmail(userData.email || "");
-                setPreviewUrl(userData.profilePicture || defaultProfilePic);
-                setLoading(false);
+                if (isMounted) {
+                    setUser(userData);
+                    setUsername(userData.username || "");
+                    setEmail(userData.email || "");
+                    setProfileVisibility(userData.profileVisibility ?? true);
+                    setPreviewUrl(userData.profilePicture || defaultProfilePic);
+                    setLoading(false);
+                }
             } catch (error) {
                 console.error("Error fetching user details:", error);
-                toast.error("Failed to load user information");
-                setLoading(false);
+                if (isMounted) {
+                    toast.error("Failed to load user information");
+                    setLoading(false);
+                }
             }
         };
 
         fetchUserDetails();
+
+        return () => {
+            isMounted = false;
+        };
     }, [userId, navigate]);
 
-    // Handle profile picture change
     const handleProfilePictureChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setProfilePicture(file);
             const reader = new FileReader();
             reader.onloadend = () => {
-                setPreviewUrl(reader.result); // Set the preview URL
+                setPreviewUrl(reader.result);
             };
             reader.readAsDataURL(file);
         }
     };
 
-    // Handle profile update
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
         if (!username.trim()) {
@@ -77,27 +83,31 @@ const Settings = () => {
         try {
             setUpdatingProfile(true);
 
-            // Prepare the payload
-            const payload = {
-                username: username,
-                profilePicture: previewUrl, // Send the profile picture URL if available
-            };
+            const formData = new FormData();
+            formData.append("username", username);
+            if (profilePicture) {
+                formData.append("profilePicture", profilePicture);
+            }
 
             const response = await axios.put(
                 `https://arcade-array.onrender.com/api/auth/update-profile/${userId}`,
-                payload,
+                formData,
                 {
                     headers: {
-                        "Content-Type": "application/json",
+                        "Content-Type": "multipart/form-data",
                     },
                 }
             );
 
             if (response.status === 200) {
                 toast.success("Profile updated successfully!");
-                const updatedUser = { ...user, username: response.data.username, profilePicture: response.data.profilePicture };
+                const updatedUser = {
+                    ...user,
+                    username: response.data.username,
+                    profilePicture: response.data.profilePicture || previewUrl,
+                };
                 setUser(updatedUser);
-                localStorage.setItem("user", JSON.stringify(updatedUser)); // Update local storage
+                localStorage.setItem("user", JSON.stringify(updatedUser));
             }
         } catch (error) {
             console.error("Error updating profile:", error);
@@ -107,50 +117,46 @@ const Settings = () => {
         }
     };
 
-    if (loading) {
-        return <Loader />;
-    }
+    const handleProfileVisibilityToggle = async (e) => {
+        const isVisible = e.target.checked;
+        const previousVisibility = profileVisibility;
+        setProfileVisibility(isVisible);
 
-    const handleLogout = () => {
-        localStorage.removeItem('userId'); // Remove user ID from localStorage
-        navigate('/home'); // Navigate to login page after logout
+        try {
+            const response = await axios.put(
+                `https://arcade-array.onrender.com/api/auth/update-profile-visibility/${userId}`,
+                { profileVisibility: isVisible },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                toast.success(`Profile visibility set to ${isVisible ? "public" : "private"}`);
+                setUser({ ...user, profileVisibility: isVisible });
+            }
+        } catch (error) {
+            console.error("Error updating profile visibility:", error);
+            toast.error("Failed to update profile visibility");
+            setProfileVisibility(previousVisibility);
+        }
     };
 
-    const handleProfileVisibilityToggle = async (e) => {
-    const isVisible = e.target.checked;
-    setProfileVisibility(isVisible);
+    const handleLogout = () => {
+        localStorage.removeItem('userId');
+        navigate('/home');
+    };
 
-    try {
-        console.log("Sending request to update profile visibility...");
-        console.log("User ID:", userId);
-        console.log("New Profile Visibility:", isVisible);
-
-        const response = await axios.put(
-            `https://arcade-array.onrender.com/api/auth/update-profile-visibility/${userId}`,
-            { profileVisibility: isVisible },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`, // Add this if authentication is required
-                },
-            }
+    if (loading) {
+        return (
+            <div className="loader-container">
+                <div className="loader"></div>
+            </div>
         );
-
-        console.log("Response from server:", response);
-
-        if (response.status === 200) {
-            toast.success(`Profile visibility set to ${isVisible ? "public" : "private"}`);
-            setUser({ ...user, profileVisibility: isVisible }); // Update local state
-        }
-    } catch (error) {
-        console.error("Error updating profile visibility:", error);
-        if (error.response) {
-            console.error("Server responded with:", error.response.data);
-        }
-        toast.error("Failed to update profile visibility");
-        setProfileVisibility(!isVisible); // Revert the toggle if the request fails
     }
-};
 
     return (
         <div className="settings-container">
@@ -173,17 +179,22 @@ const Settings = () => {
                         {user ? (
                             <div className="user-details">
                                 <img
-                                    src={user?.profilePicture ? user.profilePicture : defaultProfilePic}
+                                    src={previewUrl || defaultProfilePic}
                                     style={{ borderRadius: "50%", width: "3vw", cursor: "pointer" }}
                                     alt="Profile"
                                     onClick={() => setDropdownVisible(!dropdownVisible)}
                                 />
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <div>
-                                        <h1 className="username">Welcome, {user?.username}</h1>
-                                        <p className="useremail">Email: {user?.email || "No email found"}</p>
+                                        <h1 className="username">Welcome, {username}</h1>
+                                        <p className="useremail">Email: {email || "No email found"}</p>
                                     </div>
                                 </div>
+                                {dropdownVisible && (
+                                    <div className="dropdown-menu">
+                                        <button onClick={handleLogout}>Logout</button>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className="auth-buttons">
@@ -231,7 +242,7 @@ const Settings = () => {
                                     <div className="form-group1">
                                         <label htmlFor="email">Email</label>
                                         <input type="email" id="email" value={email} disabled placeholder="Your email" />
-                                        <small>Email cannot be changed</small>
+                                        <small>Email cannot be changed here. Contact support for assistance.</small>
                                     </div>
                                     <div className="profile-actions">
                                         <button type="submit" className="save-button" disabled={updatingProfile}>
@@ -249,11 +260,11 @@ const Settings = () => {
                                     </div>
                                     <div className="stat-card">
                                         <h4>Wishlist Items</h4>
-                                        <p>{user.wishlistCount || 0}</p> {/* Display wishlist count */}
+                                        <p>{user.wishlistCount || 0}</p>
                                     </div>
                                     <div className="stat-card">
                                         <h4>Friends</h4>
-                                        <p>{user.friendCount || user.friends?.length || 0}</p> {/* Display friend count */}
+                                        <p>{user.friendCount || user.friends?.length || 0}</p>
                                     </div>
                                 </div>
                             </div>
