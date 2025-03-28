@@ -21,7 +21,7 @@ const ResetPassword = () => {
         setMessage('');
         setError('');
         try {
-            const response = await fetch('http://localhost:3000/api/auth/reset-password', {
+            const response = await fetch('https://arcade-array.onrender.com/api/auth/reset-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token, password }),

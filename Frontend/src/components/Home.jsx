@@ -190,7 +190,7 @@ const GameStore = () => {
   return (
     <>
       <div className="container">
-        <div className="upper">
+        <div className="upper1">
           {/* Sidebar */}
           <nav className="sidebar">
             <div className="logo">

@@ -21,7 +21,7 @@ import ForgotPassword from './components/ForgotPassword.jsx'; // New
 import ResetPassword from './components/ResetPassword.jsx'; // New
 
 // Initialize socket once
-const socket = io('http://localhost:3000', {
+const socket = io('https://arcade-array.onrender.com', {
     path: '/socket.io', // Explicitly set path
     withCredentials: true,
     reconnection: true,

@@ -96,6 +96,14 @@ const Friends = ({ socket }) => {
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 setNotifications(data);
+                // Initialize requestStatus with pending outgoing requests
+                const pendingRequests = {};
+                data.forEach(request => {
+                    if (request.from === userId) { // Outgoing requests
+                        pendingRequests[request.to] = 'pending';
+                    }
+                });
+                setRequestStatus(pendingRequests);
             } catch (error) {
                 console.error("Error fetching pending requests:", error);
             }
@@ -104,6 +112,12 @@ const Friends = ({ socket }) => {
     }, [userId]);
 
     const sendFriendRequest = async (targetUserId) => {
+        // Prevent sending request if already pending
+        if (requestStatus[targetUserId] === 'pending') {
+            toast.info("Friend request already sent!");
+            return;
+        }
+
         try {
             const response = await fetch(
                 "https://arcade-array.onrender.com/api/friends/friend-request",
@@ -124,10 +138,9 @@ const Friends = ({ socket }) => {
                     }
                 } else {
                     toast.success("Friend request sent");
-                    // Immediately update request status to show pending icon
                     setRequestStatus((prevState) => ({
                         ...prevState,
-                        [targetUserId]: 'pending', // Use 'pending' instead of true for clarity
+                        [targetUserId]: 'pending',
                     }));
                 }
             } else {
@@ -210,7 +223,6 @@ const Friends = ({ socket }) => {
                 </div>
                 <div className="nav-right">
                     <div className="user-info">
-                        {user ? (
                             <div className="user-details">
                                 <img
                                     src={user?.profilePicture ? user.profilePicture : defaultProfilePic}
@@ -230,16 +242,7 @@ const Friends = ({ socket }) => {
                                     </div>
                                 )}
                             </div>
-                        ) : (
-                            <div className="auth-buttons">
-                                <button className="login-button" onClick={() => handleNavigation("/login")}>
-                                    Login
-                                </button>
-                                <button className="signup-button" onClick={() => handleNavigation("/signup")}>
-                                    Signup
-                                </button>
-                            </div>
-                        )}
+                        
                     </div>
                 </div>
             </nav>
@@ -247,7 +250,7 @@ const Friends = ({ socket }) => {
             <main className="main">
                 {isLoading ? (
                     <div className="loader-container">
-                        <p>Loading...</p> {/* Temporary placeholder since Loader is removed */}
+                        <p>Loading...</p>
                     </div>
                 ) : (
                     <>
@@ -303,10 +306,10 @@ const Friends = ({ socket }) => {
                                             </div>
                                             <div className="friend-actions">
                                                 {requestStatus[user._id] === 'pending' ? (
-                                                    <img 
-                                                        src={pendingrequest} 
-                                                        alt="Request Pending" 
-                                                        className="add-friend-icon" 
+                                                    <img
+                                                        src={pendingrequest}
+                                                        alt="Request Pending"
+                                                        className="add-friend-icon"
                                                         title="Friend request pending"
                                                     />
                                                 ) : (
@@ -316,6 +319,7 @@ const Friends = ({ socket }) => {
                                                         onClick={() => sendFriendRequest(user._id)}
                                                         className="add-friend-icon"
                                                         title="Send friend request"
+                                                        style={{ cursor: 'pointer' }}
                                                     />
                                                 )}
                                             </div>
